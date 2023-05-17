@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:conduit/config/cHiveStore.dart';
 import 'package:conduit/config/constant.dart';
+import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/c_exception.dart';
 import 'package:hive/hive.dart';
@@ -15,7 +16,7 @@ class UserClient {
 
   UserClient._internal();
   Future<http.Response> doGet(String url, {Map<String, String>? header}) async {
-    Box<UserAccessData>? userData = await cHiveStore.isExistUserBox();
+    Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
 
     if (userData == null) {
       return http.Response("{'msg':'No user found'}", 404);
@@ -42,7 +43,7 @@ class UserClient {
             statusCode: response.statusCode);
       }
     } on UnAuthorizedException catch (e) {
-      cHiveStore.clossSession();
+      hiveStore.clossSession();
       return http.Response('{"message":"${e.message}"}', e.statusCode);
     }
   }

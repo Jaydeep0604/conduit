@@ -4,7 +4,7 @@ class AppColors {
   static const Color primaryColor = Color.fromARGB(255, 80, 197, 41);
   static const Color bottomColor2 = Color.fromARGB(255, 97, 207, 61);
   static const Color primaryColor2 = Color.fromARGB(255, 14, 78, 7);
-  static const Color white2 = Color.fromARGB(255, 222, 227, 217);
+  static const Color white2 = Color.fromARGB(255, 243, 243, 243);
   static const Color scaffold_background = Color(0xff24272c);
   static const Color scaffold_background_light = Color.fromARGB(255, 169, 180, 199);
   static const Color white = Colors.white;

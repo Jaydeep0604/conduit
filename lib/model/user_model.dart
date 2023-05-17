@@ -4,30 +4,19 @@ part 'user_model.g.dart';
 @HiveType(typeId: 1)
 class UserAccessData {
   @HiveField(0)
-  String? token;
+  String? email;
 
   @HiveField(1)
-  String? userId;
-
-  @HiveField(2)
   String? userName;
 
-  @HiveField(4)
+  @HiveField(2)
   String? bio;
 
   @HiveField(3)
   String? image;
 
-  @HiveField(5)
-  String? email;
+  @HiveField(4)
+  String? token;
 
-    UserAccessData({
-    this.email,
-    this.userId,
-    this.token,
-    this.image,
-    this.bio,
-    this.userName
-
-  });
+  UserAccessData({this.email, this.userName, this.bio, this.image, this.token});
 }

@@ -67,16 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
 
                 if (state is LoginSuccessState) {
-                  // downloadTaskbloc.add(RestoreDownloadedTask());
-                  // user managemnt flow
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //   context,
-                  //   ManageUsers.manageUsersUrl,
-                  //   (route) => false,
-                  // );
-                  CToast.instance.showSuccess(context, "login successfull");
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));
+                  CToast.instance.showSuccess(context, "login successfull");
                 }
               },
             ),

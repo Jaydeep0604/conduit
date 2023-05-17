@@ -2,8 +2,7 @@ import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
-import 'package:conduit/config/cHiveStore.dart';
-import 'package:conduit/model/user_data_model.dart';
+import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/repository/all_airtist_repo.dart';
 import 'package:conduit/repository/auth_repo.dart';
@@ -18,9 +17,7 @@ import 'package:hive_flutter/adapters.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserAccessDataAdapter());
-  Hive.registerAdapter(UserDataAdapter());
-  
-  await cHiveStore.init();
+  await hiveStore.init();
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
@@ -46,28 +43,24 @@ Future<void> main() async {
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-
-
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (context) => LoginBloc(),
-      ),
-      BlocProvider(
-        create: (context) => ProfileBloc(repo:ProfileRepoImpl()),
-      ),
-      BlocProvider(
-        create: (context) => RegisterBloc(authRepo: AuthRepoImpl()),
-      ),
-       BlocProvider(
-        create: (context) => AllArticlesBloc(repo: AllArticlesImpl()),
-      ),
-    ],
-    child: MyApp()));
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(
+      create: (context) => LoginBloc(),
+    ),
+    BlocProvider(
+      create: (context) => ProfileBloc(repo: ProfileRepoImpl()),
+    ),
+    BlocProvider(
+      create: (context) => RegisterBloc(authRepo: AuthRepoImpl()),
+    ),
+    BlocProvider(
+      create: (context) => AllArticlesBloc(repo: AllArticlesImpl()),
+    ),
+  ], child: MyApp()));
 }
 // void main() {
 //   runApp(MultiBlocProvider(

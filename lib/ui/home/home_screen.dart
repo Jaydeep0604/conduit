@@ -76,9 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.feed_outlined
-              ),
+              icon: Icon(Icons.feed_outlined),
               label: "Your Feed",
               backgroundColor: AppColors.primaryColor),
           BottomNavigationBarItem(
@@ -102,30 +100,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Center(
                     child: GestureDetector(
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProfileScreen()));
                   },
-                  child: CircleAvatar(
-                    backgroundColor: AppColors.white2,
-                    child: Icon(
-                      Icons.person,
-                      color: AppColors.primaryColor,
-                      size: 65,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.primaryColor),
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    radius: 45,
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.white2,
+                      child: Icon(
+                        Icons.person,
+                        color: AppColors.primaryColor,
+                        size: 65,
+                      ),
+                      radius: 45,
+                    ),
                   ),
                 )),
               ),
               ListTile(
                   title: const Text('Global'),
                   leading: Icon(Icons.feed),
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.pop(context);
+                  }),
               ListTile(
                 title: const Text('Your Feed'),
                 leading: Icon(Icons.people),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
               Align(
                 alignment: Alignment.bottomRight,

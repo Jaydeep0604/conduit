@@ -1,5 +1,5 @@
 import 'package:conduit/bloc/login_bloc/login_event.dart';
-import 'package:conduit/config/cHiveStore.dart';
+import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repository/auth_repo.dart';
@@ -15,37 +15,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   _onLoginSubmit(LoginSubmitEvent event, Emitter<LoginState> emit) async {
     try {
       emit(LoginLoadingState());
-      dynamic jsonData;
-      jsonData = await repo.login(event.authModel);
-      // dynamic data = jsonData['user'];
-      // print(data);
-      // emit(LoginLoadingState());
-      // dynamic data = await repo.login(event.authModel);
-
-      bool isSessionOpen = await cHiveStore.openSession(
+      dynamic data;
+      data = await repo.login(event.authModel);
+      print("Login response :: $data");
+      dynamic jsonData = data['user'];
+      bool isSessionOpen = await hiveStore.openSession(
         UserAccessData(
-          userName: jsonData['username'],
-          email: jsonData['email'],
-          image: jsonData['image'],
-          token: jsonData['token'],
-          bio: jsonData['bio'],
+          email: jsonData["email"],
+          userName: jsonData["username"],
+          bio: jsonData["bio"],
+          image: jsonData["image"],
+          token: jsonData["token"],
         ),
       );
 
-      // await downloadStore.storeUserAccessData(
-      //   UserAccessData(
-      //     countryCode: data['country_code'],
-      //     firstName: data['first_name'],
-      //     lastName: data['last_name'],
-      //     email: data['email'],
-      //     dob: data['dob'],
-      //     accessToken: data['accesstoken'],
-      //     userId: data['user_id'].toString(),
-      //     mobile: data['mobile_no'],
-      //     loginType: data['login_type'],
-      //   ),
-      // );
-  
       if (isSessionOpen) {
         add(InitUserEvent(msg: jsonData['user'].toString()));
       } else {
@@ -55,6 +38,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ),
         );
       }
+
       emit(
         LoginSuccessState(
           msg: jsonData["user"].toString(),
@@ -73,7 +57,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       emit(LoginLoadingState());
       // UserData userData = await userRepo.getUserProfileData();
-      bool isStoredUser = await cHiveStore.isSession();
+      bool isStoredUser = await hiveStore.isSession();
       if (isStoredUser) {
         emit(
           LoginSuccessState(
