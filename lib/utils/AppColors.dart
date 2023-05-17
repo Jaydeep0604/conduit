@@ -14,7 +14,7 @@ class AppColors {
   static const Color Box_width_color = Color(0xff707070);
   static const Color Bottom_bar_color = Color(0xff232323);
   static const Color drawer_background = Color(0xff0f0f0f);
-  static const Color text_color = Color.fromARGB(255, 95, 98, 106);
+  static const Color text_color = Color.fromARGB(255, 171, 173, 176);
   static const Color play_button_border = Color(0xff2596be);
   static const Color Box_back_color = Color(0xff002632);
   static const Color plan_details_background = Color(0xff515660);

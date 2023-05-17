@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:conduit/config/cHiveStore.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/c_exception.dart';
 import 'package:hive/hive.dart';
@@ -50,7 +51,7 @@ class UserClient {
 
   // Future<http.Response> doPost(String url, Map<String, dynamic> body,
   //     {Map<String, String>? header}) async {
-  //   Box<UserAccessData>? userData = await cHiveStore.isExistUserBox();
+  //   Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
 
   //   if (userData == null) {
   //     return http.Response("{'msg':'No user found'}", 404);
@@ -64,11 +65,12 @@ class UserClient {
   //     head.addAll(header);
   //   }
 
-  //   dynamic bod = jsonEncode({"info": encodeDecode.encode(json.encode(body))});
+  //   dynamic bod = jsonEncode({"article": json.encode(body)});
+  //   print(bod);
 
   //   try {
   //     http.Response response = await http.post(Uri.parse(url),
-  //         body: jsonEncode({"info": encodeDecode.encode(json.encode(body))}),
+  //         body: jsonEncode({"article": json.encode(body)}),
   //         headers: head);
   //     print("${response.body}");
   //     dynamic jsonData = jsonDecode(response.body);
@@ -80,10 +82,57 @@ class UserClient {
   //           statusCode: response.statusCode);
   //     }
   //   } on UnAuthorizedException catch (e) {
-  //     ksHiveStore.clossSession();
+  //     hiveStore.clossSession();
   //     return http.Response('{"message":"${e.message}"}', e.statusCode);
   //   }
   // }
+  Future<http.Response> doPost(String url, Map<String, dynamic> body,
+    {Map<String, String>? header}) async {
+  Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+
+  if (userData == null) {
+    return http.Response("{'msg':'No user found'}", 404);
+  }
+
+  Map<String, String> head = {
+    "content-type": "application/json",
+    "Authorization": "Bearer ${userData.values.last.token}"
+  };
+
+  if (header != null) {
+    head.addAll(header);
+  }
+  
+  NewArticleModel newArticleModel = NewArticleModel(
+    article: Article(
+      title: body["title"],
+      description: body["description"],
+      body: body["body"],
+      tagList: body["tagList"],
+    ),
+  );
+
+  try {
+    http.Response response = await http.post(
+      Uri.parse(url),
+      body: jsonEncode(newArticleModel.toJson()),
+      headers: head,
+    );
+
+    dynamic jsonData = jsonDecode(response.body);
+    if (response.statusCode != 403 && response.statusCode != 401) {
+      return response;
+    } else {
+      throw UnAuthorizedException(
+        message: jsonData['message'] ?? "Session Expired..!".toString(),
+        statusCode: response.statusCode,
+      );
+    }
+  } on UnAuthorizedException catch (e) {
+    hiveStore.clossSession();
+    return http.Response('{"message":"${e.message}"}', e.statusCode);
+  }
+}
 
   // Future<http.Response> doDelete(String url, Map<String, dynamic> body,
   //     {Map<String, String>? header}) async {

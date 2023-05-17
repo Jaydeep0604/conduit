@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:conduit/model/all_artist_model.dart';
-import 'package:conduit/repository/all_airtist_repo.dart';
+import 'package:conduit/repository/all_article_repo.dart';
 
 import 'all_airtist_event.dart';
 import 'all_articles_state.dart';

@@ -1,14 +1,12 @@
 import 'package:conduit/bloc/all_articles_bloc/all_airtist_event.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
-import 'package:conduit/bloc/login_bloc/login_bloc.dart';
-import 'package:conduit/model/auth_model.dart';
-import 'package:conduit/repository/all_airtist_repo.dart';
+import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
+import 'package:conduit/ui/home/add_article_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/yourfeed.dart';
 import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
-import 'package:conduit/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,7 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final pages = [const YourFeedScreen(), const GlobalScreen()];
+  final pages = [
+    const GlobalScreen(),
+    const YourFeedScreen(),
+    BlocProvider(
+      create: (context) => NewArticleBloc(),
+      child: AddArticleScreen(),
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.white2,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        leading: Container(),
         centerTitle: true,
         title: Column(
           children: [
@@ -61,14 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        // backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.primaryColor,
         // fixedColor: AppColors.white,
         currentIndex: _selectedIndex,
-        unselectedItemColor: AppColors.text_color,
-        selectedItemColor: AppColors.primaryColor2,
+        unselectedItemColor: AppColors.white2,
+        selectedItemColor: AppColors.white,
+
         // unselectedItemColor: Colors.grey,
 
-        type: BottomNavigationBarType.shifting,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
@@ -76,18 +81,29 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.feed_outlined),
-              label: "Your Feed",
+              icon: Icon(
+                Icons.feed_outlined,
+                color: AppColors.white,
+              ),
+              label: "Globle",
               backgroundColor: AppColors.primaryColor),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
+                color: AppColors.white,
               ),
-              label: "Global",
-              backgroundColor: AppColors.bottomColor2),
+              label: "Your Feed",
+              backgroundColor: AppColors.primaryColor),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add,
+                color: AppColors.white,
+              ),
+              label: "Add",
+              backgroundColor: AppColors.primaryColor),
         ],
       ),
-      endDrawer: Opacity(
+      drawer: Opacity(
         opacity: 1,
         child: Drawer(
           backgroundColor: AppColors.white2,

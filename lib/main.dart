@@ -4,7 +4,7 @@ import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/user_model.dart';
-import 'package:conduit/repository/all_airtist_repo.dart';
+import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/repository/auth_repo.dart';
 import 'package:conduit/repository/profile_repo.dart';
 import 'package:conduit/ui/splash/splash_screen.dart';
