@@ -4,17 +4,18 @@ import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/ui/home/user_profile_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/comment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GlobalItemDetailScreen extends StatefulWidget {
-  GlobalItemDetailScreen(
-      {Key? key, required this.allArticlesModel, this.commentModel})
-      : super(key: key);
+  GlobalItemDetailScreen({
+    Key? key,
+    required this.allArticlesModel,
+  }) : super(key: key);
   AllArticlesModel allArticlesModel;
-  CommentModel? commentModel;
 
   @override
   State<GlobalItemDetailScreen> createState() => _GlobalItemDetailScreenState();
@@ -541,41 +542,50 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     ),
                     SizedBox(height: 16.0),
 
-                    // BlocBuilder<CommentBloc, CommentState>(
-                    //   builder: (context, state) {
-                    //     if(state is CommentErrorState)
-                    //     return Padding(
-                    //       padding: const EdgeInsets.only(
-                    //           left: 15, right: 15, top: 10, bottom: 10),
-                    //       child: SizedBox(
-                    //         height: 30,
-                    //         child: ListView.separated(
-                    //           padding: EdgeInsets.zero,
-                    //           shrinkWrap: true,
-                    //           primary: false,
-                    //           scrollDirection: Axis.horizontal,
-                    //           itemCount:
-                    //               widget.allArticlesModel.tagList!.length,
-                    //           itemBuilder: (BuildContext ctxt, int index) {
-                    //             return Container(
-                    //               decoration: BoxDecoration(
-                    //                   borderRadius: BorderRadius.circular(6),
-                    //                   color: AppColors.white),
-                    //               child: CommentWidget(
-                    //                   commentModel: widget.commentModel[index]),
-                    //             );
-                    //           },
-                    //           separatorBuilder:
-                    //               (BuildContext context, int index) {
-                    //             return SizedBox(
-                    //               width: 5,
-                    //             );
-                    //           },
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
+                    BlocBuilder<CommentBloc, CommentState>(
+                      builder: (context, state) {
+                        if (state is CommentErrorState) {
+                          return CToast.instance.showError(context, state.msg);
+                        }
+                        if (state is CommentLoadingState) {
+                          Center(child: CToast.instance.showLoader());
+                        }
+                        if (state is CommentSuccessState) {
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, top: 10, bottom: 10),
+                            child: SizedBox(
+                              height: 30,
+                              child: ListView.separated(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                primary: false,
+                                scrollDirection: Axis.horizontal,
+                                itemCount:
+                                    widget.allArticlesModel.tagList!.length,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: AppColors.white),
+                                    child: CommentWidget(
+                                        commentModel:
+                                            state.commentModel[index]),
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return SizedBox(
+                                    width: 5,
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        }
+                        return SizedBox();
+                      },
+                    ),
                     SizedBox(height: 16.0),
                   ],
                 ),
