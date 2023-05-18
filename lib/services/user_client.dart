@@ -105,10 +105,10 @@ class UserClient {
   
   NewArticleModel newArticleModel = NewArticleModel(
     article: Article(
-      title: body["title"],
-      description: body["description"],
-      body: body["body"],
-      tagList: body["tagList"],
+      title: body.values.first["title"],
+      description: body.values.first["description"],
+      body: body.values.first["body"],
+      tagList: body.values.first["tagList"],
     ),
   );
 
