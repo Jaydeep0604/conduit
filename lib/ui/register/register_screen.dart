@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        backgroundColor: AppColors.white2             ,
+        backgroundColor: AppColors.white2,
         body: MultiBlocListener(
           listeners: [
             BlocListener<RegisterBloc, RegisterState>(
@@ -77,8 +77,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 if (state is RegisterErrorState) {
                   CToast.instance.showError(context, state.msg);
                 }
-
-                 
               },
             )
           ],
@@ -266,13 +264,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           disabledColor: AppColors.Box_width_color,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
-                          child: new Text('Sign Up',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .button
-                                  ?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700)),
+                          child: isLoading
+                              ? Container(
+                                  height: 40,
+                                  padding: EdgeInsets.all(8),
+                                  child: CToast.instance.showLoader(),
+                                )
+                              : Text('Sign Up',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700)),
                           onPressed: isLoading
                               ? null
                               : () {

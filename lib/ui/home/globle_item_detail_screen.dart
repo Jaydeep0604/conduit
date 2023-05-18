@@ -1,13 +1,20 @@
+import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
+import 'package:conduit/bloc/comment_bloc/comment_state.dart';
 import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/ui/home/user_profile_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/widget/comment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GlobalItemDetailScreen extends StatefulWidget {
-  GlobalItemDetailScreen({Key? key, required this.allArticlesModel})
+  GlobalItemDetailScreen(
+      {Key? key, required this.allArticlesModel, this.commentModel})
       : super(key: key);
   AllArticlesModel allArticlesModel;
+  CommentModel? commentModel;
 
   @override
   State<GlobalItemDetailScreen> createState() => _GlobalItemDetailScreenState();
@@ -41,7 +48,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                          color: AppColors.white.withOpacity(0.4), blurRadius: 8)
+                          color: AppColors.white.withOpacity(0.4),
+                          blurRadius: 8)
                     ]),
                 child: Transform.scale(
                   scale: 0.9,
@@ -229,7 +237,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     ),
                     SizedBox(height: 16.0),
                     Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, top: 10, bottom: 10),
                       child: Text(
                         "${widget.allArticlesModel.body}",
                         style: TextStyle(fontSize: 14.0),
@@ -251,48 +260,49 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     //     return SizedBox();
                     //   },
                     // )
-    
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: SizedBox(
-                        height: 30,
-                        child: ListView.separated(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          primary: false,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: widget.allArticlesModel.tagList!.length,
-                          itemBuilder: (BuildContext ctxt, int index) {
-                            return Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: AppColors.white),
-                                child: Center(
-                                    child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  child: Text(
-                                    " ${widget.allArticlesModel.tagList![index]} ",
-                                    style: TextStyle(fontSize: 11),
-                                  ),
-                                )));
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(
-                              width: 5,
-                            );
-                          },
+                    if (widget.allArticlesModel.tagList!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, top: 10, bottom: 10),
+                        child: SizedBox(
+                          height: 30,
+                          child: ListView.separated(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            primary: false,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: widget.allArticlesModel.tagList!.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: AppColors.white),
+                                  child: Center(
+                                      child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    child: Text(
+                                      " ${widget.allArticlesModel.tagList![index]} ",
+                                      style: TextStyle(fontSize: 11),
+                                    ),
+                                  )));
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return SizedBox(
+                                width: 5,
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: 15, right: 15, top: 10, bottom: 10),
+                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
                       child: Divider(),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -326,7 +336,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   ),
                                   child: Container(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -336,7 +347,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                               "${widget.allArticlesModel.author!.username.toString()}",
                                               style: TextStyle(
                                                   fontSize: 13,
-                                                  color: AppColors.primaryColor),
+                                                  color:
+                                                      AppColors.primaryColor),
                                             )),
                                         Align(
                                           alignment: Alignment.bottomLeft,
@@ -359,7 +371,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: AppColors.text_color)),
+                                border:
+                                    Border.all(color: AppColors.text_color)),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 2, horizontal: 7),
@@ -526,6 +539,43 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 16.0),
+
+                    // BlocBuilder<CommentBloc, CommentState>(
+                    //   builder: (context, state) {
+                    //     if(state is CommentErrorState)
+                    //     return Padding(
+                    //       padding: const EdgeInsets.only(
+                    //           left: 15, right: 15, top: 10, bottom: 10),
+                    //       child: SizedBox(
+                    //         height: 30,
+                    //         child: ListView.separated(
+                    //           padding: EdgeInsets.zero,
+                    //           shrinkWrap: true,
+                    //           primary: false,
+                    //           scrollDirection: Axis.horizontal,
+                    //           itemCount:
+                    //               widget.allArticlesModel.tagList!.length,
+                    //           itemBuilder: (BuildContext ctxt, int index) {
+                    //             return Container(
+                    //               decoration: BoxDecoration(
+                    //                   borderRadius: BorderRadius.circular(6),
+                    //                   color: AppColors.white),
+                    //               child: CommentWidget(
+                    //                   commentModel: widget.commentModel[index]),
+                    //             );
+                    //           },
+                    //           separatorBuilder:
+                    //               (BuildContext context, int index) {
+                    //             return SizedBox(
+                    //               width: 5,
+                    //             );
+                    //           },
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     SizedBox(height: 16.0),
                   ],
                 ),

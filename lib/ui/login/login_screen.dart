@@ -40,6 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void loading() {
+    CToast.instance.showLoading(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -198,6 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       GestureDetector(
                         onTap: (() {
+                          FocusManager.instance.primaryFocus!.unfocus();
                           setState(() {
                             // emailCtr.clear();
                             // passwordctr.clear();
@@ -230,13 +236,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           disabledColor: AppColors.Box_width_color,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
-                          child: new Text('Sign in',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .button
-                                  ?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700)),
+                          child: isLoading
+                              ? Container(
+                                  height: 40,
+                                  padding: EdgeInsets.all(8),
+                                  child: CToast.instance.showLoader(),
+                                )
+                              : Text('Sign in',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700)),
                           onPressed: isLoading
                               ? null
                               : () {

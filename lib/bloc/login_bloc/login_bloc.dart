@@ -72,12 +72,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             msg: event.msg,
           ),
         );
-      } else {
-        emit(
-          LoginErrorState(
-            msg: "Cannot initialize the user",
-          ),
-        );
+      // } else {
+      //   emit(
+      //     LoginErrorState(
+      //       msg: "Cannot initialize the user",
+      //     ),
+      //   );
       }
     } catch (e) {
       emit(

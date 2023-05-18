@@ -54,15 +54,26 @@ class AuthRepoImpl extends AuthRepo {
 
     http.Response response =
         await AuthClient.instance.doPost(ApiConstant.LOGIN, body);
-    // print(body);
-    print(response.body);
+    print(body);
+    dynamic jsonData = jsonDecode(response.body);
+    String message = '';
+
+    if (jsonData['errors'] != null) {
+      Map<String, dynamic> errors = jsonData['errors'];
+      String fieldName = errors.keys.first;
+      String errorValue = errors[fieldName][0];
+
+      // Construct the error message with the field name
+      message = '$fieldName $errorValue';
+    }
+    print(message);
     if (response.statusCode == 200) {
-      dynamic jsonData = jsonDecode(response.body);
+      // dynamic jsonData = jsonDecode(response.body);
       return jsonData;
-    } else if (response.statusCode == 403) {
-      throw "Email or password is invalid";
+      // } else if (response.statusCode == 403) {
+      //   throw "Email or password is invalid";
     } else {
-      throw response.body;
+      throw message;
     }
   }
   // @override

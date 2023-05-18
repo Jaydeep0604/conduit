@@ -1,6 +1,7 @@
-import 'package:conduit/bloc/all_articles_bloc/all_airtist_event.dart';
+import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
+import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/yourfeed.dart';
@@ -272,6 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: FlatButton(
                           height: 40,
                           color: AppColors.primaryColor,
+                          // disabledColor: AppColors.Bottom_bar_color,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           child: new Text('Confirm',
@@ -282,11 +284,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       //fontFamily: KSMFontFamily.robotoRgular
                                       )
                                   .copyWith(color: Colors.white)),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
+                          onPressed: ()async {
+                            await hiveStore.logOut();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
+                              (route) => false,
+                            );
                           },
                         ),
                       ),

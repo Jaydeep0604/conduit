@@ -33,8 +33,8 @@ class CToast {
       backgroundColor: Colors.red[400],
       behavior: SnackBarBehavior.floating,
       elevation: 10,
-      // behavior: SnackBarBehavior.floating,
-      duration: Duration(seconds: 5),
+      // duration: Duration(seconds: 2),
+      duration: Duration(milliseconds: 1200),
       dismissDirection: DismissDirection.horizontal,
 
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -49,13 +49,15 @@ class CToast {
         "$msg",
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: AppColors.primaryColor,
-            fontSize: 12,
-            // fontFamily: KSMFontFamily.robotomedium
-            ),
+          color: AppColors.primaryColor,
+          fontSize: 12,
+          // fontFamily: KSMFontFamily.robotomedium
+        ),
       ),
+      // backgroundColor: AppColors.black,
       behavior: SnackBarBehavior.floating,
-      duration: Duration(seconds: 2),
+      // duration: Duration(seconds: 2),
+      duration: Duration(milliseconds: 1200),
       elevation: 10,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));
@@ -64,9 +66,10 @@ class CToast {
   showLoader() {
     return Center(
         child: LoadingAnimationWidget.threeArchedCircle(
-      color: MyApp.themeNotifier.value == ThemeMode.dark
-          ? Colors.white
-          : Colors.black,
+      color: Colors.black,
+      // MyApp.themeNotifier.value == ThemeMode.dark
+      //     ? Colors.white
+      //     : Colors.black,
       size: 40,
     ));
   }
@@ -105,6 +108,7 @@ class CToast {
         textColor: Colors.white,
         fontSize: 12.0);
   }
+
   showToast(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
@@ -113,10 +117,10 @@ class CToast {
         "$msg",
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: AppColors.black,
-            fontSize: 12,
-            // fontFamily: KSMFontFamily.robotomedium
-            ),
+          color: AppColors.black,
+          fontSize: 12,
+          // fontFamily: KSMFontFamily.robotomedium
+        ),
       ),
       behavior: SnackBarBehavior.floating,
       duration: Duration(seconds: 2),
@@ -125,6 +129,4 @@ class CToast {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));
   }
-
-
 }
