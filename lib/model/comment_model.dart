@@ -28,15 +28,38 @@ class CommentModel {
   String? body;
   Author? author;
 
-  CommentModel({this.id, this.createdAt, this.updatedAt, this.body, this.author});
+  CommentModel(
+      {this.id, this.createdAt, this.updatedAt, this.body, this.author});
 
-  CommentModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    body = json['body'];
-    author =
-        json['author'] != null ? new Author.fromJson(json['author']) : null;
+  // CommentModel.fromJson(Map<String, dynamic> json) {
+  //   id = json['id'];
+  //   createdAt = json['createdAt'];
+  //   updatedAt = json['updatedAt'];
+  //   body = json['body'];
+  //   author =
+  //       json['author'] != null ? new Author.fromJson(json['author']) : null;
+  // }
+  // factory CommentModel.fromJson(Map<String, dynamic> json) {
+  //   return CommentModel(
+  //     id: json['id'] as int?,
+  //     createdAt: json['createdAt'] as String?,
+  //     updatedAt: json['updatedAt'] as String?,
+  //     body: json['body'] as String?,
+  //     author: json['author'] != null
+  //         ? Author.fromJson(json['author'] as Map<String, dynamic>)
+  //         : null,
+  //   );
+  // }
+  factory CommentModel.fromJson(Map<String, dynamic>? json) {
+    return CommentModel(
+      id: json?['id'] as int?,
+      createdAt: json?['createdAt'] as String?,
+      updatedAt: json?['updatedAt'] as String?,
+      body: json?['body'] as String?,
+      author: json?['author'] != null
+          ? Author.fromJson(json!['author'] as Map<String, dynamic>?)
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -54,19 +77,34 @@ class CommentModel {
 
 class Author {
   String? username;
-  Null? bio;
+  String? bio;
   String? image;
   bool? following;
 
   Author({this.username, this.bio, this.image, this.following});
 
-  Author.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
-    bio = json['bio'];
-    image = json['image'];
-    following = json['following'];
+  // Author.fromJson(Map<String, dynamic> json) {
+  //   username = json['username'];
+  //   bio = json['bio'];
+  //   image = json['image'];
+  //   following = json['following'];
+  // }
+  // factory Author.fromJson(Map<String, dynamic>? json) {
+  //   return Author(
+  //     username: json?['username'] as String?,
+  //     bio: json?['bio'],
+  //     image: json?['image'] as String?,
+  //     following: json?['following'] as bool?,
+  //   );
+  // }
+  factory Author.fromJson(Map<String, dynamic>? json) {
+    return Author(
+      username: json?['username'] as String?,
+      bio: json?['bio'] as String, // Update the type to String?
+      image: json?['image'] as String?,
+      following: json?['following'] as bool?,
+    );
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['username'] = this.username;
@@ -76,4 +114,3 @@ class Author {
     return data;
   }
 }
-

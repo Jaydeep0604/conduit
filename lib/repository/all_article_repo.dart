@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/config/shared_preferences_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/services/user_client.dart';
+import 'package:conduit/ui/home/globle_item_detail_screen.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 
@@ -81,7 +83,16 @@ class AllArticlesImpl extends AllArticlesRepo {
   }
 
   Future<List<CommentModel>> getComment() async {
-    String url = ApiConstant.SUB_COMMENT_URL;
+    // GlobalItemDetailScreen detailScreen = GlobalItemDetailScreen();
+    // detailScreen.slug();
+    String title;
+    final pref = await sharedPreferencesStore.getTitle();
+    title = await pref['title'];
+    // String url ="https://api.realworld.io/api/articles/Climate-change-132627/comments";
+    String url = ApiConstant.BASE_COMMENT_URL +
+        "/${title}" +
+        ApiConstant.END_COMMENT_URL;
+    print(url);
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.get(
       Uri.parse(url),
@@ -95,9 +106,16 @@ class AllArticlesImpl extends AllArticlesRepo {
 
     if (response.statusCode == 200) {
       // dynamic data = jsonDecode(jsonData);
-      List<dynamic> data = jsonData["articles"];
-      List<CommentModel> s =
-          List.from((data).map((e) => CommentModel.fromJson(e)));
+      List<dynamic> data = jsonData["comments"];
+      print(data);
+      List<CommentModel> s = List<CommentModel>.from(
+          data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
+
+      // List<CommentModel> s = List<CommentModel>.from(
+      //     data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
+
+      // List<CommentModel> s =
+      //     List.from((data).map((e) => CommentModel.fromJson(e)));
       return s;
     } else {
       throw Exception();

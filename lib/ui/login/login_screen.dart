@@ -26,9 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
   late LoginBloc loginBloc;
   late RegisterBloc registerBloc;
   late TextEditingController emailCtr =
-      TextEditingController(text: "jaydeep@mailinator.com");
+      TextEditingController();
   late TextEditingController passwordCtr =
-      TextEditingController(text: "Test@123");
+      TextEditingController();
   @override
   void initState() {
     // emailCtr = TextEditingController();

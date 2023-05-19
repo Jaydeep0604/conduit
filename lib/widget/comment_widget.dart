@@ -81,23 +81,23 @@ class _CommentWidgetState extends State<CommentWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 15,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                            "${widget.commentModel.author!.image}"),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "${widget.commentModel.author!.username}",
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
+                    // CircleAvatar(
+                    //   radius: 15,
+                    //   child: ClipRRect(
+                    //     borderRadius: BorderRadius.circular(50),
+                    //     child: Image.network(
+                    //         "${widget.commentModel.author!.image}"),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
+                    // Text(
+                    //   "${widget.commentModel.author!.username}",
+                    //   style: TextStyle(
+                    //     color: AppColors.primaryColor,
+                    //   ),
+                    // ),
                     SizedBox(
                       width: 10,
                     ),

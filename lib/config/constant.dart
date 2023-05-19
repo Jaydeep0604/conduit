@@ -1,4 +1,6 @@
 class ApiConstant {
+
+  //Github : https://github.com/gothinkster 
   static const website = "https://demo.realworld.io/#/";
   // /*#1*/ static const BASE_URL = "https://kstream.xceltec.in:3004";
   // /*#2*/ static const SUB_URL = "/kstream";
@@ -13,7 +15,7 @@ class ApiConstant {
 
   String?  title;
   static const BASE_COMMENT_URL = "https://api.realworld.io/api/articles";
-  static const SUB_COMMENT_URL = "/comments";
+  static const END_COMMENT_URL = "/comments";
   // static String COMMENT = BASE_COMMENT_URL+"/$title"+SUB_COMMENT_URL;
   
 
