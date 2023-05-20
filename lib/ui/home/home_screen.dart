@@ -1,8 +1,12 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
+import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
+import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
+import 'package:conduit/ui/home/comment_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/yourfeed.dart';
 import 'package:conduit/ui/login/login_screen.dart';
@@ -38,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final pages = [
     const GlobalScreen(),
-    const YourFeedScreen(),
+    YourFeedScreen(),
     BlocProvider(
       create: (context) => NewArticleBloc(),
       child: AddArticleScreen(),
@@ -284,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       //fontFamily: KSMFontFamily.robotoRgular
                                       )
                                   .copyWith(color: Colors.white)),
-                          onPressed: ()async {
+                          onPressed: () async {
                             await hiveStore.logOut();
                             Navigator.pushAndRemoveUntil(
                               context,

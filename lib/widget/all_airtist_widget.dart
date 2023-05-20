@@ -1,7 +1,10 @@
+import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/ui/home/globle_item_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllAirtistWidget extends StatefulWidget {
   AllAirtistWidget({Key? key, required this.articlesModel}) : super(key: key);
@@ -27,12 +30,15 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                GlobalItemDetailScreen(allArticlesModel: widget.articlesModel),
+            builder: (context) => BlocProvider(
+              create: (context) => CommentBloc(repo: AllArticlesImpl()),
+              child: GlobalItemDetailScreen(
+                  allArticlesModel: widget.articlesModel),
+            ),
           ),
         );
       },
-      onDoubleTap: (){
+      onDoubleTap: () {
         _toggleObscured();
       },
       child: Container(
@@ -168,12 +174,13 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                                 color: AppColors.white2),
                             child: Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 3),
-                                  child: Text(
-                              " ${widget.articlesModel.tagList![index]} ",
-                              style: TextStyle(fontSize: 11),
-                            ),
-                                )));
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 3),
+                              child: Text(
+                                " ${widget.articlesModel.tagList![index]} ",
+                                style: TextStyle(fontSize: 11),
+                              ),
+                            )));
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(

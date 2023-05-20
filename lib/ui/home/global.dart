@@ -1,4 +1,3 @@
-import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_airtist_widget.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,5 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
+import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
@@ -53,6 +54,9 @@ Future<void> main() async {
     ),
     BlocProvider(
       create: (context) => ProfileBloc(repo: ProfileRepoImpl()),
+    ),
+    BlocProvider(
+      create: (context) => CommentBloc(repo: AllArticlesImpl()),
     ),
     BlocProvider(
       create: (context) => RegisterBloc(authRepo: AuthRepoImpl()),

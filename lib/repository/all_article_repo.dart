@@ -8,6 +8,7 @@ import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/services/user_client.dart';
 import 'package:conduit/ui/home/globle_item_detail_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,15 +84,15 @@ class AllArticlesImpl extends AllArticlesRepo {
   }
 
   Future<List<CommentModel>> getComment() async {
-    // GlobalItemDetailScreen detailScreen = GlobalItemDetailScreen();
-    // detailScreen.slug();
-    String title;
+    String? slug;
+    // GlobalItemDetailScreen globalItemDetailScreen = GlobalItemDetailScreen();
+    // slug = await globalItemDetailScreen.allArticlesModel!.slug;
+    // print("slug of globle detail screen :: $slug");
     final pref = await sharedPreferencesStore.getTitle();
-    title = await pref['title'];
-    // String url ="https://api.realworld.io/api/articles/Climate-change-132627/comments";
-    String url = ApiConstant.BASE_COMMENT_URL +
-        "/${title}" +
-        ApiConstant.END_COMMENT_URL;
+    slug = await pref['slug'];
+    // String url ="https://api.realworld.io/api/articles/The-Kauwa-Kaate-Fake-News-Detection-System:-Demo-135353/comments";
+    String url =
+        ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
     print(url);
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.get(

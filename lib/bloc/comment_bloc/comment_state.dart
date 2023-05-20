@@ -25,9 +25,12 @@ class NoCommentState extends CommentState {
 
 class CommentSuccessState extends CommentState {
   List<CommentModel> commentModel;
-  CommentSuccessState({required this.commentModel});
+  bool hasReachedMax;
+  CommentSuccessState({this.hasReachedMax = true, required this.commentModel});
   @override
-  List<Object?> get props => [this.commentModel];
+  List<Object?> get props => [
+        this.commentModel,
+      ];
   // String toString() {
   //   return msg;
   // }

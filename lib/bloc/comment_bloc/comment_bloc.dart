@@ -6,8 +6,8 @@ import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
-  AllArticlesRepo repo = AllArticlesImpl();
-  CommentBloc() : super(CommentInitialState()) {
+  AllArticlesRepo repo;
+  CommentBloc({required this.repo}) : super(CommentInitialState()) {
     on<fetchCommentEvent>(_onFetchCommentEvent);
   }
   _onFetchCommentEvent(
@@ -18,11 +18,11 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       if (data.isEmpty) {
         emit(NoCommentState());
       } else {
-        // sharedPreferencesStore.logOut();
+        sharedPreferencesStore.logOut();
         emit(CommentSuccessState(commentModel: data));
       }
     } catch (e) {
-      // sharedPreferencesStore.logOut();
+      sharedPreferencesStore.logOut();
       emit(
         CommentErrorState(
           msg: e.toString(),

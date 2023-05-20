@@ -20,5 +20,5 @@ class ApiConstant {
   
 
   static const TOKEN =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpheUBtYWlsaW5hdG9yLmNvbSIsInVzZXJuYW1lIjoiSnZrIiwiaWF0IjoxNjg0Mjk4OTA4LCJleHAiOjE2ODk0ODI5MDh9.oIfdm0LyWHuzu7qeMUNml8CLyrghjeWOdt_xsODpiYM";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpheWRlZXBwcEBtYWlsaW5hdG9yLmNvbSIsInVzZXJuYW1lIjoiSmF5ZGVlcHBwIiwiaWF0IjoxNjg0NDk2NTY1LCJleHAiOjE2ODk2ODA1NjV9.TAKbvNlhVw0Qu4P7cuJ3H9shzwKp5QvpRrMUP8P93M0";
 }
