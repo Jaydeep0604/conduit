@@ -1,11 +1,17 @@
 import 'dart:async';
+import 'package:conduit/bloc/add_comment_bloc/add_comment_bloc.dart';
+import 'package:conduit/bloc/add_comment_bloc/add_comment_event.dart';
+import 'package:conduit/bloc/add_comment_bloc/add_comment_state.dart';
+import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/config/shared_preferences_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/ui/home/comment_screen.dart';
 import 'package:conduit/ui/home/user_profile_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GlobalItemDetailScreen extends StatefulWidget {
   GlobalItemDetailScreen({
@@ -21,15 +27,19 @@ class GlobalItemDetailScreen extends StatefulWidget {
 class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
   Timer? timer;
   bool comment = false;
+  bool isLoading = false;
 
+  GlobalKey<FormState> _form = GlobalKey<FormState>();
   void initState() {
     super.initState();
-    store();
+
     timer = Timer(Duration(seconds: 2), () {
       setState(() {
         comment = true;
       });
     });
+
+    store();
   }
 
   store() async {
@@ -94,8 +104,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
             children: [
               if (comment == false)
                 Expanded(
-                  child: Center(
-                      child: CToast.instance.showLoader()),
+                  child: CToast.instance.showLoader(),
                 ),
               if (comment == true)
                 Expanded(
@@ -479,136 +488,14 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 15, right: 15),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                    color: AppColors.black.withOpacity(0.5),
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      maxLines: 3,
-                                      autofocus: false,
-                                      // initialValue: detail.bio.toString(),
-                                      cursorColor: AppColors.primaryColor,
-                                      keyboardType: TextInputType.text,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        hintText: "Write a comment...",
-                                        filled: true,
-                                        fillColor: AppColors.white2,
-                                        contentPadding:
-                                            const EdgeInsets.all(10),
-                                        prefixIcon: Padding(
-                                          padding: const EdgeInsets.all(15.0),
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        disabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 3,
-                                              color: AppColors.white2),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 3,
-                                              color: AppColors.white2),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 3,
-                                              color: AppColors.white2),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 3,
-                                              color: AppColors.white2),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 3,
-                                              color: AppColors.white2),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        //prefixText: 'GJ011685',
-                                      ),
-                                      // controller: emailCtr,
-                                    ),
-                                    Divider(
-                                      color: AppColors.black.withOpacity(0.5),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: AppColors.white2,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3, horizontal: 8),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 15,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: Image.network(
-                                                    "${widget.allArticlesModel?.author!.image}"),
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 5),
-                                                child: Text(
-                                                  "Post Comment",
-                                                  style: TextStyle(
-                                                    color: AppColors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            AddCommentScreen(
+                                allArticlesModel: widget.allArticlesModel),
                             SizedBox(
                               height: 8,
                             ),
                             SizedBox(
                               child: comment
-                                  ? CommentScreen()
+                                  ? CommentViewScreen()
                                   : CToast.instance.showLoader(),
                               // : SizedBox(),
                             ),

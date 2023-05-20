@@ -43,10 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final pages = [
     const GlobalScreen(),
     YourFeedScreen(),
-    BlocProvider(
-      create: (context) => NewArticleBloc(),
-      child: AddArticleScreen(),
-    )
+    AddArticleScreen()
   ];
 
   @override

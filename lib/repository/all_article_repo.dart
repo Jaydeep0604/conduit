@@ -7,14 +7,13 @@ import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/services/user_client.dart';
-import 'package:conduit/ui/home/globle_item_detail_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData();
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
+  Future<dynamic> addComment(CommentModel commentModel);
   Future<List<CommentModel>> getComment();
 }
 
@@ -49,6 +48,50 @@ class AllArticlesImpl extends AllArticlesRepo {
     Map<String, dynamic> body = newArticleModel.toJson();
     http.Response response =
         await UserClient.instance.doPost(ApiConstant.ADD_ARTICLE, body);
+    print(body);
+    dynamic jsonData = jsonDecode(response.body);
+    String message = '';
+
+    if (jsonData['errors'] != null) {
+      Map<String, dynamic> errors = jsonData['errors'];
+      String fieldName = errors.keys.first;
+      String errorValue = errors[fieldName][0];
+
+      // Construct the error message with the field name
+      message = '$fieldName $errorValue';
+    }
+    // if (jsonData['errors'] != null) {
+    //   Map<String, dynamic> errors = jsonData['errors'];
+    //   String fieldName = errors.keys.first;
+    //   errorMessage = errors[fieldName][0];
+
+    //   // Remove unnecessary parts
+    //   errorMessage = errorMessage
+    //       .replaceAll('{"$fieldName":', '')
+    //       .replaceAll('[', '')
+    //       .replaceAll(']', '')
+    //       .replaceAll('"', '');
+    // }
+    if (response.statusCode == 200) {
+      // dynamic jsonData = jsonDecode(response.body);
+      return message;
+    } else if (response.statusCode == 403) {
+      throw message;
+    } else {
+      throw message;
+    }
+  }
+
+  Future addComment(CommentModel commentModel) async {
+    String? slug;
+    final pref = await sharedPreferencesStore.getTitle();
+    slug = await pref['slug'];
+    String url =
+        ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
+    print(url);
+    Map<String, dynamic> body = commentModel.toJson();
+    http.Response response =
+        await UserClient.instance.doPost(url, body);
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';

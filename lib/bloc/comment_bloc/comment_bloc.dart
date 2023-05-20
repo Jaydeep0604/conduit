@@ -18,7 +18,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       if (data.isEmpty) {
         emit(NoCommentState());
       } else {
-        sharedPreferencesStore.logOut();
+        // sharedPreferencesStore.logOut();
         emit(CommentSuccessState(commentModel: data));
       }
     } catch (e) {
