@@ -1,19 +1,35 @@
+import 'package:conduit/config/shared_preferences_store.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-
 class CommentWidget extends StatefulWidget {
-  CommentWidget({Key? key, required this.commentModel}) : super(key: key);
+  CommentWidget(
+      {Key? key, required this.commentModel, required this.deleteWidget})
+      : super(key: key);
   CommentModel commentModel;
+
+  Widget deleteWidget;
 
   @override
   State<CommentWidget> createState() => _CommentWidgetState();
 }
 
 class _CommentWidgetState extends State<CommentWidget> {
+  @override
+  initState() {
+    super.initState();
+    commentIdStore();
+  }
+
+  commentIdStore() async {
+    if (widget.commentModel.id != "")
+      sharedPreferencesStore.storeCommentId(
+        await widget.commentModel.id!,
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -104,13 +120,11 @@ class _CommentWidgetState extends State<CommentWidget> {
                     DateFormat('yyyy-MM-dd').format(
                         DateTime.parse(widget.commentModel.createdAt ?? '')),
                     style: TextStyle(color: AppColors.Box_width_color),
-
                   ),
                   Spacer(),
-                  Icon(
-                    Icons.delete_forever_rounded,
-                    color: AppColors.primaryColor,
-                  )
+                  SizedBox(
+                    child: widget.deleteWidget,
+                  ),
                 ],
               ),
             ),

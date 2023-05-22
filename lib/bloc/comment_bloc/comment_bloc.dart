@@ -9,6 +9,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   AllArticlesRepo repo;
   CommentBloc({required this.repo}) : super(CommentInitialState()) {
     on<fetchCommentEvent>(_onFetchCommentEvent);
+    on<deleteCommentEvent>(_onDeleteCommentEvent);
   }
   _onFetchCommentEvent(
       fetchCommentEvent event, Emitter<CommentState> emit) async {
@@ -22,7 +23,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         emit(CommentSuccessState(commentModel: data));
       }
     } catch (e) {
-      sharedPreferencesStore.logOut();
+      sharedPreferencesStore.removeSlug();
       emit(
         CommentErrorState(
           msg: e.toString(),
@@ -30,4 +31,23 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       );
     }
   }
+
+  _onDeleteCommentEvent(deleteCommentEvent event, Emitter<CommentState> emit) async {
+  try {
+    emit(CommentLoadingState());
+    dynamic data = await repo.deleteComment(event.commentId);
+    if (data == 1) {
+      emit(DeleteCommentSuccessState());
+    } else {
+      emit(DeleteCommentErrorState(msg: "Something want wrong please try again later"));
+    }
+  } catch (e) {
+    emit(
+      CommentErrorState(
+        msg: e.toString(),
+      ),
+    );
+  }
+}
+
 }

@@ -2,14 +2,12 @@ import 'dart:async';
 import 'package:conduit/bloc/add_comment_bloc/add_comment_bloc.dart';
 import 'package:conduit/bloc/add_comment_bloc/add_comment_event.dart';
 import 'package:conduit/bloc/add_comment_bloc/add_comment_state.dart';
-import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/bloc/comment_bloc/comment_state.dart';
 import 'package:conduit/config/shared_preferences_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
-import 'package:conduit/ui/home/comment_screen.dart';
 import 'package:conduit/ui/home/user_profile_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
@@ -32,7 +30,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
   Timer? timer;
   bool comment = false;
   bool isLoading = false;
-
+  bool isDeleting = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late AddCommentBloc addCommentBloc;
   TextEditingController? commentCtr;
@@ -49,7 +47,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
       });
     }
 
-    store();
+    slugStore();
 
     commentCtr = TextEditingController();
     addCommentBloc = context.read<AddCommentBloc>();
@@ -58,7 +56,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
     commentBloc.add(fetchCommentEvent());
   }
 
-  store() async {
+  slugStore() async {
     sharedPreferencesStore.storeSlug(
       await widget.allArticlesModel!.slug!,
     );
@@ -642,12 +640,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                       height: 30,
                                                       width: 120,
                                                       decoration: BoxDecoration(
-                                                        color: commentCtr!
-                                                                .text.isNotEmpty
-                                                            ? AppColors
-                                                                .primaryColor
-                                                            : AppColors
-                                                                .button_color,
+                                                        color: AppColors
+                                                            .primaryColor,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(5),
@@ -699,7 +693,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 5),
+                                            SizedBox(height: 10),
                                           ],
                                         ),
                                       ),
@@ -708,15 +702,14 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                 ),
                                 BlocBuilder<CommentBloc, CommentState>(
                                   builder: (context, state) {
-                                    if (state is CommentErrorState) {
-                                      return CToast.instance
-                                          .showError(context, state.msg);
-                                    }
+                                    // if (state is CommentErrorState) {
+                                    //   return CToast.instance
+                                    //       .showError(context, state.msg);
+                                    // }
                                     if (state is CommentLoadingState) {
                                       return Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 15, bottom: 5),
-                                        child: Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: SizedBox(
                                           height: 30,
                                           child: CToast.instance.showLoader(),
                                         ),
@@ -725,20 +718,39 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                     if (state is NoCommentState) {
                                       return SizedBox();
                                     }
+                                    if (state is DeleteCommentSuccessState) {
+                                      refreshComments();
+                                    }
                                     if (state is CommentSuccessState) {
                                       return Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 15,
-                                            right: 15,
-                                            top: 10,
-                                            bottom: 10),
+                                            left: 15, right: 15, top: 10),
                                         child: ListView.separated(
                                           primary: false,
                                           shrinkWrap: true,
+                                          reverse: true,
                                           scrollDirection: Axis.vertical,
                                           itemCount: state.commentModel.length,
                                           itemBuilder: (context, index) {
                                             return CommentWidget(
+                                              deleteWidget: InkWell(
+                                                onTap: () {
+                                                  commentBloc.add(
+                                                      deleteCommentEvent(state
+                                                          .commentModel
+                                                          .last
+                                                          .id!));
+                                                },
+                                                child: isDeleting
+                                                    ? CToast.instance
+                                                        .showLoader()
+                                                    : Icon(
+                                                        Icons
+                                                            .delete_forever_rounded,
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                      ),
+                                              ),
                                               commentModel:
                                                   state.commentModel[index],
                                             );
@@ -758,15 +770,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                 ),
                               ],
                             ),
-                            // CommentViewScreen(
-                            //     allArticlesModel: widget.allArticlesModel),
-                            // SizedBox(
-                            //   child: comment
-                            //       ? CommentViewScreen(allArticlesModel: widget.allArticlesModel)
-                            //       : CToast.instance.showLoader(),
-                            //   // : SizedBox(),
-                            // ),
-                            SizedBox(height: 10.0),
+                            SizedBox(height: 15),
                           ],
                         ),
                       ],

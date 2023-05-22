@@ -46,3 +46,24 @@ class CommentErrorState extends CommentState {
     return msg;
   }
 }
+
+class DeleteCommentErrorState extends CommentState {
+  String msg;
+  DeleteCommentErrorState({required this.msg});
+  @override
+  List<Object?> get props => [msg];
+  @override
+  String toString() {
+    return msg;
+  }
+}
+
+class DeleteCommentSuccessState extends CommentState {
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteCommentLoadingState extends CommentState {
+  @override
+  List<Object?> get props => [];
+}

@@ -15,6 +15,7 @@ abstract class AllArticlesRepo {
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
   Future<String> addComment(AddCommentModel addCommentModel);
   Future<List<CommentModel>> getComment();
+  Future<int> deleteComment(int commentId);
 }
 
 class AllArticlesImpl extends AllArticlesRepo {
@@ -84,7 +85,7 @@ class AllArticlesImpl extends AllArticlesRepo {
 
   Future<String> addComment(AddCommentModel addCommentModel) async {
     String? slug;
-    final pref = await sharedPreferencesStore.getTitle();
+    final pref = await sharedPreferencesStore.getSlug();
     slug = await pref['slug'];
     // String url =
     //     "https://api.realworld.io/api/articles/Creativity_Is_a_Process_Not_an_Event-179946/comments";
@@ -140,7 +141,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     // GlobalItemDetailScreen globalItemDetailScreen = GlobalItemDetailScreen();
     // slug = await globalItemDetailScreen.allArticlesModel!.slug;
     // print("slug of globle detail screen :: $slug");
-    final pref = await sharedPreferencesStore.getTitle();
+    final pref = await sharedPreferencesStore.getSlug();
     slug = await pref['slug'];
     // String url ="https://api.realworld.io/api/articles/The-Kauwa-Kaate-Fake-News-Detection-System:-Demo-135353/comments";
     String url =
@@ -172,6 +173,71 @@ class AllArticlesImpl extends AllArticlesRepo {
       return s;
     } else {
       throw Exception();
+    }
+  }
+
+  // Future<int> deleteComment() async {
+  //   String? slug;
+  //   int? CommentId;
+  //   final pref = await sharedPreferencesStore.getSlug();
+  //   slug = await pref['slug'];
+  //   final pref2 = await sharedPreferencesStore.getCommentId();
+  //   CommentId = await pref['commentId'];
+  //   String url = ApiConstant.BASE_COMMENT_URL +
+  //       "/${slug}" +
+  //       ApiConstant.END_COMMENT_URL +
+  //       "/${CommentId}";
+  //   print(url);
+  //   Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+  //   http.Response response = await http.get(
+  //     Uri.parse(url),
+  //     headers: {
+  //       "content-type": "application/json",
+  //       "Authorization": "Bearer ${detailModel!.values.first.token}"
+  //     },
+  //   );
+  //   Map<String, dynamic> jsonData = json.decode(response.body);
+
+  //   if (response.statusCode == 200) {
+  //     int data = 1;
+  //     // List<dynamic> data = jsonData["comments"];
+  //     // print(data);
+  //     // List<CommentModel> s = List<CommentModel>.from(
+  //     //     data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
+
+  //     return data;
+  //   } else {
+  //     throw Exception();
+  //   }
+  // }
+  Future<int> deleteComment(int commentId) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String? slug;
+    final pref = await sharedPreferencesStore.getSlug();
+    slug = await pref['slug'];
+    // final pref2 = await sharedPreferencesStore.getCommentId();
+    // commentId = await pref['commentId'];
+
+    // Construct the URL for the delete request
+    String url = ApiConstant.BASE_COMMENT_URL +
+        "/${slug}" +
+        ApiConstant.END_COMMENT_URL +
+        "/${commentId}";
+
+    // Perform the delete request
+    http.Response response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+
+    // Check the response status code
+    if (response.statusCode == 200) {
+      return 1;
+    } else {
+      throw Exception('Failed to delete comment');
     }
   }
 }
