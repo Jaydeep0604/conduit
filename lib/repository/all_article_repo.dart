@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData();
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
-  Future<dynamic> addComment(CommentModel commentModel);
+  Future<String> addComment(AddCommentModel addCommentModel);
   Future<List<CommentModel>> getComment();
 }
 
@@ -82,20 +82,20 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 
-  Future addComment(CommentModel commentModel) async {
+  Future<String> addComment(AddCommentModel addCommentModel) async {
     String? slug;
     final pref = await sharedPreferencesStore.getTitle();
     slug = await pref['slug'];
+    // String url =
+    //     "https://api.realworld.io/api/articles/Creativity_Is_a_Process_Not_an_Event-179946/comments";
     String url =
         ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
     print(url);
-    Map<String, dynamic> body = commentModel.toJson();
-    http.Response response =
-        await UserClient.instance.doPost(url, body);
+    Map<String, dynamic> body = addCommentModel.toJson();
+    http.Response response = await UserClient.instance.doPostComment(url, body);
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
-
     if (jsonData['errors'] != null) {
       Map<String, dynamic> errors = jsonData['errors'];
       String fieldName = errors.keys.first;
@@ -104,18 +104,6 @@ class AllArticlesImpl extends AllArticlesRepo {
       // Construct the error message with the field name
       message = '$fieldName $errorValue';
     }
-    // if (jsonData['errors'] != null) {
-    //   Map<String, dynamic> errors = jsonData['errors'];
-    //   String fieldName = errors.keys.first;
-    //   errorMessage = errors[fieldName][0];
-
-    //   // Remove unnecessary parts
-    //   errorMessage = errorMessage
-    //       .replaceAll('{"$fieldName":', '')
-    //       .replaceAll('[', '')
-    //       .replaceAll(']', '')
-    //       .replaceAll('"', '');
-    // }
     if (response.statusCode == 200) {
       // dynamic jsonData = jsonDecode(response.body);
       return message;
@@ -125,6 +113,27 @@ class AllArticlesImpl extends AllArticlesRepo {
       throw message;
     }
   }
+
+  // Future<String> addComment(AddCommentModel addCommentModel) async {
+  //   String? slug;
+  //   final pref = await sharedPreferencesStore.getTitle();
+  //   slug = await pref['slug'];
+  //   String url =
+  //       ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
+
+  //   Map<String, dynamic> body = addCommentModel.toJson();
+  //   http.Response response = await UserClient.instance.doPostComment(url, body);
+  //   print(body);
+
+  //   if (response.statusCode == 200) {
+  //     return "Comment added successfully";
+  //   } else if (response.statusCode == 403) {
+  //     throw "Authorization error";
+  //   } else {
+  //     // Handle other errors
+  //     throw "An error occurred";
+  //   }
+  // }
 
   Future<List<CommentModel>> getComment() async {
     String? slug;

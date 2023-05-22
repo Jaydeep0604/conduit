@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 abstract class AddCommentEvent extends Equatable {}
 
 class SubmitCommentEvent extends AddCommentEvent {
-  CommentModel commentModel;
-  SubmitCommentEvent({required this.commentModel});
+  AddCommentModel addCommentModel;
+  SubmitCommentEvent({required this.addCommentModel});
   @override
-  List<Object?> get props => [commentModel];
+  List<Object?> get props => [addCommentModel];
 }

@@ -114,3 +114,52 @@ class Author {
     return data;
   }
 }
+// class AddCommentModel {
+//   String? body;
+
+//   AddCommentModel({this.body});
+
+//   AddCommentModel.fromJson(Map<String, dynamic> json) {
+//     body = json['body'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['body'] = this.body;
+//     return data;
+//   }
+// }
+class AddCommentModel {
+  Comment? comment;
+
+  AddCommentModel({this.comment});
+
+  AddCommentModel.fromJson(Map<String, dynamic> json) {
+    comment =
+        json['comment'] != null ? new Comment.fromJson(json['comment']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.comment != null) {
+      data['comment'] = this.comment!.toJson();
+    }
+    return data;
+  }
+}
+
+class Comment {
+  String? body;
+
+  Comment({this.body});
+
+  Comment.fromJson(Map<String, dynamic> json) {
+    body = json['body'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['body'] = this.body;
+    return data;
+  }
+}

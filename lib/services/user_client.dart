@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:conduit/config/cHiveStore.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/c_exception.dart';
@@ -87,53 +88,133 @@ class UserClient {
   //   }
   // }
   Future<http.Response> doPost(String url, Map<String, dynamic> body,
-    {Map<String, String>? header}) async {
-  Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+      {Map<String, String>? header}) async {
+    Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
 
-  if (userData == null) {
-    return http.Response("{'msg':'No user found'}", 404);
-  }
+    if (userData == null) {
+      return http.Response("{'msg':'No user found'}", 404);
+    }
 
-  Map<String, String> head = {
-    "content-type": "application/json",
-    "Authorization": "Bearer ${userData.values.last.token}"
-  };
+    Map<String, String> head = {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${userData.values.last.token}"
+    };
 
-  if (header != null) {
-    head.addAll(header);
-  }
-  
-  NewArticleModel newArticleModel = NewArticleModel(
-    article: Article(
-      title: body.values.first["title"],
-      description: body.values.first["description"],
-      body: body.values.first["body"],
-      tagList: body.values.first["tagList"],
-    ),
-  );
+    if (header != null) {
+      head.addAll(header);
+    }
 
-  try {
-    http.Response response = await http.post(
-      Uri.parse(url),
-      body: jsonEncode(newArticleModel.toJson()),
-      headers: head,
+    NewArticleModel newArticleModel = NewArticleModel(
+      article: Article(
+        title: body.values.first["title"],
+        description: body.values.first["description"],
+        body: body.values.first["body"],
+        tagList: body.values.first["tagList"],
+      ),
     );
 
-    dynamic jsonData = jsonDecode(response.body);
-    if (response.statusCode != 403 && response.statusCode != 401) {
-      return response;
-    } else {
-      throw UnAuthorizedException(
-        message: jsonData['message'] ?? "Session Expired..!".toString(),
-        statusCode: response.statusCode,
+    try {
+      http.Response response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(newArticleModel.toJson()),
+        headers: head,
       );
-    }
-  } on UnAuthorizedException catch (e) {
-    hiveStore.clossSession();
-    return http.Response('{"message":"${e.message}"}', e.statusCode);
-  }
-}
 
+      dynamic jsonData = jsonDecode(response.body);
+      if (response.statusCode != 403 && response.statusCode != 401) {
+        return response;
+      } else {
+        throw UnAuthorizedException(
+          message: jsonData['message'] ?? "Session Expired..!".toString(),
+          statusCode: response.statusCode,
+        );
+      }
+    } on UnAuthorizedException catch (e) {
+      hiveStore.clossSession();
+      return http.Response('{"message":"${e.message}"}', e.statusCode);
+    }
+  }
+
+  Future<http.Response> doPostComment(String url, Map<String, dynamic> body,
+      {Map<String, String>? header}) async {
+    Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+
+    if (userData == null) {
+      return http.Response("{'msg':'No user found'}", 404);
+    }
+
+    Map<String, String> head = {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${userData.values.last.token}"
+    };
+
+    if (header != null) {
+      head.addAll(header);
+    }
+
+    // CommentModel commentModel = CommentModel(
+    //   body: body.values.last["body"] as String?,
+    // );
+
+    try {
+      http.Response response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(body),
+        headers: head,
+      );
+
+      dynamic jsonData = jsonDecode(response.body);
+      if (response.statusCode != 403 && response.statusCode != 401) {
+        return response;
+      } else {
+        throw UnAuthorizedException(
+          message: jsonData['message'] ?? "Session Expired..!".toString(),
+          statusCode: response.statusCode,
+        );
+      }
+    } on UnAuthorizedException catch (e) {
+      hiveStore.clossSession();
+      return http.Response('{"message":"${e.message}"}', e.statusCode);
+    }
+  }
+  // Future<http.Response> doPostComment(String url, Map<String, dynamic> body,
+  //     {Map<String, String>? header}) async {
+  //   Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+
+  //   if (userData == null) {
+  //     return http.Response("{'msg':'No user found'}", 404);
+  //   }
+
+  //   Map<String, String> head = {
+  //     "content-type": "application/json",
+  //     "Authorization": "Bearer ${userData.values.last.token}"
+  //   };
+
+  //   if (header != null) {
+  //     head.addAll(header);
+  //   }
+
+  //   try {
+  //     http.Response response = await http.post(
+  //       Uri.parse(url),
+  //       body: jsonEncode(body),
+  //       headers: head,
+  //     );
+
+  //     if (response.statusCode != 403 && response.statusCode != 401) {
+  //       return response;
+  //     } else {
+  //       dynamic jsonData = jsonDecode(response.body);
+  //       throw UnAuthorizedException(
+  //         message: jsonData['message'] ?? "Session Expired..!".toString(),
+  //         statusCode: response.statusCode,
+  //       );
+  //     }
+  //   } on UnAuthorizedException catch (e) {
+  //     hiveStore.clossSession();
+  //     return http.Response('{"message":"${e.message}"}', e.statusCode);
+  //   }
+  // }
   // Future<http.Response> doDelete(String url, Map<String, dynamic> body,
   //     {Map<String, String>? header}) async {
   //   Box<UserAccessData>? userData = await ksHiveStore.isExistUserBox();
