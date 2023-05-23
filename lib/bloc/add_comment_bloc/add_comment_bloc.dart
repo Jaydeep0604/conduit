@@ -8,12 +8,12 @@ class AddCommentBloc extends Bloc<AddCommentEvent, AddCommentState> {
     on<SubmitCommentEvent>(_onSubmitCommentEvent);
   }
   _onSubmitCommentEvent(
-      SubmitCommentEvent event, Emitter<AddCommentState> emitt) async {
+      SubmitCommentEvent event, Emitter<AddCommentState> emit) async {
     AllArticlesRepo repo = AllArticlesImpl();
     try {
       emit(AddCommentLoadingState());
       dynamic data;
-      data = await repo.addComment(event.addCommentModel,event.slug);
+      data = await repo.addComment(event.addCommentModel,event.slug!);
       emit(AddCommentSuccessState(msg: "New article added successfully"));
     } catch (e) {
       emit(AddCommentErroeState(msg: e.toString()));

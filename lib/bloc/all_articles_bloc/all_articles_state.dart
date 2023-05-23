@@ -1,6 +1,8 @@
 import 'package:conduit/model/all_artist_model.dart';
 
-abstract class AllArticlesState {}
+abstract class AllArticlesState {
+  late bool hasReachedMax;
+}
 
 class AllArticlesInitialState extends AllArticlesState {
   List<Object?> get props => [];
@@ -19,13 +21,9 @@ class AllArticlesLoadedStete extends AllArticlesState {
   bool hasReachedMax;
 
   AllArticlesLoadedStete(
-      {
-      this.hasReachedMax = true,
-      required this.allArticleslist});
+      {this.hasReachedMax = true, required this.allArticleslist});
   @override
-  List<Object?> get props => [
-        this.allArticleslist,
-      ];
+  List<Object?> get props => [this.allArticleslist, hasReachedMax];
 }
 
 class NoAllArticlesState extends AllArticlesState {

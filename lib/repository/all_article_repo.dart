@@ -11,7 +11,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AllArticlesRepo {
-  Future<List<AllArticlesModel>> getAllArticlesData();
+  Future<List<AllArticlesModel>> getAllArticlesData({int offset, int limit});
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
   Future<String> addComment(AddCommentModel addCommentModel, String slug);
   Future<List<CommentModel>> getComment(String slug);
@@ -20,8 +20,8 @@ abstract class AllArticlesRepo {
 
 class AllArticlesImpl extends AllArticlesRepo {
   @override
-  Future<List<AllArticlesModel>> getAllArticlesData() async {
-    String url = ApiConstant.ALL_Articles;
+  Future<List<AllArticlesModel>> getAllArticlesData({int? offset,int? limit,}) async {
+    String url = ApiConstant.ALL_Articles+ "?offset=$offset&limit=$limit";
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.get(
       Uri.parse(url),
@@ -31,6 +31,7 @@ class AllArticlesImpl extends AllArticlesRepo {
       },
     );
     Map<String, dynamic> jsonData = json.decode(response.body);
+    // print(response.body);
     // dynamic jsonData =jsonDecode(response.body);
 
     if (response.statusCode == 200) {
@@ -43,7 +44,6 @@ class AllArticlesImpl extends AllArticlesRepo {
       throw Exception();
     }
   }
-
   Future addNewArticle(NewArticleModel newArticleModel) async {
     String url = ApiConstant.ADD_ARTICLE;
     Map<String, dynamic> body = newArticleModel.toJson();

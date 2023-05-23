@@ -26,11 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   late AllArticlesBloc ArticlesBloc;
   bool isLoading = false;
 
-  @override
-  void initState() {
-    ArticlesBloc = context.read<AllArticlesBloc>();
-    ArticlesBloc.add(allArticlesEvent());
-  }
+
+  // @override
+  // void initState() {
+    
+  //   ArticlesBloc = context.read<AllArticlesBloc>();
+  //   ArticlesBloc.add(allArticlesEvent());
+  // }
+
 
   int _selectedIndex = 0;
 
@@ -40,11 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final pages = [
-    const GlobalScreen(),
-    YourFeedScreen(),
-    AddArticleScreen()
-  ];
+  final pages = [const GlobalScreen(), YourFeedScreen(), AddArticleScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: pages[_selectedIndex],
     );
   }
+
+  
+
 
   onLogout() {
     showAlertBottomSheet().then((value) {
