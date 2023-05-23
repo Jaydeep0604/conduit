@@ -25,7 +25,6 @@ class _GlobalScreenState extends State<GlobalScreen> {
                 // CircularProgressIndicator(
                 //   backgroundColor: Colors.black,
                 //   color: AppColors.white2,
-
                 // ),
                 );
           }

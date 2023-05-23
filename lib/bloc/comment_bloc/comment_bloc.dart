@@ -15,15 +15,13 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       fetchCommentEvent event, Emitter<CommentState> emit) async {
     try {
       emit(CommentLoadingState());
-      List<CommentModel> data = await repo.getComment();
+      List<CommentModel> data = await repo.getComment(event.slug);
       if (data.isEmpty) {
         emit(NoCommentState());
       } else {
-        // sharedPreferencesStore.logOut();
         emit(CommentSuccessState(commentModel: data));
       }
     } catch (e) {
-      sharedPreferencesStore.removeSlug();
       emit(
         CommentErrorState(
           msg: e.toString(),
@@ -32,22 +30,23 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     }
   }
 
-  _onDeleteCommentEvent(deleteCommentEvent event, Emitter<CommentState> emit) async {
-  try {
-    emit(CommentLoadingState());
-    dynamic data = await repo.deleteComment(event.commentId);
-    if (data == 1) {
-      emit(DeleteCommentSuccessState());
-    } else {
-      emit(DeleteCommentErrorState(msg: "Something want wrong please try again later"));
+  _onDeleteCommentEvent(
+      deleteCommentEvent event, Emitter<CommentState> emit) async {
+    try {
+      emit(CommentLoadingState());
+      dynamic data = await repo.deleteComment(event.commentId);
+      if (data == 1) {
+        emit(DeleteCommentSuccessState());
+      } else {
+        emit(DeleteCommentErrorState(
+            msg: "Something want wrong please try again later"));
+      }
+    } catch (e) {
+      emit(
+        CommentErrorState(
+          msg: e.toString(),
+        ),
+      );
     }
-  } catch (e) {
-    emit(
-      CommentErrorState(
-        msg: e.toString(),
-      ),
-    );
   }
-}
-
 }

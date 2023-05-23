@@ -5,7 +5,8 @@ abstract class AddCommentEvent extends Equatable {}
 
 class SubmitCommentEvent extends AddCommentEvent {
   AddCommentModel addCommentModel;
-  SubmitCommentEvent({required this.addCommentModel});
+  String slug;
+  SubmitCommentEvent({required this.addCommentModel,required this.slug});
   @override
-  List<Object?> get props => [addCommentModel];
+  List<Object?> get props => [addCommentModel,slug];
 }

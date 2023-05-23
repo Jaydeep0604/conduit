@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 abstract class CommentEvent extends Equatable {}
 
 class fetchCommentEvent extends CommentEvent {
+  String slug;
+  fetchCommentEvent({required this.slug});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [slug];
 }
 
 class deleteCommentEvent extends CommentEvent {
@@ -15,4 +17,3 @@ class deleteCommentEvent extends CommentEvent {
   @override
   List<Object?> get props => [commentId];
 }
-
