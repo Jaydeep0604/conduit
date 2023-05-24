@@ -1,19 +1,13 @@
-import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
-import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
-import 'package:conduit/bloc/comment_bloc/comment_event.dart';
-import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
 import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
-import 'package:conduit/ui/home/comment_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/yourfeed.dart';
 import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
+import 'package:conduit/ui/setting/setting_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,14 +19,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late AllArticlesBloc ArticlesBloc;
   bool isLoading = false;
-
-
-  // @override
-  // void initState() {
-    
-  //   ArticlesBloc = context.read<AllArticlesBloc>();
-  //   ArticlesBloc.add(allArticlesEvent());
-  // }
 
 
   int _selectedIndex = 0;
@@ -52,7 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         centerTitle: true,
+        leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingScreen(),
+                ),
+              );
+            },
+            child: Icon(Icons.settings)),
         title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               "conduit",
@@ -64,6 +62,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(),
+                  ),
+                );
+              },
+              child: Icon(Icons.person),
+            ),
+          )
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.primaryColor,
@@ -104,92 +118,89 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: AppColors.primaryColor),
         ],
       ),
-      drawer: Opacity(
-        opacity: 1,
-        child: Drawer(
-          backgroundColor: AppColors.white2,
-          child: ListView(
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                ),
-                child: Center(
-                    child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfileScreen()));
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.primaryColor),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor: AppColors.white2,
-                      child: Icon(
-                        Icons.person,
-                        color: AppColors.primaryColor,
-                        size: 65,
-                      ),
-                      radius: 45,
-                    ),
-                  ),
-                )),
-              ),
-              ListTile(
-                  title: const Text('Global'),
-                  leading: Icon(Icons.feed),
-                  onTap: () {
-                    Navigator.pop(context);
-                  }),
-              ListTile(
-                title: const Text('Your Feed'),
-                leading: Icon(Icons.people),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: InkWell(
-                  onTap: onLogout,
-                  child: IntrinsicWidth(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, bottom: 40),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Sign Out",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 16,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      // drawer: Opacity(
+      //   opacity: 1,
+      //   child: Drawer(
+      //     backgroundColor: AppColors.white2,
+      //     child: ListView(
+      //       children: [
+      //         DrawerHeader(
+      //           decoration: BoxDecoration(
+      //             color: AppColors.white,
+      //           ),
+      //           child: Center(
+      //               child: GestureDetector(
+      //             onTap: () {
+      //               Navigator.pop(context);
+      //               Navigator.push(
+      //                   context,
+      //                   MaterialPageRoute(
+      //                       builder: (context) => ProfileScreen()));
+      //             },
+      //             child: Container(
+      //               decoration: BoxDecoration(
+      //                 border: Border.all(color: AppColors.primaryColor),
+      //                 borderRadius: BorderRadius.circular(50),
+      //               ),
+      //               child: CircleAvatar(
+      //                 backgroundColor: AppColors.white2,
+      //                 child: Icon(
+      //                   Icons.person,
+      //                   color: AppColors.primaryColor,
+      //                   size: 65,
+      //                 ),
+      //                 radius: 45,
+      //               ),
+      //             ),
+      //           )),
+      //         ),
+      //         ListTile(
+      //             title: const Text('Global'),
+      //             leading: Icon(Icons.feed),
+      //             onTap: () {
+      //               Navigator.pop(context);
+      //             }),
+      //         ListTile(
+      //           title: const Text('Your Feed'),
+      //           leading: Icon(Icons.people),
+      //           onTap: () {
+      //             Navigator.pop(context);
+      //           },
+      //         ),
+      //         Align(
+      //           alignment: Alignment.bottomRight,
+      //           child: InkWell(
+      //             onTap: onLogout,
+      //             child: IntrinsicWidth(
+      //               child: Padding(
+      //                 padding: const EdgeInsets.only(
+      //                     left: 10.0, right: 10.0, bottom: 40),
+      //                 child: Row(
+      //                   children: [
+      //                     Text(
+      //                       "Sign Out",
+      //                       style: TextStyle(
+      //                         fontSize: 14.0,
+      //                       ),
+      //                     ),
+      //                     SizedBox(width: 5),
+      //                     Icon(
+      //                       Icons.arrow_forward_ios_rounded,
+      //                       size: 16,
+      //                     )
+      //                   ],
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      // ),
       body: pages[_selectedIndex],
     );
   }
-
-  
-
 
   onLogout() {
     showAlertBottomSheet().then((value) {

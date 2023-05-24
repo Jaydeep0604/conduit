@@ -1,13 +1,14 @@
 import 'package:conduit/model/auth_model.dart';
+import 'package:conduit/model/profile_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ProfileEvent extends Equatable {}
 
 class FetchProfileEvent extends ProfileEvent {
+  // FetchProfileEvent({});
   @override
   List<Object?> get props => [];
 }
-
 
 // ignore: must_be_immutable
 class DeleteProfileEvent extends ProfileEvent {
@@ -24,8 +25,8 @@ class DeleteProfileEvent extends ProfileEvent {
 
 // ignore: must_be_immutable
 class ChangeProfileEvent extends ProfileEvent {
-  AuthModel authModel;
-  ChangeProfileEvent({required this.authModel});
+  ProfileModel profileModel;
+  ChangeProfileEvent({required this.profileModel});
   @override
-  List<Object?> get props => [authModel];
+  List<Object?> get props => [profileModel];
 }

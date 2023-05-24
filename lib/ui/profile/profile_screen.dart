@@ -1,9 +1,13 @@
-import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/model/user_model.dart';
+import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
+import 'package:conduit/bloc/profile_bloc/profile_event.dart';
+import 'package:conduit/bloc/profile_bloc/profile_state.dart';
+import 'package:conduit/ui/favorite/favorite_screen.dart';
+import 'package:conduit/ui/my_article/my_article_screen.dart';
+import 'package:conduit/ui/setting/setting_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/message.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,384 +16,194 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  @override
+class _ProfileScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
+  late ProfileBloc profileBloc;
+  bool isLoading = false;
+
   void initState() {
     super.initState();
+    profileBloc = context.read<ProfileBloc>();
+    profileBloc.add(FetchProfileEvent());
   }
+
+  late final _tabController = TabController(length: 2, vsync: this);
+
+  final pages = [const MyArticlescreen(), FavoriteScreen()];
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus!.unfocus();
-      },
-      child: Scaffold(
-        // backgroundColor: AppColors.white2,
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          centerTitle: true,
-          title: Column(
-            children: [
-              Text(
-                "conduit",
-                style: TextStyle(color: AppColors.primaryColor2, fontSize: 30),
-              ),
-              Text(
-                "A place to share your knowledge.",
-                style: TextStyle(color: AppColors.white2, fontSize: 12),
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
+        centerTitle: true,
+        title: Text(
+          "Profile",
+          style: TextStyle(color: AppColors.primaryColor2, fontSize: 20),
         ),
-        body: SafeArea(
-          child: ValueListenableBuilder(
-            valueListenable:
-                Hive.box<UserAccessData>(hiveStore.userDetailKey).listenable(),
-            builder: (BuildContext context, dynamic box, Widget? child) {
-              UserAccessData? detail = box.get(hiveStore.userId);
-              return SingleChildScrollView(
-                child: GestureDetector(
-                  onTap: () {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus) {
-                      currentFocus.unfocus();
-                    }
-                  },
-                  child: Form(
-                    // key: _formKey,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                  color: AppColors.primaryColor, width: 1)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.network("${detail?.image ?? '--'}",
-                                  alignment: Alignment.center),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                autofocus: false,
-                                initialValue: detail!.userName.toString(),
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(8)
-                                ],
-                                style: TextStyle(
-                                  color: Colors.black,
+      ),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) {
+                if (state is ProfileErrorState) {
+                  CToast.instance.showError(context, state.message);
+                }
+                if (state is ProfileInitialState ||
+                    state is ProfileLoadingState) {
+                  return CToast.instance.showLoader();
+                }
+                if (state is ProfileLoadedState) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 15,right: 15,top: 10),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: AppColors.white2,
+                        border:
+                            Border.all(color: AppColors.black.withOpacity(0.1)),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, top: 20, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                border: Border.all(
+                                  color: AppColors.primaryColor,
+                                  width: 1,
                                 ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    //prefixText: 'GJ011685',
-                                    hintText: "Username"),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                maxLines: 5,
-                                autofocus: false,
-                                initialValue: detail.bio.toString(),
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(8)
-                                ],
-                                style: TextStyle(
-                                  color: Colors.black,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    '${state.profileList.last.image}',
+                                    alignment: Alignment.center,
+                                  ),
                                 ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    //prefixText: 'GJ011685',
-                                    hintText: "Bio"),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                autofocus: false,
-                                initialValue: detail.email.toString(),
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(8)
-                                ],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "Email"
-                                    //prefixText: 'GJ011685',
-                                    ),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                autofocus: false,
-                                // initialValue: textarearefcode.text,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(8)
-                                ],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "New Password"
-                                    // prefixText: 'GJ011685',
-                                    ),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 25),
-                          child: SizedBox(
-                            width: 320,
-                            height: 45,
-                            child: MaterialButton(
-                              // color: AppColors.primaryColor,
-                              textColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side:
-                                      BorderSide(color: AppColors.primaryColor)),
-                              onPressed: () {
-                                FocusManager.instance.primaryFocus!.unfocus();
-                                setState(() {
-                                  // if (_formKey.currentState!.validate()) {
-                                  //   Fluttertoast.showToast(
-                                  //       msg: "Profile Saved",
-                                  //       toastLength: Toast.LENGTH_SHORT,
-                                  //       gravity: ToastGravity.SNACKBAR,
-                                  //       timeInSecForIosWeb: 1,
-                                  //       backgroundColor: AppColors.cursorcolor,
-                                  //       textColor: Colors.white,
-                                  //       fontSize: 16.0);
-                                  //   Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => MyProfileScreen()),
-                                  //   );
-                                  // } else {}
-                                });
-                              },
-                              child: Text(
-                                'Save Profile',
-                                style: TextStyle(color: AppColors.primaryColor),
                               ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 25),
-                          child: SizedBox(
-                            width: 320,
-                            height: 45,
-                            child: MaterialButton(
-                              textColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: BorderSide(color: Colors.red[400]!),
-                              ),
-                              onPressed: () {
-                                FocusManager.instance.primaryFocus!.unfocus();
-                                setState(() {
-                                  // if (_formKey.currentState!.validate()) {
-                                  //   Fluttertoast.showToast(
-                                  //       msg: "Profile Saved",
-                                  //       toastLength: Toast.LENGTH_SHORT,
-                                  //       gravity: ToastGravity.SNACKBAR,
-                                  //       timeInSecForIosWeb: 1,
-                                  //       backgroundColor: AppColors.cursorcolor,
-                                  //       textColor: Colors.white,
-                                  //       fontSize: 16.0);
-                                  //   Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => MyProfileScreen()),
-                                  //   );
-                                  // } else {}
-                                });
-                              },
-                              child: Text(
-                                'Logout',
-                                style: TextStyle(color: Colors.red[400]),
-                              ),
+                            SizedBox(width: 20),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${state.profileList.last.username}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "${state.profileList.last.bio}",
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                SizedBox(height: 10),
+                                InkWell(
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SettingScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 25,
+                                        width: 180,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.settings,
+                                              size: 20,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Text("Edit Profile Setting"),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox();
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              child: Divider(),
+            ),
+            TabBar(
+              controller: _tabController,
+              indicatorColor: AppColors.primaryColor,
+              isScrollable: false,
+              labelColor: AppColors.primaryColor,
+              unselectedLabelColor: AppColors.text_color,
+              tabs: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Text(
+                      "My Articles",
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Text("Favorited Articles",
+                        style: TextStyle(fontSize: 14)),
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  MyArticlescreen(),
+                  FavoriteScreen(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -72,6 +72,9 @@ Future<void> main() async {
     BlocProvider(
       create: (context) => AddCommentBloc(),
     ),
+    BlocProvider(
+      create: (context) => ProfileBloc(repo: ProfileRepoImpl()),
+    ),
   ], child: MyApp()));
 }
 // void main() {

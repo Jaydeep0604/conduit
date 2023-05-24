@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:conduit/model/auth_model.dart';
+import 'package:conduit/model/profile_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ProfileState extends Equatable {}
@@ -23,7 +24,7 @@ class ProfileLoadingState extends ProfileState {
 
 // ignore: must_be_immutable
 class ProfileLoadedState extends ProfileState {
-  List<AuthModel> profileList;
+  List<ProfileModel> profileList;
   ProfileLoadedState({required this.profileList});
   @override
   List<Object?> get props => [profileList];
@@ -39,7 +40,7 @@ class ProfileLoadedError extends ProfileState {
 
 // ignore: must_be_immutable
 class ProfileErrorState extends ProfileState {
-  List<AuthModel>? profileList;
+  List<ProfileModel>? profileList;
   String message;
   ProfileErrorState({
     this.profileList,
@@ -52,7 +53,7 @@ class ProfileErrorState extends ProfileState {
 
 // ignore: must_be_immutable
 class ProfileSuccessState extends ProfileState {
-  List<AuthModel>? profileList;
+  List<ProfileModel>? profileList;
   ProfileSuccessState({this.profileList});
   @override
   List<Object?> get props => [profileList];
