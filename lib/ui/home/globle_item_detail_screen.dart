@@ -678,18 +678,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   itemCount: state.commentModel.length,
                                   itemBuilder: (context, index) {
                                     return CommentWidget(
-                                      deleteWidget: InkWell(
-                                        onTap: () {
-                                          commentBloc.add(deleteCommentEvent(
-                                              state.commentModel.last.id!));
-                                        },
-                                        child: isDeleting
-                                            ? CToast.instance.showLoader()
-                                            : Icon(
-                                                Icons.delete_forever_rounded,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                      ),
                                       commentModel: state.commentModel[index],
                                     );
                                   },
