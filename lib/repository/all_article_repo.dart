@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData({int offset, int limit});
+  Future<List<AllArticlesModel>> getMyArticles(int offset, int limit);
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
   Future<String> addComment(AddCommentModel addCommentModel, String slug);
   Future<List<CommentModel>> getComment(String slug);
@@ -20,8 +21,9 @@ abstract class AllArticlesRepo {
 
 class AllArticlesImpl extends AllArticlesRepo {
   @override
-  Future<List<AllArticlesModel>> getAllArticlesData({int? offset,int? limit,}) async {
-    String url = ApiConstant.ALL_Articles+ "?offset=$offset&limit=$limit";
+  Future<List<AllArticlesModel>> getAllArticlesData(
+      {int? offset, int? limit}) async {
+    String url = ApiConstant.ALL_Articles + "?offset=$offset&limit=$limit";
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.get(
       Uri.parse(url),
@@ -31,9 +33,7 @@ class AllArticlesImpl extends AllArticlesRepo {
       },
     );
     Map<String, dynamic> jsonData = json.decode(response.body);
-    // print(response.body);
     // dynamic jsonData =jsonDecode(response.body);
-
     if (response.statusCode == 200) {
       // dynamic data = jsonDecode(jsonData);
       List<dynamic> data = jsonData["articles"];
@@ -44,6 +44,29 @@ class AllArticlesImpl extends AllArticlesRepo {
       throw Exception();
     }
   }
+
+  Future<List<AllArticlesModel>> getMyArticles(int offset, int limit) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.MY_ARTICLES +
+        "${detailModel?.values.first.userName}" +
+        "&?offset=$offset&limit=$limit";
+
+    http.Response response = await http.get(Uri.parse(url), headers: {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${detailModel?.values.first.token}"
+    });
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    // Map<String, dynamic> jsonData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonData["articles"];
+      List<AllArticlesModel> s =
+          List.from((data).map((e) => AllArticlesModel.fromJson(e)));
+      return s;
+    } else {
+      throw Exception();
+    }
+  }
+
   Future addNewArticle(NewArticleModel newArticleModel) async {
     String url = ApiConstant.ADD_ARTICLE;
     Map<String, dynamic> body = newArticleModel.toJson();
@@ -82,14 +105,12 @@ class AllArticlesImpl extends AllArticlesRepo {
 
   Future<String> addComment(
       AddCommentModel addCommentModel, String slug) async {
-
     //another way to store slug
     // String? slug;
     // final pref = await sharedPreferencesStore.getSlug();
     // slug = await pref['slug'];
     // String url =
-    //     "https://api.realworld.io/api/articles/Creativity_Is_a_Process_Not_an_Event-179946/comments";
-
+    // "https://api.realworld.io/api/articles/Creativity_Is_a_Process_Not_an_Event-179946/comments";,
     String url =
         ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
     print(url);
@@ -129,9 +150,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 200) {
-
       // dynamic data = jsonDecode(jsonData);
-      
       List<dynamic> data = jsonData["comments"];
       print(data);
       List<CommentModel> s = List<CommentModel>.from(
@@ -165,55 +184,3 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 }
-
-// Future<String> addComment(AddCommentModel addCommentModel) async {
-//   String? slug;
-//   final pref = await sharedPreferencesStore.getTitle();
-//   slug = await pref['slug'];
-//   String url =
-//       ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
-//   Map<String, dynamic> body = addCommentModel.toJson();
-//   http.Response response = await UserClient.instance.doPostComment(url, body);
-//   print(body);
-//   if (response.statusCode == 200) {
-//     return "Comment added successfully";
-//   } else if (response.statusCode == 403) {
-//     throw "Authorization error";
-//   } else {
-//     // Handle other errors
-//     throw "An error occurred";
-//   }
-// }
-
-// Future<int> deleteComment() async {
-//   String? slug;
-//   int? CommentId;
-//   final pref = await sharedPreferencesStore.getSlug();
-//   slug = await pref['slug'];
-//   final pref2 = await sharedPreferencesStore.getCommentId();
-//   CommentId = await pref['commentId'];
-//   String url = ApiConstant.BASE_COMMENT_URL +
-//       "/${slug}" +
-//       ApiConstant.END_COMMENT_URL +
-//       "/${CommentId}";
-//   print(url);
-//   Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-//   http.Response response = await http.get(
-//     Uri.parse(url),
-//     headers: {
-//       "content-type": "application/json",
-//       "Authorization": "Bearer ${detailModel!.values.first.token}"
-//     },
-//   );
-//   Map<String, dynamic> jsonData = json.decode(response.body);
-//   if (response.statusCode == 200) {
-//     int data = 1;
-//     // List<dynamic> data = jsonData["comments"];
-//     // print(data);
-//     // List<CommentModel> s = List<CommentModel>.from(
-//     //     data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
-//     return data;
-//   } else {
-//     throw Exception();
-//   }
-// }

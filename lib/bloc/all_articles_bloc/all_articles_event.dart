@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 abstract class AllArticlesEvent extends Equatable {}
 
-class allArticlesEvent extends AllArticlesEvent {
+class FetchAllArticlesEvent extends AllArticlesEvent {
   @override
   List<Object?> get props => [];
 }

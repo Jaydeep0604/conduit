@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late AllArticlesBloc ArticlesBloc;
   bool isLoading = false;
 
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -256,30 +255,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.pop(context, false);
                             }),
                       ),
-                      // Expanded(
-                      //   child: TextButton(
-                      //     style: ButtonStyle(
-                      //       minimumSize: MaterialStateProperty.all<Size>(
-                      //           Size(MediaQuery.of(context).size.width, 40)),
-                      //       shape: MaterialStateProperty.all<
-                      //           RoundedRectangleBorder>(RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(12.0),
-                      //       )),
-                      //       backgroundColor: MaterialStateProperty.all<Color>(
-                      //           AppColors.pholder_background),
-                      //     ),
-                      //     child: new Text('Cancel',
-                      //         // textAlign: TextAlign.center,
-                      //         style:
-                      //             Theme.of(context).textTheme.button?.copyWith(
-                      //                   fontFamily: KSMFontFamily.robotoRgular,
-                      //                   color: Colors.white,
-                      //                 )),
-                      //     onPressed: () {
-                      //       Navigator.pop(context, false);
-                      //     },
-                      //   ),
-                      // ),
                       SizedBox(
                         width: 10,
                       ),
@@ -309,30 +284,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                       ),
-                      // Expanded(
-                      //   child: TextButton(
-                      //     style: ButtonStyle(
-                      //       minimumSize: MaterialStateProperty.all<Size>(
-                      //           Size(MediaQuery.of(context).size.width, 40)),
-                      //       shape: MaterialStateProperty.all<
-                      //           RoundedRectangleBorder>(RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(12.0),
-                      //       )),
-                      //       backgroundColor: MaterialStateProperty.all<Color>(
-                      //           AppColors.button_color),
-                      //     ),
-                      //     child: new Text('Confirm',
-                      //         // textAlign: TextAlign.center,
-                      //         style:
-                      //             Theme.of(context).textTheme.button?.copyWith(
-                      //                   fontFamily: KSMFontFamily.robotoRgular,
-                      //                   color: Colors.white,
-                      //                 )),
-                      //     onPressed: () {
-                      //       Navigator.pop(context, true);
-                      //     },
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

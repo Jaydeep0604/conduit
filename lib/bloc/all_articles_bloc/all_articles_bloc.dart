@@ -49,7 +49,7 @@ class AllArticlesBloc extends Bloc<AllArticlesEvent, AllArticlesState> {
     try {
       if (event is FetchNextAllArticlesEvent) {
         print(" The Length is ${event.length!.toInt()}");
-        offset = event.length!.toInt() + 1;
+        offset = event.length!.toInt();
       } else {
         offset = 0;
       }

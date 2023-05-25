@@ -1,6 +1,5 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_state.dart';
-import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_airtist_widget.dart';
 import 'package:flutter/material.dart';
@@ -8,89 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/all_articles_bloc/all_articles_event.dart';
 
-// class GlobalScreen extends StatefulWidget {
-//   const GlobalScreen({Key? key}) : super(key: key);
-//   @override
-//   State<GlobalScreen> createState() => _GlobalScreenState();
-// }
-// class _GlobalScreenState extends State<GlobalScreen> {
-//   late ScrollController _scrollController;
-//   void initState() {
-//     super.initState();
-//     _scrollController = ScrollController();
-//   }
-//   void _scrollListener() {
-//     final maxScroll = _scrollController.position.maxScrollExtent;
-//     final currentScroll = _scrollController.position.pixels;
-//     final bloc = context.read<AllArticlesBloc>();
-
-//     if (currentScroll >= maxScroll) {
-//       if (!bloc.state.hasReachedMax!) {
-//         bloc.add(LoadMoreAllArticlesEvent());
-//       }
-//     }
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: BlocBuilder<AllArticlesBloc, AllArticlesState>(
-//         builder: (context, state) {
-//           if (state is AllArticlesInitialState ||
-//               state is AllArticlesLoadingState) {
-//             return Center(child: CToast.instance.showLoader()
-//                 // CircularProgressIndicator(
-//                 //   backgroundColor: Colors.black,
-//                 //   color: AppColors.white2,
-//                 // ),
-//                 );
-//           }
-//           if (state is AllArticlesLoadedStete) {
-//             return SingleChildScrollView(
-//               child: Padding(
-//                 padding: const EdgeInsets.all(5),
-//                 child: Container(
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(7),
-//                     child: ListView.separated(
-//                       controller: _scrollController,
-//                       primary: false,
-//                       shrinkWrap: true,
-//                       scrollDirection: Axis.vertical,
-//                       itemCount: state.allArticleslist.length,
-//                       itemBuilder: (context, index) {
-//                         return AllAirtistWidget(
-//                             articlesModel: state.allArticleslist[index]);
-//                       },
-//                       separatorBuilder: (BuildContext context, int index) {
-//                         return SizedBox(
-//                           height: 10,
-//                         );
-//                       },
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             );
-//           }
-//           return SizedBox();
-//         },
-//       ),
-//     );
-//   }
-//   Widget _buildLoadMoreIndicator() {
-//     return Center(
-//       child: Padding(
-//         padding: EdgeInsets.all(10),
-//         child: CircularProgressIndicator(),
-//       ),
-//     );
-//   }
-//   @override
-//   void dispose() {
-//     _scrollController.dispose();
-//     super.dispose();
-//   }
-// }
 class GlobalScreen extends StatefulWidget {
   const GlobalScreen({Key? key}) : super(key: key);
 
@@ -107,17 +23,8 @@ class _GlobalScreenState extends State<GlobalScreen> {
     super.initState();
     _scrollController = ScrollController();
     ArticlesBloc = context.read<AllArticlesBloc>();
-    ArticlesBloc.add(allArticlesEvent());
+    ArticlesBloc.add(FetchAllArticlesEvent());
 
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.atEdge) {
-    //     if (_scrollController.position.pixels ==
-    //         _scrollController.position.maxScrollExtent) {
-
-    //       ArticlesBloc.add(FetchNextAllArticlesEvent(length:));
-    //     }
-    //   }
-    // });
     _scrollController.addListener(() async {
       if (_scrollController.position.atEdge) {
         if (_scrollController.position.pixels ==
@@ -137,6 +44,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
               state is AllArticlesLoadingState) {
             return Center(child: CToast.instance.showLoader());
           }
+
           if (state is AllArticlesLoadedStete) {
             return SingleChildScrollView(
               controller: _scrollController,
