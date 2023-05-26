@@ -1,7 +1,6 @@
 import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_event.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_state.dart';
-import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_airtist_widget.dart';
 import 'package:flutter/material.dart';
@@ -68,16 +67,12 @@ class _MyArticlescreenState extends State<MyArticlescreen> {
                           itemCount: state.myArticleslist.length +
                               (state.hasReachedMax ? 0 : 1),
                           itemBuilder: (context, index) {
-                            if (index < state.myArticleslist.length) {
+                                                if (index < state.myArticleslist.length) {
                               length = state.myArticleslist.length;
-
                               return AllAirtistWidget(
                                   articlesModel: state.myArticleslist[index]);
                             } else {
-                              return SizedBox(
-                                height: 30,
-                                child: CToast.instance.showLoader(),
-                              );
+                              return _buildLoadMoreIndicator();
                             }
                           },
                           separatorBuilder: (BuildContext context, int index) {
@@ -85,11 +80,6 @@ class _MyArticlescreenState extends State<MyArticlescreen> {
                           },
                         ),
                       ),
-                      if (state is MyArticlesNextDataLoadingState)
-                        SizedBox(
-                          height: 30,
-                          child: CToast.instance.showLoader(),
-                        ),
                     ],
                   ),
                 ),

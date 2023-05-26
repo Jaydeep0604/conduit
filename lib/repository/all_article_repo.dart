@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData({int offset, int limit});
   Future<List<AllArticlesModel>> getMyArticles(int offset, int limit);
+  Future<List<AllArticlesModel>> getMyFavoriteArticles(int offset, int limit);
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
   Future<String> addComment(AddCommentModel addCommentModel, String slug);
   Future<List<CommentModel>> getComment(String slug);
@@ -49,13 +50,38 @@ class AllArticlesImpl extends AllArticlesRepo {
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.MY_ARTICLES +
         "${detailModel?.values.first.userName}" +
-        "&?offset=$offset&limit=$limit";
-
+        "&offset=$offset&limit=$limit";
+    // String url = ApiConstant.ALL_Articles + "?offset=$offset&limit=$limit";
     http.Response response = await http.get(Uri.parse(url), headers: {
       "content-type": "application/json",
       "Authorization": "Bearer ${detailModel?.values.first.token}"
     });
     Map<String, dynamic> jsonData = json.decode(response.body);
+    int totalCount = jsonData['articlesCount'];
+    print(totalCount);
+    // Map<String, dynamic> jsonData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonData["articles"];
+      List<AllArticlesModel> s =
+          List.from((data).map((e) => AllArticlesModel.fromJson(e)));
+      return s;
+    } else {
+      throw Exception();
+    }
+  }
+  Future<List<AllArticlesModel>> getMyFavoriteArticles(int offset, int limit) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.MY_FAVORITE_ARTICLES +
+        "${detailModel?.values.first.userName}" +
+        "&offset=$offset&limit=$limit";
+    // String url = ApiConstant.ALL_Articles + "?offset=$offset&limit=$limit";
+    http.Response response = await http.get(Uri.parse(url), headers: {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${detailModel?.values.first.token}"
+    });
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    int totalCount = jsonData['articlesCount'];
+    print(totalCount);
     // Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonData["articles"];

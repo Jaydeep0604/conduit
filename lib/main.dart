@@ -3,6 +3,7 @@ import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
+import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_bloc.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
@@ -69,6 +70,9 @@ Future<void> main() async {
     ),
     BlocProvider(
       create: (context) => MyArticlesBloc(repo: AllArticlesImpl()),
+    ),
+    BlocProvider(
+      create: (context) => MyFavoriteArticlesBloc(repo: AllArticlesImpl()),
     ),
     BlocProvider(
       create: (context) => NewArticleBloc(),
