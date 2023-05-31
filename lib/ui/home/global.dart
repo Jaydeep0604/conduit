@@ -42,7 +42,24 @@ class _GlobalScreenState extends State<GlobalScreen> {
         builder: (context, state) {
           if (state is AllArticlesInitialState ||
               state is AllArticlesLoadingState) {
-            return Center(child: CToast.instance.showLoader());
+            return Padding(
+              padding: const EdgeInsets.all(5),
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: ListView.separated(
+                    scrollDirection: Axis.vertical,
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return AllAirtistWidget.shimmer();
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 10);
+                    },
+                  ),
+                ),
+              ),
+            );
           }
 
           if (state is AllArticlesLoadedStete) {

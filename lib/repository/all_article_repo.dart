@@ -69,7 +69,9 @@ class AllArticlesImpl extends AllArticlesRepo {
       throw Exception();
     }
   }
-  Future<List<AllArticlesModel>> getMyFavoriteArticles(int offset, int limit) async {
+
+  Future<List<AllArticlesModel>> getMyFavoriteArticles(
+      int offset, int limit) async {
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.MY_FAVORITE_ARTICLES +
         "${detailModel?.values.first.userName}" +

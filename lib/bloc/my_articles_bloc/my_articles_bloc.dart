@@ -6,42 +6,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
   AllArticlesRepo repo;
-  int offset = 1;
+  int offset = 0;
   int limit = 10;
   MyArticlesBloc({required this.repo}) : super(MyArticlesInitialState()) {
-    on<MyArticlesEvent>(_onMyArticlesEvent);
-    // on<FetchNextMyArticlesEvent>(_onFetchNextMyArticlesEvent);
+    on<FetchMyArticlesEvent>(_onMyArticlesEvent);
+    on<FetchNextMyArticlesEvent>(_onFetchNextMyArticlesEvent);
   }
 
   void _onMyArticlesEvent(
       MyArticlesEvent event, Emitter<MyArticlesState> emit) async {
     try {
-      if (event is FetchNextMyArticlesEvent) {
-        print(" The Length is ${event.length!.toInt()}");
-        offset = event.length!.toInt();
-      } else {
-        offset = 0;
-      }
-      if (offset == 0) {
-        emit(MyArticlesLoadingState());
-      }
-
+      // if (event is FetchNextMyArticlesEvent) {
+      //   print(" The Length is ${event.length!.toInt()}");
+      //   offset = event.length!.toInt();
+      // } else {
+      //   offset = 0;
+      // }
+      // if (offset == 0) {
+      offset = 0;
+      emit(MyArticlesLoadingState());
+      // }
       List<AllArticlesModel> aData =
           (await repo.getMyArticles(offset, limit)).cast<AllArticlesModel>();
       if (aData.isEmpty) {
         emit(NoMyArticlesState());
       } else {
-        bool hasReachedMax = aData.length < 10;
-        if (event is FetchNextMyArticlesEvent) {
-          final currentState = state;
-          if (currentState is MyArticlesLoadedStete) {
-            aData = [...currentState.myArticleslist, ...aData];
-          }
-        }
-        emit(
-          MyArticlesLoadedStete(
-              myArticleslist: aData, hasReachedMax: hasReachedMax),
-        );
+        // bool hasReachedMax = aData.length < 10;
+        // if (event is FetchNextMyArticlesEvent) {
+        //   final currentState = state;
+        //   if (currentState is MyArticlesLoadedStete) {
+        //     aData = [...currentState.myArticleslist, ...aData];
+        //   }
+        // }
+        emit(MyArticlesLoadedStete(myArticleslist: aData));
+        offset = offset + 10;
       }
     } catch (e) {
       print(e);
@@ -49,40 +47,32 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
     }
   }
 
-  // _onFetchNextMyArticlesEvent(
-  //     MyArticlesEvent event, Emitter<MyArticlesState> emit) async {
-  //   MyArticlesLoadedStete curentstate = state as MyArticlesLoadedStete;
-  //   if (curentstate is MyArticlesLoadedStete) {
-  //     try {
-  //       emit(MyArticlesNextDataLoadingState());
-  //       if (event is FetchNextMyArticlesEvent) {
-  //         print(" The Length is ${event.length!.toInt()}");
-  //         offset = event.length!.toInt();
-  //       } else {
-  //         offset = 0;
-  //       }
-  //       List<AllArticlesModel> aData =
-  //           (await repo.getMyArticles(offset, limit)).cast<AllArticlesModel>();
-  //       if (aData.isEmpty) {
-  //         emit(NoMyArticlesState());
-  //       } else {
-  //         bool hasReachedMax = aData.length < 10;
-  //         if (event is FetchNextMyArticlesEvent) {
-  //           final currentState = state;
-  //           if (currentState is MyArticlesLoadedStete) {
-  //             aData = [...currentState.myArticleslist, ...aData];
-  //           }
-  //         }
-  //         emit(
-  //           MyArticlesLoadedStete(
-  //             myArticleslist: aData,
-  //           ),
-  //         );
-  //       }
-  //     } catch (e) {
-  //       emit(MyArticlesLoadedStete(
-  //           myArticleslist: curentstate.myArticleslist, hasReachedMax: true));
-  //     }
-  //   }
-  // }
+  _onFetchNextMyArticlesEvent(
+      MyArticlesEvent event, Emitter<MyArticlesState> emit) async {
+    MyArticlesLoadedStete curentstate = state as MyArticlesLoadedStete;
+    if (curentstate is MyArticlesLoadedStete) {
+      try {
+        // if (event is FetchNextMyArticlesEvent) {
+        //   offset = event.length!.toInt() + 1;
+        // }
+        // emit(MyArticlesNextDataLoadingState());
+        List<AllArticlesModel> myArticleslist =
+            (await repo.getMyArticles(offset, limit)).cast<AllArticlesModel>();
+        if (myArticleslist.isEmpty) {
+          emit(
+            MyArticlesLoadedStete(
+                myArticleslist: curentstate.myArticleslist,
+                hasReachedMax: true),
+          );
+        } else {
+          emit(MyArticlesLoadedStete(
+              myArticleslist: curentstate.myArticleslist + myArticleslist));
+          offset = offset + 10;
+        }
+      } catch (e) {
+        emit(MyArticlesLoadedStete(
+            myArticleslist: curentstate.myArticleslist, hasReachedMax: true));
+      }
+    }
+  }
 }

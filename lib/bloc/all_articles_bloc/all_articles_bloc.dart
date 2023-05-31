@@ -84,7 +84,33 @@ class AllArticlesBloc extends Bloc<AllArticlesEvent, AllArticlesState> {
     }
   }
 }
-
+// _onFetchNextMyArticlesEvent(
+//       MyArticlesEvent event, Emitter<MyArticlesState> emit) async {
+//     MyArticlesLoadedStete curentstate = state as MyArticlesLoadedStete;
+//     if (curentstate is MyArticlesLoadedStete) {
+//       try {
+//         // if (event is FetchNextMyArticlesEvent) {
+//         //   offset = event.length!.toInt() + 1;
+//         // }
+//         List<AllArticlesModel> myArticleslist =
+//             (await repo.getMyArticles(offset, limit)).cast<AllArticlesModel>();
+//         if (myArticleslist.isEmpty) {
+//           emit(
+//             MyArticlesLoadedStete(
+//                 myArticleslist: curentstate.myArticleslist,
+//                 hasReachedMax: true),
+//           );
+//         } else {
+//           emit(MyArticlesLoadedStete(
+//               myArticleslist: curentstate.myArticleslist + myArticleslist));
+//           offset = offset + 10;
+//         }
+//       } catch (e) {
+//         emit(MyArticlesLoadedStete(
+//             myArticleslist: curentstate.myArticleslist, hasReachedMax: true));
+//       }
+//     }
+//   }
 
 // class AllArticlesBloc extends Bloc<AllArticlesEvent, AllArticlesState> {
 //   AllArticlesRepo repo;
