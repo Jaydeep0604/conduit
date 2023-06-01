@@ -27,7 +27,6 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
       _obsecureText = !_obsecureText;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
@@ -256,7 +255,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
               child: Container(
                 child: Text(
-                  "${widget.articlesModel?.slug}",
+                  "${widget.articlesModel?.title}",
                   maxLines: 2,
                   style: TextStyle(overflow: TextOverflow.ellipsis),
                 ),

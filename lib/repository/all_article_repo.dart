@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData({int offset, int limit});
   Future<List<AllArticlesModel>> getMyArticles(int offset, int limit);
+  Future<List<CommentModel>> deleteArticle(String slug);
   Future<List<AllArticlesModel>> getMyFavoriteArticles(int offset, int limit);
   Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
   Future<String> addComment(AddCommentModel addCommentModel, String slug);
@@ -169,6 +170,31 @@ class AllArticlesImpl extends AllArticlesRepo {
     print(url);
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    // dynamic jsonData =jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      // dynamic data = jsonDecode(jsonData);
+      List<dynamic> data = jsonData["comments"];
+      print(data);
+      List<CommentModel> s = List<CommentModel>.from(
+          data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
+      return s;
+    } else {
+      throw Exception();
+    }
+  }
+  Future<List<CommentModel>> deleteArticle(String slug) async {
+    String url =
+        ApiConstant.BASE_COMMENT_URL + "/${slug}";
+    print(url);
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    http.Response response = await http.delete(
       Uri.parse(url),
       headers: {
         "content-type": "application/json",

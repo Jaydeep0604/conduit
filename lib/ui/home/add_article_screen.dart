@@ -2,6 +2,7 @@ import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_event.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_state.dart';
 import 'package:conduit/model/new_article_model.dart';
+import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:flutter/material.dart';
@@ -68,8 +69,8 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
               }
 
               if (state is NewArticleSuccessState) {
-                // Navigator.pushReplacement(context,
-                //     MaterialPageRoute(builder: (context) => GlobalScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
                 clear();
                 CToast.instance.showSuccess(context, state.msg);
               }
@@ -303,7 +304,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 25,left: 60,right: 60),
+                    padding: EdgeInsets.only(top: 25, left: 60, right: 60),
                     child: SizedBox(
                       height: 40,
                       child: MaterialButton(
@@ -324,12 +325,13 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                               articleBloc.add(
                                 SubmitNewArticle(
                                   newArticleModel: NewArticleModel(
-                                      article: Article(
-                                    title: titleCtr!.text.trim(),
-                                    description: aboutTitleCtr!.text.trim(),
-                                    body: articleCtr!.text.trim(),
-                                    tagList: tagsCtr!.text.trim(),
-                                  )),
+                                    article: Article(
+                                      title: titleCtr!.text.trim(),
+                                      description: aboutTitleCtr!.text.trim(),
+                                      body: articleCtr!.text.trim(),
+                                      tagList: tagsCtr!.text.trim(),
+                                    ),
+                                  ),
                                 ),
                               );
                               // }

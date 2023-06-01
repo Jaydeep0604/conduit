@@ -22,8 +22,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    ArticlesBloc = context.read<AllArticlesBloc>();
-    ArticlesBloc.add(FetchAllArticlesEvent());
+    
 
     _scrollController.addListener(() async {
       if (_scrollController.position.atEdge) {

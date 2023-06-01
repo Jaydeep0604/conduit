@@ -11,6 +11,7 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
   MyArticlesBloc({required this.repo}) : super(MyArticlesInitialState()) {
     on<FetchMyArticlesEvent>(_onMyArticlesEvent);
     on<FetchNextMyArticlesEvent>(_onFetchNextMyArticlesEvent);
+    on<DeleteMyArticlesEvent>(_onDeleteMyArticleEvent);
   }
 
   void _onMyArticlesEvent(
@@ -73,6 +74,25 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
         emit(MyArticlesLoadedStete(
             myArticleslist: curentstate.myArticleslist, hasReachedMax: true));
       }
+    }
+  }
+
+  _onDeleteMyArticleEvent(
+      DeleteMyArticlesEvent event, Emitter<MyArticlesState> emit) async {
+    try {
+      dynamic data = await repo.deleteArticle(event.slug);
+      if (data == 1) {
+        emit(DeleteMyArticleSuccessState());
+      } else {
+        emit(DeleteMyArticleErrorState(
+            msg: "Something want wrong please try again later"));
+      }
+    } catch (e) {
+      emit(
+        DeleteMyArticleErrorState(
+          msg: e.toString(),
+        ),
+      );
     }
   }
 }

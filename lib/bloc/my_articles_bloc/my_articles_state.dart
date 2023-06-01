@@ -16,9 +16,6 @@ class MyArticlesNoInternateState extends MyArticlesState {
 class MyArticlesLoadingState extends MyArticlesState {
   List<Object?> get props => [];
 }
-class MyArticlesNextDataLoadingState extends MyArticlesState {
-  List<Object?> get props => [];
-}
 
 class MyArticlesLoadedStete extends MyArticlesState {
   List<AllArticlesModel> myArticleslist;
@@ -48,4 +45,29 @@ class MyArticlesErrorState extends MyArticlesState {
   String toString() {
     return msg;
   }
+}
+
+class MyArticlesNextDataLoadingState extends MyArticlesState {
+  List<Object?> get props => [];
+}
+
+class DeleteMyArticleErrorState extends MyArticlesState {
+  String msg;
+  DeleteMyArticleErrorState({required this.msg});
+  @override
+  List<Object?> get props => [msg];
+  @override
+  String toString() {
+    return msg;
+  }
+}
+
+class DeleteMyArticleSuccessState extends MyArticlesState {
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteMyArticleLoadingState extends MyArticlesState {
+  @override
+  List<Object?> get props => [];
 }

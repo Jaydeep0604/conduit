@@ -149,7 +149,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                                 },
                                 child: Icon(
                                   Icons.delete_forever_rounded,
-                                  color: AppColors.primaryColor,
+                                  color: Colors.red[400],
                                 ),
                               ),
                             )

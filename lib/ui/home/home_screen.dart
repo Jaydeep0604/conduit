@@ -1,4 +1,5 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
+import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
 import 'package:conduit/ui/home/global.dart';
@@ -8,6 +9,7 @@ import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/ui/setting/setting_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,7 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
+  void initState(){
+    super.initState();
 
+    ArticlesBloc = context.read<AllArticlesBloc>();
+    ArticlesBloc.add(FetchAllArticlesEvent());
+  
+  }
   final pages = [const GlobalScreen(), YourFeedScreen(), AddArticleScreen()];
 
   @override
