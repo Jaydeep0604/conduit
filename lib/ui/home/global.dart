@@ -4,6 +4,7 @@ import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_airtist_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 
 import '../../bloc/all_articles_bloc/all_articles_event.dart';
 
@@ -16,19 +17,18 @@ class GlobalScreen extends StatefulWidget {
 
 class _GlobalScreenState extends State<GlobalScreen> {
   late ScrollController _scrollController;
-  late AllArticlesBloc ArticlesBloc;
+  late AllArticlesBloc articlesBloc;
   int? length;
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    
-
+    articlesBloc = context.read<AllArticlesBloc>();
     _scrollController.addListener(() async {
       if (_scrollController.position.atEdge) {
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
-          ArticlesBloc.add(FetchNextAllArticlesEvent(length: await length));
+          articlesBloc.add(FetchNextAllArticlesEvent(length: await length));
         }
       }
     });

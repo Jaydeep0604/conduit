@@ -15,8 +15,10 @@ abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getMyArticles(int offset, int limit);
   Future<List<CommentModel>> deleteArticle(String slug);
   Future<List<AllArticlesModel>> getMyFavoriteArticles(int offset, int limit);
-  Future<dynamic> addNewArticle(NewArticleModel newArticleModel);
+  Future<dynamic> addNewArticle(ArticleModel newArticleModel);
+  Future<dynamic> updateArticle(ArticleModel newArticleModel, String slug);
   Future<String> addComment(AddCommentModel addCommentModel, String slug);
+  Future<List<ArticleModel>> getArticle(String slug);
   Future<List<CommentModel>> getComment(String slug);
   Future<int> deleteComment(int commentId);
 }
@@ -96,11 +98,11 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 
-  Future addNewArticle(NewArticleModel newArticleModel) async {
+  Future addNewArticle(ArticleModel newArticleModel) async {
     String url = ApiConstant.ADD_ARTICLE;
     Map<String, dynamic> body = newArticleModel.toJson();
     http.Response response =
-        await UserClient.instance.doPost(ApiConstant.ADD_ARTICLE, body);
+        await UserClient.instance.doPostArticle(ApiConstant.ADD_ARTICLE, body);
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
@@ -124,6 +126,71 @@ class AllArticlesImpl extends AllArticlesRepo {
     // }
     if (response.statusCode == 200) {
       // dynamic jsonData = jsonDecode(response.body);
+      return message;
+    } else if (response.statusCode == 403) {
+      throw message;
+    } else {
+      throw message;
+    }
+  }
+
+  Future<List<ArticleModel>> getArticle(String slug) async {
+    String url = ApiConstant.GET_ARTICLE + "/${slug}";
+    print(url);
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    // dynamic jsonData =jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      ArticleModel articleModel = ArticleModel.fromJson(jsonData);
+      return [articleModel];
+
+      // dynamic data = jsonDecode(jsonData);
+      // List<dynamic> data = jsonData["articles"];
+      // List<ArticleModel> s =
+      //     List.from((data).map((e) => ArticleModel.fromJson(e)));
+      // return s;
+    } else {
+      throw Exception();
+    }
+  }
+
+  //   Map<String, dynamic> jsonData = json.decode(response.body);
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> data = jsonData['article'];
+  //     print(data);
+  //     List<Article> s = List<Article>.from(
+  //         data.map((e) => Article.fromJson(e as Map<String, dynamic>)));
+  //     return s;
+  //   } else {
+  //     throw Exception();
+  //   }
+  // }
+
+  Future updateArticle(ArticleModel newArticleModel, String slug) async {
+    String url = ApiConstant.UPDATE_ARTICLE + "/${slug}";
+
+    Map<String, dynamic> body = newArticleModel.toJson();
+
+    http.Response response = await UserClient.instance
+        .doUpdateArticle(ApiConstant.UPDATE_ARTICLE, body);
+    print(body);
+    dynamic jsonData = jsonDecode(response.body);
+    String message = '';
+
+    if (jsonData['errors'] != null) {
+      Map<String, dynamic> errors = jsonData['errors'];
+      String fieldName = errors.keys.first;
+      String errorValue = errors[fieldName][0];
+      message = '$fieldName $errorValue';
+    }
+    if (response.statusCode == 200) {
       return message;
     } else if (response.statusCode == 403) {
       throw message;
@@ -189,9 +256,9 @@ class AllArticlesImpl extends AllArticlesRepo {
       throw Exception();
     }
   }
+
   Future<List<CommentModel>> deleteArticle(String slug) async {
-    String url =
-        ApiConstant.BASE_COMMENT_URL + "/${slug}";
+    String url = ApiConstant.BASE_COMMENT_URL + "/${slug}";
     print(url);
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.delete(

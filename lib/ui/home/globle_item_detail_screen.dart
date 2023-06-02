@@ -7,13 +7,16 @@ import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/bloc/comment_bloc/comment_state.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_event.dart';
+import 'package:conduit/bloc/new_article_bloc/new_article_event.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/user_model.dart';
+import 'package:conduit/ui/home/add_article_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/ui/home/user_profile_detail_screen.dart';
+import 'package:conduit/ui/update_article/update_article.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/comment_widget.dart';
@@ -295,35 +298,52 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                           if (dataUsername ==
                                               widget.allArticlesModel!.author!
                                                   .username)
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: AppColors.white2)),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 2,
-                                                        horizontal: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.edit,
-                                                      size: 15,
-                                                      color: AppColors.white2,
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UpdateArticleScreen(
+                                                      slug: widget
+                                                          .allArticlesModel!
+                                                          .slug!,
                                                     ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                      "Edit",
-                                                      style: TextStyle(
-                                                          color:
-                                                              AppColors.white2,
-                                                          fontSize: 13),
-                                                    ),
-                                                  ],
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    border: Border.all(
+                                                        color:
+                                                            AppColors.white2)),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 2,
+                                                      horizontal: 15),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.edit,
+                                                        size: 15,
+                                                        color: AppColors.white2,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        "Edit",
+                                                        style: TextStyle(
+                                                            color: AppColors
+                                                                .white2,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),

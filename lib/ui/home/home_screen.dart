@@ -29,13 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
-  void initState(){
-    super.initState();
 
+  void initState() {
+    super.initState();
     ArticlesBloc = context.read<AllArticlesBloc>();
     ArticlesBloc.add(FetchAllArticlesEvent());
-  
   }
+
   final pages = [const GlobalScreen(), YourFeedScreen(), AddArticleScreen()];
 
   @override

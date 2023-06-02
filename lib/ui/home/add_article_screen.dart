@@ -10,7 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddArticleScreen extends StatefulWidget {
-  const AddArticleScreen({Key? key}) : super(key: key);
+  AddArticleScreen({Key? key}) : super(key: key);
+  // bool isAddArticle;
+  // String slug;
 
   @override
   State<AddArticleScreen> createState() => _AddArticleScreenState();
@@ -23,7 +25,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
   TextEditingController? articleCtr;
   TextEditingController? tagsCtr;
   late NewArticleBloc articleBloc;
-  NewArticleModel? newArticleModel;
+  // List<ArticleModel>? articleModel;
   bool isLoading = false;
   @override
   void initState() {
@@ -33,7 +35,6 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
     aboutTitleCtr = TextEditingController();
     articleCtr = TextEditingController();
     tagsCtr = TextEditingController();
-    clear();
   }
 
   void clear() {
@@ -318,28 +319,24 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                         ),
                         onPressed: () {
                           FocusManager.instance.primaryFocus!.unfocus();
-                          setState(() {
-                            if (_form.currentState!.validate()) {
-                              // NewArticleModel newArticle = _createArticleModel()!;
-                              //if (newArticle != "") {
-                              articleBloc.add(
-                                SubmitNewArticle(
-                                  newArticleModel: NewArticleModel(
-                                    article: Article(
-                                      title: titleCtr!.text.trim(),
-                                      description: aboutTitleCtr!.text.trim(),
-                                      body: articleCtr!.text.trim(),
-                                      tagList: tagsCtr!.text.trim(),
-                                    ),
+
+                          if (_form.currentState!.validate()) {
+                            articleBloc.add(
+                              SubmitNewArticle(
+                                newArticleModel: ArticleModel(
+                                  article: Article(
+                                    title: titleCtr!.text.trim(),
+                                    description: aboutTitleCtr!.text.trim(),
+                                    body: articleCtr!.text.trim(),
+                                    // tagList: tagsCtr!.text.trim(),
                                   ),
                                 ),
-                              );
-                              // }
-                            } else {
-                              CToast.instance
-                                  .showError(context, "New article not added");
-                            }
-                          });
+                              ),
+                            );
+                          } else {
+                            CToast.instance
+                                .showError(context, "New article not added");
+                          }
                         },
                         child: isLoading
                             ? Container(
@@ -364,12 +361,4 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
       ),
     );
   }
-
-  // NewArticleModel? _createArticleModel() {
-  //   return NewArticleModel(
-  //       title: titleCtr.text.trim(),
-  //       description: aboutTitleCtr.text.trim(),
-  //       body: articleCtr.text.trim(),
-  //       tag: tagsCtr.text.trim());
-  // }
 }
