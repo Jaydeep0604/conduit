@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Box<UserAccessData>? detailModel =
           await hiveStore.isExistUserAccessData();
       if (detailModel!.values.isNotEmpty) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, (MaterialPageRoute(builder: (context) => HomeScreen())));
       }
       if (detailModel.values.isEmpty)
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: MediaQuery.of(context).size.height,
               child: Text(
                 'conduit',
-                style: TextStyle(fontSize: 40, color: Colors.white),
+                style: TextStyle(fontSize: 40, color: AppColors.white),
               )),
           Center(
             child: Container(
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: MediaQuery.of(context).size.height,
                 child: Text(
                   'A place to share your knowledge.',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: TextStyle(fontSize: 20, color: AppColors.white),
                 )),
           ),
         ],

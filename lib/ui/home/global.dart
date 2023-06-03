@@ -4,7 +4,6 @@ import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_airtist_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 
 import '../../bloc/all_articles_bloc/all_articles_event.dart';
 

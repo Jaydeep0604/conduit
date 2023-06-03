@@ -1,5 +1,6 @@
 import 'package:conduit/bloc/add_comment_bloc/add_comment_bloc.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
+import 'package:conduit/bloc/article_bloc/article_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
@@ -75,7 +76,7 @@ Future<void> main() async {
       create: (context) => MyFavoriteArticlesBloc(repo: AllArticlesImpl()),
     ),
     BlocProvider(
-      create: (context) => NewArticleBloc(),
+      create: (context) => ArticleBloc(repo: AllArticlesImpl()),
     ),
     BlocProvider(
       create: (context) => AddCommentBloc(),

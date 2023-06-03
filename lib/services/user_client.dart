@@ -137,6 +137,7 @@ class UserClient {
   Future<http.Response> doUpdateArticle(String url, Map<String, dynamic> body,
       {Map<String, String>? header}) async {
     Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+    print("TOKEN IS :: ${userData!.values.last.token}");
 
     if (userData == null) {
       return http.Response("{'msg':'No user found'}", 404);
@@ -161,7 +162,7 @@ class UserClient {
     );
 
     try {
-      http.Response response = await http.post(
+      http.Response response = await http.put(
         Uri.parse(url),
         body: jsonEncode(newArticleModel.toJson()),
         headers: head,

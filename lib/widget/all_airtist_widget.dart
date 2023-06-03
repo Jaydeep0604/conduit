@@ -27,6 +27,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
       _obsecureText = !_obsecureText;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
@@ -60,7 +61,8 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-              child: Container(height: 10,
+              child: Container(
+                height: 10,
                 child: Shimmer.fromColors(
                   baseColor: AppColors.white2,
                   highlightColor: Colors.white30.withOpacity(0.1),
@@ -97,7 +99,8 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Container(
-                    height: 20,width: 100,
+                    height: 20,
+                    width: 100,
                     child: Shimmer.fromColors(
                       baseColor: AppColors.white2,
                       highlightColor: Colors.white30.withOpacity(0.1),
@@ -164,7 +167,8 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
             builder: (context) => BlocProvider(
               create: (context) => CommentBloc(repo: AllArticlesImpl()),
               child: GlobalItemDetailScreen(
-                  allArticlesModel: widget.articlesModel),
+                  slug: widget.articlesModel!.slug!,
+                  favorited: widget.articlesModel!.favorited),
             ),
           ),
         );

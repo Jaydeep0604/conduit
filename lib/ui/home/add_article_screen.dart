@@ -1,3 +1,6 @@
+import 'package:conduit/bloc/article_bloc/article_bloc.dart';
+import 'package:conduit/bloc/article_bloc/article_event.dart';
+import 'package:conduit/bloc/article_bloc/article_state.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_bloc.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_event.dart';
 import 'package:conduit/bloc/new_article_bloc/new_article_state.dart';
@@ -24,13 +27,13 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
   TextEditingController? aboutTitleCtr;
   TextEditingController? articleCtr;
   TextEditingController? tagsCtr;
-  late NewArticleBloc articleBloc;
+  late ArticleBloc articleBloc;
   // List<ArticleModel>? articleModel;
   bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    articleBloc = context.read<NewArticleBloc>();
+    articleBloc = context.read<ArticleBloc>();
     titleCtr = TextEditingController();
     aboutTitleCtr = TextEditingController();
     articleCtr = TextEditingController();
@@ -55,9 +58,9 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
       child: Scaffold(
         backgroundColor: AppColors.white2,
         body: SafeArea(
-          child: BlocListener<NewArticleBloc, NewArticleState>(
+          child: BlocListener<ArticleBloc, ArticleState>(
             listener: (context, state) {
-              if (state is NewArticleLoadingState) {
+              if (state is ArticleLoadingState) {
                 setState(() {
                   isLoading = true;
                 });
@@ -69,14 +72,14 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                 CToast.instance.dismiss();
               }
 
-              if (state is NewArticleSuccessState) {
+              if (state is ArticleAddSuccessState) {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
                 clear();
                 CToast.instance.showSuccess(context, state.msg);
               }
 
-              if (state is NewArticleErroeState) {
+              if (state is ArticleAddErrorState) {
                 CToast.instance.showError(context, state.msg);
               }
             },
@@ -322,8 +325,8 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
 
                           if (_form.currentState!.validate()) {
                             articleBloc.add(
-                              SubmitNewArticle(
-                                newArticleModel: ArticleModel(
+                              SubmitArticleEvent(
+                                articleModel: ArticleModel(
                                   article: Article(
                                     title: titleCtr!.text.trim(),
                                     description: aboutTitleCtr!.text.trim(),

@@ -101,8 +101,7 @@ class AllArticlesImpl extends AllArticlesRepo {
   Future addNewArticle(ArticleModel newArticleModel) async {
     String url = ApiConstant.ADD_ARTICLE;
     Map<String, dynamic> body = newArticleModel.toJson();
-    http.Response response =
-        await UserClient.instance.doPostArticle(ApiConstant.ADD_ARTICLE, body);
+    http.Response response = await UserClient.instance.doPostArticle(url, body);
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
@@ -178,8 +177,8 @@ class AllArticlesImpl extends AllArticlesRepo {
 
     Map<String, dynamic> body = newArticleModel.toJson();
 
-    http.Response response = await UserClient.instance
-        .doUpdateArticle(ApiConstant.UPDATE_ARTICLE, body);
+    http.Response response =
+        await UserClient.instance.doUpdateArticle(url, body);
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
