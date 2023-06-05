@@ -19,6 +19,8 @@ class ApiConstant {
   /*#10*/ static const MY_FAVORITE_ARTICLES = "https://api.realworld.io/api/articles?favorited=";
   /*#11*/ static const UPDATE_ARTICLE = "https://api.realworld.io/api/articles";
   /*#12*/ static const GET_ARTICLE = "https://api.realworld.io/api/articles";
+  /*#13*/ static const UPDATE_USER= "https://api.realworld.io/api/user";
+  /*#14*/ static const USER_PROFILE= "https://api.realworld.io/api/user";
 
   static const TOKEN =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpheWRlZXBwcEBtYWlsaW5hdG9yLmNvbSIsInVzZXJuYW1lIjoiSmF5ZGVlcHBwIiwiaWF0IjoxNjg0NDk2NTY1LCJleHAiOjE2ODk2ODA1NjV9.TAKbvNlhVw0Qu4P7cuJ3H9shzwKp5QvpRrMUP8P93M0";

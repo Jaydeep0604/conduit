@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 abstract class ProfileEvent extends Equatable {}
 
 class FetchProfileEvent extends ProfileEvent {
-  // FetchProfileEvent({});
   @override
   List<Object?> get props => [];
 }
@@ -13,7 +12,6 @@ class FetchProfileEvent extends ProfileEvent {
 // ignore: must_be_immutable
 class DeleteProfileEvent extends ProfileEvent {
   AuthModel authModel;
-
   DeleteProfileEvent({
     required this.authModel,
   });
@@ -23,10 +21,9 @@ class DeleteProfileEvent extends ProfileEvent {
       ];
 }
 
-// ignore: must_be_immutable
-class ChangeProfileEvent extends ProfileEvent {
+class UpdateProfileEvent extends ProfileEvent {
   ProfileModel profileModel;
-  ChangeProfileEvent({required this.profileModel});
+  UpdateProfileEvent({required this.profileModel});
   @override
   List<Object?> get props => [profileModel];
 }

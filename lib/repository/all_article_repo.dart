@@ -5,6 +5,7 @@ import 'package:conduit/config/shared_preferences_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/new_article_model.dart';
+import 'package:conduit/model/profile_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/services/user_client.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -21,6 +22,9 @@ abstract class AllArticlesRepo {
   Future<List<ArticleModel>> getArticle(String slug);
   Future<List<CommentModel>> getComment(String slug);
   Future<int> deleteComment(int commentId);
+  Future<List<ProfileModel>> getProfileData();
+  Future<dynamic> updateProfile(ProfileModel profileModel);
+  Future<bool> logOut();
 }
 
 class AllArticlesImpl extends AllArticlesRepo {
@@ -112,6 +116,7 @@ class AllArticlesImpl extends AllArticlesRepo {
       String errorValue = errors[fieldName][0];
       message = '$fieldName $errorValue';
     }
+    // for error text shoe only
     // if (jsonData['errors'] != null) {
     //   Map<String, dynamic> errors = jsonData['errors'];
     //   String fieldName = errors.keys.first;
@@ -301,6 +306,62 @@ class AllArticlesImpl extends AllArticlesRepo {
       return 1;
     } else {
       throw Exception('Failed to delete comment');
+    }
+  }
+
+   @override
+  Future<List<ProfileModel>> getProfileData() async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.USER_PROFILE;
+    http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      ProfileModel profile = ProfileModel.fromJson(jsonData);
+      return [profile]; // Wrap the profile in a list and return
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future updateProfile(ProfileModel profileModel) async {
+    String url = ApiConstant.UPDATE_USER;
+
+    Map<String, dynamic> body = profileModel.toJson();
+
+    http.Response response =
+        await UserClient.instance.doUpdateProfile(url, body);
+    // print(body);
+    dynamic jsonData = jsonDecode(response.body);
+    String message = '';
+
+    if (jsonData['errors'] != null) {
+      Map<String, dynamic> errors = jsonData['errors'];
+      String fieldName = errors.keys.first;
+      String errorValue = errors[fieldName][0];
+      message = '$fieldName $errorValue';
+    }
+    if (response.statusCode == 200) {
+      return message;
+    } else if (response.statusCode == 403) {
+      throw message;
+    } else {
+      throw message;
+    }
+  }
+
+   @override
+  Future<bool> logOut() async {
+    await hiveStore.logOut();
+    if (hiveStore.logOut() == true) {
+      return true;
+    } else {
+      throw Exception("Something went wrong try again later");
     }
   }
 }

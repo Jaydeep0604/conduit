@@ -63,6 +63,11 @@ class ArticleErrorState extends ArticleState {
 
 // update article
 
+class UpdateArticleLoadingState extends ArticleState {
+  @override
+  List<Object?> get props => [];
+}
+
 class UpdateArticleErroeState extends ArticleState {
   String msg;
   UpdateArticleErroeState({required this.msg});

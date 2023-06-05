@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/services/user_service.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/yourfeed.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late AllArticlesBloc ArticlesBloc;
+  late UserStateContainerState userState;
   bool isLoading = false;
 
   int _selectedIndex = 0;
@@ -30,17 +32,50 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  late GlobalKey<ScaffoldState> globalScaffoldKey;
   void initState() {
     super.initState();
     ArticlesBloc = context.read<AllArticlesBloc>();
     ArticlesBloc.add(FetchAllArticlesEvent());
+    globalScaffoldKey = GlobalKey<ScaffoldState>();
+    // hiveStore.isSessionValid.listen((event) {
+    //   if (event == false) {
+    //     logOut();
+    //   }
+    // });
   }
+
+  // logOut() {
+  //   hiveStore.logOut();
+  //   UserStateContainer.of(context).updateUser(userResponseModel: null);
+  //   UserStateContainer.of(context).updateLoggedStatus(false);
+  //   Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => LoginScreen(),
+  //       ));
+  // }
+
+  // @override
+  // void didChangeDependencies() {
+  //   userState = UserStateContainer.of(context);
+  //   if (userState.user == null && userState.isLoggedIn == true) {
+  //     // AvmToast.instance.showLoading(context);
+  //     if (mounted) {
+  //       userState.initUser().whenComplete(() {
+  //         // AvmToast.instance.dismiss();
+  //       });
+  //     }
+  //   }
+  //   super.didChangeDependencies();
+  // }
 
   final pages = [const GlobalScreen(), YourFeedScreen(), AddArticleScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalScaffoldKey,
       backgroundColor: AppColors.white2,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,

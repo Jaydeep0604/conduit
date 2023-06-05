@@ -18,10 +18,7 @@ class UpdateArticleScreen extends StatefulWidget {
 
 class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
   GlobalKey<FormState> _form = GlobalKey<FormState>();
-  TextEditingController? titleCtr;
-  TextEditingController? aboutTitleCtr;
-  TextEditingController? articleCtr;
-  TextEditingController? tagsCtr;
+  TextEditingController? titleCtr, aboutTitleCtr, articleCtr, tagsCtr;
   late ArticleBloc articleBloc;
   String? title, aboutTitle, article;
   List<String>? tagsList;
@@ -85,19 +82,19 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
               if (state is ArticleLoadingState) {
                 return Center(child: CToast.instance.showLoader());
               }
+              if (state is UpdateArticleLoadingState) {
+                return Center(child: CToast.instance.showLoader());
+              }
               if (state is UpdateArticleSuccessState) {
-                articleBloc.add(FetchArticleEvent(slug: widget.slug));
                 Future.delayed(Duration(seconds: 2), () {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));
                 });
               }
-
               if (state is ArticleErrorState) {
                 Future.delayed(Duration.zero, () {
                   CToast.instance.showError(context, state.msg);
                 });
-                // return CToast.instance.showError(context, state.msg);
               }
               if (state is ArticleLoadedState) {
                 title = state.articleModel.last.article?.title;
@@ -309,8 +306,6 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
                                           width: 3, color: AppColors.white),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    hintText: "Enter tags"
-                                    //prefixText: 'GJ011685',
                                     ),
                                 // controller: emailCtr,
                               )

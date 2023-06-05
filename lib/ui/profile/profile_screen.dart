@@ -350,7 +350,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(50),
                                               child: Image.network(
-                                                '${state.profileList.last.image}',
+                                                '${state.profileList.last.user!.image}',
                                                 alignment: Alignment.center,
                                               ),
                                             ),
@@ -358,7 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         SizedBox(height: 20),
                                         Text(
-                                          "${state.profileList.last.username}",
+                                          "${state.profileList.last.user!.username}",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
@@ -378,7 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               selectAll: false),
                                           minLines: 1,
                                           initialValue:
-                                              state.profileList.last.bio,
+                                              state.profileList.last.user!.bio,
                                           // cursorColor: AppColors.primaryColor,
                                           keyboardType: TextInputType.text,
                                           style: TextStyle(

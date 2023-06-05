@@ -1,10 +1,11 @@
 import 'dart:math';
-
-import 'package:conduit/model/auth_model.dart';
 import 'package:conduit/model/profile_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ProfileState extends Equatable {}
+
+// fetch profile
+
 
 class ProfileInitialState extends ProfileState {
   @override
@@ -22,7 +23,6 @@ class ProfileLoadingState extends ProfileState {
 }
 
 
-// ignore: must_be_immutable
 class ProfileLoadedState extends ProfileState {
   List<ProfileModel> profileList;
   ProfileLoadedState({required this.profileList});
@@ -30,15 +30,20 @@ class ProfileLoadedState extends ProfileState {
   List<Object?> get props => [profileList];
 }
 
-// ignore: must_be_immutable
-class ProfileLoadedError extends ProfileState {
+class ProfileLoadedErrorState extends ProfileState {
   String msg;
-  ProfileLoadedError({required this.msg});
+  ProfileLoadedErrorState({required this.msg});
   @override
   List<Object?> get props => [msg];
+  @override
+  String toString() {
+    return msg;
+  }
 }
 
-// ignore: must_be_immutable
+
+// update profile
+
 class ProfileErrorState extends ProfileState {
   List<ProfileModel>? profileList;
   String message;
@@ -50,29 +55,18 @@ class ProfileErrorState extends ProfileState {
   List<Object?> get props => [profileList, message, Random().nextDouble()];
 }
 
-
-// ignore: must_be_immutable
-class ProfileSuccessState extends ProfileState {
-  List<ProfileModel>? profileList;
-  ProfileSuccessState({this.profileList});
+class ProfileUpdateLoadingState extends ProfileState {
   @override
-  List<Object?> get props => [profileList];
+  List<Object?> get props => [];
+}
+class ProfileUpdateSuccessState extends ProfileState {
+  @override
+  List<Object?> get props => [];
 }
 
-
-
-// ignore: must_be_immutable
-class PasswordChangedState extends ProfileState {
-  String message;
-  PasswordChangedState({required this.message});
-  @override
-  List<Object?> get props => [message];
-}
-
-// ignore: must_be_immutable
-class ProfileUserErrorState extends ProfileState {
+class ProfileUpdateErrorState extends ProfileState {
   String msg;
-  ProfileUserErrorState({required this.msg});
+  ProfileUpdateErrorState({required this.msg});
   @override
   List<Object?> get props => [msg];
   @override
@@ -80,3 +74,28 @@ class ProfileUserErrorState extends ProfileState {
     return msg;
   }
 }
+
+// class ProfileSuccessState extends ProfileState {
+//   List<ProfileModel>? profileList;
+//   ProfileSuccessState({this.profileList});
+//   @override
+//   List<Object?> get props => [profileList];
+// }
+
+// class PasswordChangedState extends ProfileState {
+//   String message;
+//   PasswordChangedState({required this.message});
+//   @override
+//   List<Object?> get props => [message];
+// }
+
+// class ProfileUserErrorState extends ProfileState {
+//   String msg;
+//   ProfileUserErrorState({required this.msg});
+//   @override
+//   List<Object?> get props => [msg];
+//   @override
+//   String toString() {
+//     return msg;
+//   }
+// }

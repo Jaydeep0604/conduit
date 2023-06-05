@@ -9,7 +9,9 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   ArticleBloc({required this.repo}) : super(ArticleInitialState()) {
     on<SubmitArticleEvent>(_onSubmitArticleEvent);
     on<FetchArticleEvent>(onFetchArticleEvent);
+    on<UpdateArticleEvent>(_onUpdateArticle);
     on<DeleteArticleEvent>(_onDeleteArticleEvent);
+
   }
 
   _onSubmitArticleEvent(SubmitArticleEvent event, Emitter<ArticleState> emit) async {
@@ -45,7 +47,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   _onUpdateArticle(UpdateArticleEvent event, Emitter<ArticleState> emit) async {
     AllArticlesRepo repo = AllArticlesImpl();
     try {
-      // emit(UpdateArticleLoadingState());
+      emit(UpdateArticleLoadingState());
       dynamic data;
       data = await repo.updateArticle(event.articleModel, event.slug);
       emit(UpdateArticleSuccessState(msg: "Article updated successfully"));
