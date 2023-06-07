@@ -81,6 +81,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 return CToast.instance.showLoader();
               }
               if(state is ProfileUpdateSuccessState){
+                isLoading=false;
                 profileBloc.add(FetchProfileEvent());
               }
               if(state is ProfileUpdateErrorState){
@@ -368,22 +369,23 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                                 onPressed: () {
                                   FocusManager.instance.primaryFocus!.unfocus();
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  profileBloc.add(
-                                    UpdateProfileEvent(
-                                      profileModel: ProfileModel(
-                                        user: User(
-                                          username: usernameCtr!.text.toString(),
-                                          email: emailCtr!.text.toString(),
-                                          bio: bioCtr!.text.toString(),
-                                          image: image.toString()
+                                  // setState(() {
+                                  //   isLoading = true;
+                                  // });
+                                  CToast.instance.showError(context, "Coming soon");
+                                  // profileBloc.add(
+                                  //   UpdateProfileEvent(
+                                  //     profileModel: ProfileModel(
+                                  //       user: User(
+                                  //         // username: usernameCtr!.text.toString(),
+                                  //         //email: emailCtr!.text.toString(),
+                                  //         bio: bioCtr!.text.toString(),
+                                  //         // image: image.toString()
                                           
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // );
                                 },
                                 child: isLoading == true
                                     ? Container(

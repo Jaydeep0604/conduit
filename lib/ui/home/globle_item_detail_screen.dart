@@ -801,6 +801,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   itemCount: state.commentModel.length,
                                   itemBuilder: (context, index) {
                                     return CommentWidget(
+                                      slug: widget.slug,
                                       commentModel: state.commentModel[index],
                                     );
                                   },

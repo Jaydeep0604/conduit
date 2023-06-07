@@ -1,5 +1,6 @@
 import 'package:conduit/bloc/login_bloc/login_event.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/config/shared_pref_store.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repository/auth_repo.dart';
@@ -19,6 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       data = await repo.login(event.authModel);
       print("Login response :: $data");
       dynamic jsonData = data['user'];
+      // await sharedStore.openSession(jsonData["token"]);
       bool isSessionOpen = await hiveStore.openSession(
         UserAccessData(
           email: jsonData["email"],
@@ -28,7 +30,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           token: jsonData["token"],
         ),
       );
-
       if (isSessionOpen) {
         add(InitUserEvent(msg: jsonData['user'].toString()));
       } else {
@@ -72,12 +73,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             msg: event.msg,
           ),
         );
-      // } else {
-      //   emit(
-      //     LoginErrorState(
-      //       msg: "Cannot initialize the user",
-      //     ),
-      //   );
+        // } else {
+        //   emit(
+        //     LoginErrorState(
+        //       msg: "Cannot initialize the user",
+        //     ),
+        //   );
       }
     } catch (e) {
       emit(

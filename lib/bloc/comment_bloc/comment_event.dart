@@ -11,9 +11,9 @@ class fetchCommentEvent extends CommentEvent {
 
 class deleteCommentEvent extends CommentEvent {
   final int commentId;
-
-  deleteCommentEvent(this.commentId);
+  final String slug;
+  deleteCommentEvent({required this.commentId, required this.slug});
 
   @override
-  List<Object?> get props => [commentId];
+  List<Object?> get props => [commentId, slug];
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/model/profile_model.dart';
@@ -16,38 +15,38 @@ class UserClient {
   }
 
   UserClient._internal();
-  Future<http.Response> doGet(String url, {Map<String, String>? header}) async {
-    Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+  // Future<http.Response> doGet(String url, {Map<String, String>? header}) async {
+  //   Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
 
-    if (userData == null) {
-      return http.Response("{'msg':'No user found'}", 404);
-    }
-    Map<String, String> head = {
-      "content-type": "application/json",
-      "Authorization": "Bearer ${ApiConstant.TOKEN}"
-      // "Authorization": "Bearer ${userData.values.last.token}"
-    };
-    // ${userData.values.last.token
-    if (header != null) {
-      head.addAll(header);
-    }
+  //   if (userData == null) {
+  //     return http.Response("{'msg':'No user found'}", 404);
+  //   }
+  //   Map<String, String> head = {
+  //     "content-type": "application/json",
+  //     "Authorization": "Bearer ${ApiConstant.TOKEN}"
+  //     // "Authorization": "Bearer ${userData.values.last.token}"
+  //   };
+  //   // ${userData.values.last.token
+  //   if (header != null) {
+  //     head.addAll(header);
+  //   }
 
-    try {
-      http.Response response = await http.get(Uri.parse(url), headers: head);
-      print("${response.body}");
-      dynamic jsonData = jsonDecode(response.body);
-      if (response.statusCode != 403 && response.statusCode != 401) {
-        return response;
-      } else {
-        throw UnAuthorizedException(
-            message: jsonData['message'] ?? "Session Expired..!".toString(),
-            statusCode: response.statusCode);
-      }
-    } on UnAuthorizedException catch (e) {
-      hiveStore.clossSession();
-      return http.Response('{"message":"${e.message}"}', e.statusCode);
-    }
-  }
+  //   try {
+  //     http.Response response = await http.get(Uri.parse(url), headers: head);
+  //     print("${response.body}");
+  //     dynamic jsonData = jsonDecode(response.body);
+  //     if (response.statusCode != 403 && response.statusCode != 401) {
+  //       return response;
+  //     } else {
+  //       throw UnAuthorizedException(
+  //           message: jsonData['message'] ?? "Session Expired..!".toString(),
+  //           statusCode: response.statusCode);
+  //     }
+  //   } on UnAuthorizedException catch (e) {
+  //     hiveStore.clossSession();
+  //     return http.Response('{"message":"${e.message}"}', e.statusCode);
+  //   }
+  // }
 
   Future<http.Response> doPostArticle(String url, Map<String, dynamic> body,
       {Map<String, String>? header}) async {
@@ -100,8 +99,9 @@ class UserClient {
   Future<http.Response> doUpdateArticle(String url, Map<String, dynamic> body,
       {Map<String, String>? header}) async {
     Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+    
     print("TOKEN IS :: ${userData!.values.last.token}");
-
+    
     if (userData == null) {
       return http.Response("{'msg':'No user found'}", 404);
     }
@@ -149,7 +149,6 @@ class UserClient {
   Future<http.Response> doPostComment(String url, Map<String, dynamic> body,
       {Map<String, String>? header}) async {
     Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
-
     if (userData == null) {
       return http.Response("{'msg':'No user found'}", 404);
     }
@@ -209,10 +208,10 @@ class UserClient {
 
     ProfileModel profileModel = ProfileModel(
       user: User(
-        email: body.values.first['email'],
-        username: body.values.first["username"],
+        // email: body.values.first['email'],
+        // username: body.values.first["username"],
         bio: body.values.first["bio "],
-        image: body.values.first['image'],
+        // image: body.values.first['image'],
       ),
     );
 

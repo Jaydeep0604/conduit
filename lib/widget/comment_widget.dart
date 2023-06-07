@@ -1,7 +1,6 @@
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/config/shared_preferences_store.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -11,9 +10,11 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class CommentWidget extends StatefulWidget {
-  CommentWidget({Key? key, required this.commentModel, this.deleteWidget})
+  CommentWidget(
+      {Key? key, required this.commentModel,this.deleteWidget, required this.slug})
       : super(key: key);
   CommentModel commentModel;
+  String? slug;
 
   Widget? deleteWidget;
 
@@ -145,7 +146,8 @@ class _CommentWidgetState extends State<CommentWidget> {
                               child: InkWell(
                                 onTap: () {
                                   commentBloc.add(deleteCommentEvent(
-                                      widget.commentModel.id!));
+                                      slug: widget.slug!,
+                                      commentId:widget.commentModel.id!));
                                 },
                                 child: Icon(
                                   Icons.delete_forever_rounded,

@@ -1,8 +1,6 @@
-import 'package:conduit/bloc/article_bloc/article_state.dart';
 import 'package:conduit/bloc/profile_bloc/profile_event.dart';
 import 'package:conduit/bloc/profile_bloc/profile_state.dart';
 import 'package:conduit/repository/all_article_repo.dart';
-import 'package:conduit/repository/profile_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
@@ -16,7 +14,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       FetchProfileEvent event, Emitter<ProfileState> emit) async {
     try {
       emit(ProfileLoadingState());
-
       dynamic aData = (await repo.getProfileData());
 
       if (aData != null) {

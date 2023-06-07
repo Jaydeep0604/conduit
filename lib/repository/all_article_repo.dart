@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/config/shared_preferences_store.dart';
+import 'package:conduit/config/shared_pref_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/new_article_model.dart';
@@ -21,7 +21,7 @@ abstract class AllArticlesRepo {
   Future<String> addComment(AddCommentModel addCommentModel, String slug);
   Future<List<ArticleModel>> getArticle(String slug);
   Future<List<CommentModel>> getComment(String slug);
-  Future<int> deleteComment(int commentId);
+  Future<int> deleteComment(int commentId, String slug);
   Future<List<ProfileModel>> getProfileData();
   Future<dynamic> updateProfile(ProfileModel profileModel);
   Future<bool> logOut();
@@ -33,10 +33,12 @@ class AllArticlesImpl extends AllArticlesRepo {
       {int? offset, int? limit}) async {
     String url = ApiConstant.ALL_Articles + "?offset=$offset&limit=$limit";
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    // final pref = await sharedStore.getAllData();
     http.Response response = await http.get(
       Uri.parse(url),
       headers: {
         "content-type": "application/json",
+        // "Authorization": "Bearer ${pref["token"]}"
         "Authorization": "Bearer ${detailModel!.values.first.token}"
       },
     );
@@ -286,15 +288,15 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 
-  Future<int> deleteComment(int commentId) async {
+  Future<int> deleteComment(int commentId, String slug) async {
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    String? slug;
-    final pref = await sharedPreferencesStore.getSlug();
-    slug = await pref['slug'];
+    // final pref = await sharedPreferencesStore.getSlug();
+    // slug = await pref['slug'];
     String url = ApiConstant.BASE_COMMENT_URL +
         "/${slug}" +
         ApiConstant.END_COMMENT_URL +
         "/${commentId}";
+    print("created url is :: $url");
     http.Response response = await http.delete(
       Uri.parse(url),
       headers: {
@@ -309,7 +311,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 
-   @override
+  @override
   Future<List<ProfileModel>> getProfileData() async {
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.USER_PROFILE;
@@ -322,6 +324,8 @@ class AllArticlesImpl extends AllArticlesRepo {
     );
     Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
+      // sharedStore.logOut();
+      // await sharedStore.openSession(jsonData["token"]);
       ProfileModel profile = ProfileModel.fromJson(jsonData);
       return [profile]; // Wrap the profile in a list and return
     } else {
@@ -331,15 +335,13 @@ class AllArticlesImpl extends AllArticlesRepo {
 
   Future updateProfile(ProfileModel profileModel) async {
     String url = ApiConstant.UPDATE_USER;
-
     Map<String, dynamic> body = profileModel.toJson();
-
     http.Response response =
         await UserClient.instance.doUpdateProfile(url, body);
     // print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
-
+    await hiveStore.logOut();
     if (jsonData['errors'] != null) {
       Map<String, dynamic> errors = jsonData['errors'];
       String fieldName = errors.keys.first;
@@ -347,7 +349,16 @@ class AllArticlesImpl extends AllArticlesRepo {
       message = '$fieldName $errorValue';
     }
     if (response.statusCode == 200) {
-      return message;
+      bool isSessionOpen = await hiveStore.openSession(
+        UserAccessData(
+          email: jsonData["email"],
+          userName: jsonData["username"],
+          bio: jsonData["bio"],
+          image: jsonData["image"],
+          token: jsonData["token"],
+        ),
+      );
+      return jsonData;
     } else if (response.statusCode == 403) {
       throw message;
     } else {
@@ -355,7 +366,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 
-   @override
+  @override
   Future<bool> logOut() async {
     await hiveStore.logOut();
     if (hiveStore.logOut() == true) {
