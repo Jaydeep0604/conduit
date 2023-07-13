@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -51,11 +52,11 @@ class _SettingScreenState extends State<SettingScreen> {
           centerTitle: true,
           title: Text(
             "Settings",
-            style: TextStyle(fontSize: 20, color: AppColors.primaryColor2),
+            style: TextStyle(fontSize: 20.sp, color: AppColors.primaryColor2),
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 15),
+              padding: EdgeInsets.only(right: 15.w),
               child: InkWell(
                   onTap: () {
                     onLogout();
@@ -106,17 +107,17 @@ class _SettingScreenState extends State<SettingScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 20,
+                            height: 20.h,
                           ),
                           Container(
-                            height: 100,
-                            width: 100,
+                            height: 100.h,
+                            width: 100.w,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                                 border: Border.all(
-                                    color: AppColors.primaryColor, width: 1)),
+                                    color: AppColors.primaryColor, width: 1.w)),
                             child: Padding(
-                              padding: const EdgeInsets.all(1.0),
+                              padding: EdgeInsets.all(1.0.w),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
@@ -127,7 +128,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                           Container(
                             padding:
-                                EdgeInsets.only(top: 20, right: 20, left: 20),
+                                EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                             child: Column(
                               children: [
                                 TextFormField(
@@ -143,36 +144,36 @@ class _SettingScreenState extends State<SettingScreen> {
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: AppColors.white2,
-                                      contentPadding: const EdgeInsets.all(10),
+                                      contentPadding: EdgeInsets.all(10.w),
                                       prefixIcon: Padding(
-                                        padding: const EdgeInsets.all(15.0),
+                                        padding: EdgeInsets.all(15.0.w),
                                       ),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       disabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedErrorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       //prefixText: 'GJ011685',
@@ -184,7 +185,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                           Container(
                             padding:
-                                EdgeInsets.only(top: 20, right: 20, left: 20),
+                                EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                             child: Column(
                               children: [
                                 TextFormField(
@@ -201,36 +202,36 @@ class _SettingScreenState extends State<SettingScreen> {
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: AppColors.white2,
-                                      contentPadding: const EdgeInsets.all(10),
+                                      contentPadding: EdgeInsets.all(10.w),
                                       prefixIcon: Padding(
-                                        padding: const EdgeInsets.all(15.0),
+                                        padding: EdgeInsets.all(15.0.w),
                                       ),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       disabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedErrorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       hintText: "Bio"),
@@ -241,7 +242,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                           Container(
                             padding:
-                                EdgeInsets.only(top: 20, right: 20, left: 20),
+                                EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                             child: Column(
                               children: [
                                 TextFormField(
@@ -257,36 +258,36 @@ class _SettingScreenState extends State<SettingScreen> {
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: AppColors.white2,
-                                      contentPadding: const EdgeInsets.all(10),
+                                      contentPadding: EdgeInsets.all(10.w),
                                       prefixIcon: Padding(
-                                        padding: const EdgeInsets.all(15.0),
+                                        padding: EdgeInsets.all(15.0.w),
                                       ),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       disabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedErrorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       hintText: "Email"
@@ -299,7 +300,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                           Container(
                             padding:
-                                EdgeInsets.only(top: 20, right: 20, left: 20),
+                                EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                             child: Column(
                               children: [
                                 TextFormField(
@@ -316,36 +317,36 @@ class _SettingScreenState extends State<SettingScreen> {
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: AppColors.white2,
-                                      contentPadding: const EdgeInsets.all(10),
+                                      contentPadding: EdgeInsets.all(10.w),
                                       prefixIcon: Padding(
-                                        padding: const EdgeInsets.all(15.0),
+                                        padding: EdgeInsets.all(15.0.w),
                                       ),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       disabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       focusedErrorBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            width: 3, color: AppColors.white2),
+                                            width: 3.w, color: AppColors.white2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       hintText: "New Password"
@@ -357,10 +358,10 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 25),
+                            padding: EdgeInsets.only(top: 25.w),
                             child: SizedBox(
-                              width: 320,
-                              height: 45,
+                              width: 320.w,
+                              height: 45.h,
                               child: MaterialButton(
                                 color: AppColors.primaryColor,
                                 textColor: AppColors.white,
@@ -389,8 +390,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                 },
                                 child: isLoading == true
                                     ? Container(
-                                        height: 40,
-                                        padding: EdgeInsets.all(8),
+                                        height: 40.h,
+                                        padding: EdgeInsets.all(8.w),
                                         child: CToast.instance.showLoader(),
                                       )
                                     : Text(
@@ -402,10 +403,10 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                           ),
                           // Padding(
-                          //   padding: EdgeInsets.only(top: 25),
+                          //   padding: EdgeInsets.only(top: 25.w),
                           //   child: SizedBox(
-                          //     width: 320,
-                          //     height: 45,
+                          //     width: 320.w,
+                          //     height: 45.h,
                           //     child: MaterialButton(
                           //       textColor: AppColors.white,
                           //       shape: RoundedRectangleBorder(
@@ -462,7 +463,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 children: [
                   Container(
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 15.w),
                     child: Text(
                       "Are you sure you want to sign out ?",
                       style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -473,12 +474,12 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.w),
                     child: Row(
                       children: [
                         Expanded(
                           child: FlatButton(
-                              height: 40,
+                              height: 40.h,
                               color: AppColors.white,
                               disabledColor: AppColors.pholder_background,
                               shape: RoundedRectangleBorder(
@@ -520,11 +521,11 @@ class _SettingScreenState extends State<SettingScreen> {
                         //   ),
                         // ),
                         SizedBox(
-                          width: 10,
+                          width: 10.w,
                         ),
                         Expanded(
                           child: FlatButton(
-                            height: 40,
+                            height: 40.h,
                             color: AppColors.primaryColor,
                             // disabledColor: AppColors.Bottom_bar_color,
                             shape: RoundedRectangleBorder(

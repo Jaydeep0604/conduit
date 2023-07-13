@@ -1,6 +1,7 @@
 // import 'package:flash/flash.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -27,7 +28,7 @@ class CToast {
         style: TextStyle(
           color: Colors.white,
           //fontFamily: KSMFontFamily.robotomedium,
-          fontSize: 12,
+          fontSize: 12.sp,
         ),
       ),
       backgroundColor: Colors.red[400],
@@ -37,7 +38,7 @@ class CToast {
       duration: Duration(milliseconds: 1200),
       dismissDirection: DismissDirection.horizontal,
 
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.w),
     ));
   }
 
@@ -50,7 +51,7 @@ class CToast {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.primaryColor,
-          fontSize: 12,
+          fontSize: 12.sp,
           // fontFamily: KSMFontFamily.robotomedium
         ),
       ),
@@ -59,7 +60,7 @@ class CToast {
       // duration: Duration(seconds: 2),
       duration: Duration(milliseconds: 1200),
       elevation: 10,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.w),
     ));
   }
 
@@ -95,7 +96,7 @@ class CToast {
         timeInSecForIosWeb: 1,
         backgroundColor: AppColors.button_color,
         textColor: Colors.white,
-        fontSize: 12.0);
+        fontSize: 12.0.sp);
   }
 
   showToastError(String message) {
@@ -106,7 +107,7 @@ class CToast {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red[400],
         textColor: Colors.white,
-        fontSize: 12.0);
+        fontSize: 12.0.sp);
   }
 
   showToast(BuildContext context, String msg) {
@@ -118,7 +119,7 @@ class CToast {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.black,
-          fontSize: 12,
+          fontSize: 12.sp,
           // fontFamily: KSMFontFamily.robotomedium
         ),
       ),
@@ -126,7 +127,7 @@ class CToast {
       duration: Duration(seconds: 2),
       elevation: 10,
       backgroundColor: AppColors.primaryColor,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.w),
     ));
   }
 }

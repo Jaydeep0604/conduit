@@ -5,6 +5,7 @@ import 'package:conduit/ui/home/globle_item_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AllAirtistWidget extends StatefulWidget {
@@ -32,7 +33,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
   Widget build(BuildContext context) {
     if (widget.isLoading) {
       return Container(
-        height: 110,
+        height: 110.h,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             //border: Border.all(color: AppColors.black.withOpacity(0.051)),
@@ -43,9 +44,9 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.w),
               child: Container(
-                height: 45,
+                height: 45.h,
                 width: MediaQuery.of(context).size.width,
                 child: Shimmer.fromColors(
                   baseColor: AppColors.white2,
@@ -60,9 +61,9 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.w),
               child: Container(
-                height: 10,
+                height: 10.h,
                 child: Shimmer.fromColors(
                   baseColor: AppColors.white2,
                   highlightColor: Colors.white30.withOpacity(0.1),
@@ -76,9 +77,9 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 5.w, left: 10.w, right: 10..w),
               child: Container(
-                height: 10,
+                height: 10.h,
                 child: Shimmer.fromColors(
                   baseColor: AppColors.white2,
                   highlightColor: Colors.white30.withOpacity(0.1),
@@ -92,15 +93,15 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ),
             ),
             SizedBox(
-              height: 5,
+              height: 5.h,
             ),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  padding: EdgeInsets.only(left: 10.w, right: 10.w),
                   child: Container(
-                    height: 20,
-                    width: 100,
+                    height: 20.h,
+                    width: 100.w,
                     child: Shimmer.fromColors(
                       baseColor: AppColors.white2,
                       highlightColor: Colors.white30.withOpacity(0.1),
@@ -114,9 +115,9 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                   ),
                 ),
                 Container(
-                  height: 20,
+                  height: 20.h,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+                    padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.w),
                     child: ListView.separated(
                       reverse: true,
                       shrinkWrap: true,
@@ -125,8 +126,8 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                       itemCount: 4,
                       itemBuilder: (BuildContext ctxt, int index) {
                         return Container(
-                          height: 20,
-                          width: 40,
+                          height: 20.h,
+                          width: 40.w,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
                               color: AppColors.white2),
@@ -144,7 +145,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(
-                          width: 5,
+                          width: 5.w,
                         );
                       },
                     ),
@@ -153,7 +154,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ],
             ),
             SizedBox(
-              height: 5,
+              height: 5.h,
             )
           ],
         ),
@@ -177,7 +178,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
         _toggleObscured();
       },
       child: Container(
-        // height: 160,
+        // height: 160.h,
         // width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             border: Border.all(color: AppColors.black.withOpacity(0.051)),
@@ -188,11 +189,11 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 45,
+              height: 45.h,
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 5),
+                    padding: EdgeInsets.only(left: 10.w, top: 5.w),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: CircleAvatar(
@@ -206,7 +207,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 55, top: 9),
+                    padding: EdgeInsets.only(left: 55.w, top: 9.w),
                     child: Container(
                       child: Column(
                         children: [
@@ -214,14 +215,14 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                               alignment: Alignment.topLeft,
                               child: Text(
                                 "${widget.articlesModel?.author?.username.toString()}",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 16.sp),
                               )),
                           Align(
                               alignment: Alignment.bottomLeft,
                               child: Text(
                                 "${widget.articlesModel?.createdAt.toString().trimLeft()}",
                                 style: TextStyle(
-                                    fontSize: 11, color: AppColors.text_color),
+                                    fontSize: 11.sp, color: AppColors.text_color),
                               ))
                         ],
                       ),
@@ -230,7 +231,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 175, top: 0),
+                      padding: EdgeInsets.only(left: 175.w, top: 0.w),
                       child: GestureDetector(
                         onTap: _toggleObscured,
                         child: Transform.scale(
@@ -256,7 +257,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.w),
               child: Container(
                 child: Text(
                   "${widget.articlesModel?.title}",
@@ -266,38 +267,38 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 5.w, left: 10.w, right: 10.w),
               child: Container(
                 child: Text(
                   "${widget.articlesModel?.body}",
                   maxLines: 3,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 11.sp,
                     color: AppColors.text_color,
                   ),
                 ),
               ),
             ),
             SizedBox(
-              height: 5,
+              height: 5.h,
             ),
             Row(
               children: [
                 Container(
-                  height: 20,
+                  height: 20.h,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(left: 10.w),
                     child: Text(
                       "Read more...",
-                      style: TextStyle(fontSize: 11, color: AppColors.black),
+                      style: TextStyle(fontSize: 11.sp, color: AppColors.black),
                     ),
                   ),
                 ),
                 Expanded(
                     child: Container(
-                  height: 20,
+                  height: 20.h,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: EdgeInsets.only(right: 10.w),
                     child: ListView.separated(
                       reverse: true,
                       shrinkWrap: true,
@@ -311,17 +312,17 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
                                 color: AppColors.white2),
                             child: Center(
                                 child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 3),
+                              padding:  EdgeInsets.symmetric(
+                                  horizontal: 6.w, vertical: 3.w),
                               child: Text(
                                 " ${widget.articlesModel?.tagList![index]} ",
-                                style: TextStyle(fontSize: 11),
+                                style: TextStyle(fontSize: 11.sp),
                               ),
                             )));
                       },
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(
-                          width: 5,
+                          width: 5.w,
                         );
                       },
                     ),
@@ -330,7 +331,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget> {
               ],
             ),
             SizedBox(
-              height: 5,
+              height: 5.h,
             )
           ],
         ),

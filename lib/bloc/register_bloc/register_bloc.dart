@@ -1,11 +1,7 @@
 import 'package:conduit/bloc/register_bloc/register_event.dart';
 import 'package:conduit/bloc/register_bloc/register_state.dart';
-import 'package:conduit/config/cHiveStore.dart';
 import 'package:conduit/model/auth_model.dart';
-import 'package:conduit/model/user_data_model.dart';
-import 'package:conduit/model/user_model.dart';
 import 'package:conduit/repository/auth_repo.dart';
-import 'package:conduit/repository/user_repo.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {

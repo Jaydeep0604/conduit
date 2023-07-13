@@ -1,6 +1,7 @@
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ConduitEditText extends StatefulWidget {
   TextInputType? textInputType;
@@ -68,7 +69,7 @@ class _ConduitEditTextState extends State<ConduitEditText> {
           paste: false,
           selectAll: false,
         ),
-        style: TextStyle(fontSize: 14, //fontFamily: KSMFontFamily.robotoRgular
+        style: TextStyle(fontSize: 14.sp, //fontFamily: KSMFontFamily.robotoRgular
         ),
         decoration: InputDecoration(
             suffixIcon: widget.suffixIcon,
@@ -81,7 +82,7 @@ class _ConduitEditTextState extends State<ConduitEditText> {
             hintStyle: Theme.of(context).textTheme.caption,
             hintText: widget.hint,
             filled: true,
-            contentPadding: EdgeInsets.only(left: 10, right: 10),
+            contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
             label: widget.name != null ? Text(widget.name ?? "") : null,
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

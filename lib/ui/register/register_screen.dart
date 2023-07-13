@@ -8,7 +8,9 @@ import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/register_bloc/register_bloc.dart';
 
@@ -24,7 +26,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late TextEditingController passwordctr = TextEditingController();
   late TextEditingController UserNameCtr = TextEditingController();
   GlobalKey<FormState> _form = GlobalKey<FormState>();
+
   bool isLoading = false;
+
   bool _obsecureText = true;
   late RegisterBloc registerBloc;
   AuthModel? authModel;
@@ -52,6 +56,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
       child: Scaffold(
         backgroundColor: AppColors.white2,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+            color: AppColors.black,
+          ),
+        ),
         body: MultiBlocListener(
           listeners: [
             BlocListener<RegisterBloc, RegisterState>(
@@ -80,50 +96,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             )
           ],
-          child: SingleChildScrollView(
-            child: Container(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Form(
                   key: _form,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 100),
-                        child: Container(
-                          height: 110,
-                          child: Column(
-                            children: [
-                              Text(
-                                "conduit",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 50,
-                                    color: AppColors.primaryColor),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text("A place to share your knowledge.",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: AppColors.black))
-                            ],
+                      SizedBox(
+                        height: 100.h,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "conduit",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 50.sp,
+                                color: AppColors.primaryColor),
                           ),
-                        ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Text("A place to share your knowledge.",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.sp,
+                                  color: AppColors.black))
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50.h,
                       ),
                       Container(
-                        padding: EdgeInsets.only(left: 30, top: 50),
+                        padding: EdgeInsets.only(left: 30.w),
                         alignment: Alignment.topLeft,
                         child: Text(
                           'Sign Up',
-                          style: TextStyle(fontSize: 25),
+                          style: TextStyle(fontSize: 25.sp),
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 20.h,
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 4, right: 30, left: 30),
+                        padding: EdgeInsets.only(right: 30.w, left: 30.w),
                         child: Column(
                           children: [
                             ConduitEditText(
@@ -150,8 +169,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 15.h,
+                      ),
                       Container(
-                        padding: EdgeInsets.only(top: 15, right: 30, left: 30),
+                        padding: EdgeInsets.only(right: 30.w, left: 30.w),
                         child: Column(
                           children: [
                             ConduitEditText(
@@ -186,8 +208,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 15.h,
+                      ),
                       Container(
-                        padding: EdgeInsets.only(top: 15, right: 30, left: 30),
+                        padding: EdgeInsets.only(right: 30.w, left: 30.w),
                         child: Column(
                           children: [
                             ConduitEditText(
@@ -228,46 +253,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: (() {
-                          setState(() {
-                            emailCtr.clear();
-                            passwordctr.clear();
-                          });
-                          // Navigator.pushNamed(
-                          //         context, ForgetPassword.forgetPasswordUrl)
-                          //     .then((value) {
-                          //   formKey.currentState?.reset();
-                          // });
-                        }),
-                        child: Container(
-                          padding: EdgeInsets.only(right: 30, top: 0.2),
-                          alignment: Alignment.topRight,
-                          child: Text('Forgot Password?',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      // fontFamily: KSMFontFamily.robotoRgular,
-                                      color: AppColors.text_color)),
-                        ),
+                        height: 20.h,
                       ),
                       Container(
-                        padding: EdgeInsets.only(right: 30, left: 30, top: 20),
+                        padding: EdgeInsets.only(
+                          right: 30.w,
+                          left: 30.w,
+                        ),
                         alignment: Alignment.topRight,
                         child: FlatButton(
                           minWidth: MediaQuery.of(context).size.width,
-                          height: 40,
+                          height: 40.h,
                           color: AppColors.primaryColor,
                           disabledColor: AppColors.Box_width_color,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           child: isLoading
                               ? Container(
-                                  height: 40,
-                                  padding: EdgeInsets.all(8),
+                                  height: 40.h,
+                                  padding: EdgeInsets.all(8.w),
                                   child: CToast.instance.showLoader(),
                                 )
                               : Text('Sign Up',
@@ -321,8 +325,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }),
                         child: Container(
                           padding: EdgeInsets.only(
-                            bottom: 20,
-                            top: 40,
+                            bottom: 20.w,
+                            top: 40.w,
                           ),
                           alignment: Alignment.center,
                           child: Text('Already have account?',

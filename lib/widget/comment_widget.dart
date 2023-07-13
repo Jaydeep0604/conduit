@@ -6,6 +6,7 @@ import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
@@ -66,30 +67,30 @@ class _CommentWidgetState extends State<CommentWidget> {
               //hintText: "Write a comment...",
               filled: true,
               fillColor: AppColors.white2,
-              contentPadding: const EdgeInsets.all(10),
+              contentPadding: EdgeInsets.all(10.w),
               prefixIcon: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: EdgeInsets.all(15.0.w),
               ),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               disabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
+                borderSide: BorderSide(width: 3.w, color: AppColors.white2),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
+                borderSide: BorderSide(width: 3.w, color: AppColors.white2),
                 borderRadius: BorderRadius.circular(10),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
+                borderSide: BorderSide(width: 3.w, color: AppColors.white2),
                 borderRadius: BorderRadius.circular(10),
               ),
               errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
+                borderSide: BorderSide(width: 3.w, color: AppColors.white2),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
+                borderSide: BorderSide(width: 3.w, color: AppColors.white2),
                 borderRadius: BorderRadius.circular(10),
               ),
               //prefixText: 'GJ011685',
@@ -104,7 +105,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 color: AppColors.white2,
                 borderRadius: BorderRadius.circular(5)),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              padding: EdgeInsets.symmetric(vertical: 5.w, horizontal: 8.w),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -116,7 +117,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                     ),
                   ),
                   SizedBox(
-                    width: 10,
+                    width: 10.w,
                   ),
                   Text(
                     "${widget.commentModel.author?.username ?? ''}",
@@ -125,7 +126,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                     ),
                   ),
                   SizedBox(
-                    width: 10,
+                    width: 10.w,
                   ),
                   Text(
                     DateFormat('yyyy-MM-dd').format(

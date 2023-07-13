@@ -11,6 +11,7 @@ import 'package:conduit/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddArticleScreen extends StatefulWidget {
   AddArticleScreen({Key? key}) : super(key: key);
@@ -88,10 +89,10 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 20,
+                    height: 20.h,
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                     child: Column(
                       children: [
                         TextFormField(
@@ -109,35 +110,35 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           decoration: InputDecoration(
                               filled: true,
                               fillColor: AppColors.white,
-                              contentPadding: const EdgeInsets.all(10),
+                              contentPadding:  EdgeInsets.all(10.w),
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding:  EdgeInsets.all(10.0.w),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               disabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               hintText: "Article Title"),
@@ -147,7 +148,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                     child: Column(
                       children: [
                         TextFormField(
@@ -164,35 +165,35 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           decoration: InputDecoration(
                               filled: true,
                               fillColor: AppColors.white,
-                              contentPadding: const EdgeInsets.all(10),
+                              contentPadding: EdgeInsets.all(10.w),
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: EdgeInsets.all(10.0.w),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               disabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               hintText: "What's this article about?"),
@@ -202,7 +203,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                     child: Column(
                       children: [
                         TextFormField(
@@ -217,35 +218,35 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           decoration: InputDecoration(
                               filled: true,
                               fillColor: AppColors.white,
-                              contentPadding: const EdgeInsets.all(10),
+                              contentPadding:  EdgeInsets.all(10.w),
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding:  EdgeInsets.all(10.0.w),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               disabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               hintText: "Write your article ( in markdown )"),
@@ -254,7 +255,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                    padding: EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
                     child: Column(
                       children: [
                         TextFormField(
@@ -268,20 +269,20 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           decoration: InputDecoration(
                               filled: true,
                               fillColor: AppColors.white,
-                              contentPadding: const EdgeInsets.all(10),
+                              contentPadding: EdgeInsets.all(10.w),
                               prefixIcon: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding:  EdgeInsets.all(10.0.w),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               disabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               enabledBorder: OutlineInputBorder(
@@ -291,12 +292,12 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    width: 3, color: AppColors.white),
+                                    width: 3.w, color: AppColors.white),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               hintText: "Enter tags"
@@ -308,9 +309,9 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 25, left: 60, right: 60),
+                    padding: EdgeInsets.only(top: 25.w, left: 60.w, right: 60.w),
                     child: SizedBox(
-                      height: 40,
+                      height: 40.h,
                       child: MaterialButton(
                         color: AppColors.primaryColor,
                         // disabledColor: AppColors.Bottom_bar_color,
@@ -343,8 +344,8 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                         },
                         child: isLoading
                             ? Container(
-                                height: 40,
-                                padding: EdgeInsets.all(8),
+                                height: 40.h,
+                                padding: EdgeInsets.all(8.w),
                                 child: CToast.instance.showLoader(),
                               )
                             : Text(

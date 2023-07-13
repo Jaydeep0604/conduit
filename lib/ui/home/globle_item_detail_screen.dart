@@ -19,6 +19,7 @@ import 'package:conduit/widget/comment_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
@@ -87,14 +88,14 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
           // centerTitle: true,
           title: Text(
             "Details",
-            style: TextStyle(color: AppColors.white, fontSize: 20),
+            style: TextStyle(color: AppColors.white, fontSize: 20.sp),
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 20),
+              padding: EdgeInsets.only(right: 20.w),
               child: Container(
-                height: 30,
-                width: 30,
+                height: 30.h,
+                width: 30.w,
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   shape: BoxShape.circle,
@@ -106,7 +107,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                 child: Transform.scale(
                   scale: 0.9,
                   child: Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(2.0.w),
                     child: widget.favorited
                         ? Icon(
                             Icons.favorite,
@@ -149,23 +150,23 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                           width: MediaQuery.of(context).size.width,
                           color: AppColors.black.withOpacity(0.8),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.w, vertical: 5.w),
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 10,
+                                  height: 10.h,
                                 ),
                                 Text(
                                   "${state.articleModel.last.article?.title}",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 17.0,
+                                      fontSize: 17.0.sp,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.white),
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 10.h,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -199,8 +200,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 10,
+                                            padding: EdgeInsets.only(
+                                              left: 10.w,
                                             ),
                                             child: Container(
                                               child: Column(
@@ -215,7 +216,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                       child: Text(
                                                         "${state.articleModel.last.article?.author?.username.toString()}",
                                                         style: TextStyle(
-                                                            fontSize: 13,
+                                                            fontSize: 13.sp,
                                                             color: AppColors
                                                                 .primaryColor),
                                                       )),
@@ -234,7 +235,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                                   .trimLeft())),
                                                       // "${widget.allArticlesModel?.createdAt.toString().trimLeft()}",
                                                       style: TextStyle(
-                                                          fontSize: 9,
+                                                          fontSize: 9.sp,
                                                           color:
                                                               AppColors.white),
                                                     ),
@@ -257,8 +258,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                             border: Border.all(
                                                 color: AppColors.white2)),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2, horizontal: 10),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.w, horizontal: 10.w),
                                           child: Row(
                                             children: [
                                               Icon(
@@ -267,13 +268,13 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                 color: AppColors.white2,
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: 5.w,
                                               ),
                                               Text(
                                                 "Follow",
                                                 style: TextStyle(
                                                     color: AppColors.white2,
-                                                    fontSize: 13),
+                                                    fontSize: 13.sp),
                                               ),
                                             ],
                                           ),
@@ -302,8 +303,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                               border: Border.all(
                                                   color: AppColors.white2)),
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 15),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 2.w, horizontal: 15.w),
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -312,13 +313,13 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                   color: AppColors.white2,
                                                 ),
                                                 SizedBox(
-                                                  width: 5,
+                                                  width: 5.w,
                                                 ),
                                                 Text(
                                                   "Edit article",
                                                   style: TextStyle(
                                                       color: AppColors.white2,
-                                                      fontSize: 13),
+                                                      fontSize: 13.sp),
                                                 ),
                                               ],
                                             ),
@@ -326,7 +327,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         ),
                                       ),
                                     SizedBox(
-                                      width: 10,
+                                      width: 10.w,
                                     ),
                                     if (dataUsername !=
                                         state.articleModel.last.article?.author!
@@ -338,8 +339,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                             border: Border.all(
                                                 color: AppColors.primaryColor)),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2, horizontal: 10),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.w, horizontal: 10.w),
                                           child: Row(
                                             children: [
                                               Icon(
@@ -348,14 +349,14 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                 color: AppColors.primaryColor,
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: 5.w,
                                               ),
                                               Text(
                                                 "( ${state.articleModel.last.article!.favoritesCount} )",
                                                 style: TextStyle(
                                                     color:
                                                         AppColors.primaryColor,
-                                                    fontSize: 13),
+                                                    fontSize: 13.sp),
                                               ),
                                             ],
                                           ),
@@ -375,8 +376,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                               border: Border.all(
                                                   color: Colors.red.shade400)),
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 10),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 2.w, horizontal: 10.w),
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -385,14 +386,14 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                   color: Colors.red.shade400,
                                                 ),
                                                 SizedBox(
-                                                  width: 5,
+                                                  width: 5.w,
                                                 ),
                                                 Text(
                                                   "Delete",
                                                   style: TextStyle(
                                                       color:
                                                           Colors.red.shade400,
-                                                      fontSize: 13),
+                                                      fontSize: 13.sp),
                                                 ),
                                               ],
                                             ),
@@ -402,28 +403,28 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 15,
+                                  height: 15.h,
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(height: 16.0),
+                        SizedBox(height: 16.0.h),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, top: 10, bottom: 10),
+                          padding: EdgeInsets.only(
+                              left: 15.w, right: 15.w, top: 10.w, bottom: 10.w),
                           child: Text(
                             "${state.articleModel.last.article?.body}",
-                            style: TextStyle(fontSize: 14.0),
+                            style: TextStyle(fontSize: 14.0.sp),
                           ),
                         ),
                         if (state
                             .articleModel.last.article!.tagList!.isNotEmpty)
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15, right: 15, top: 10, bottom: 10),
+                            padding: EdgeInsets.only(
+                                left: 15.w, right: 15.w, top: 10.w, bottom: 10.w),
                             child: SizedBox(
-                              height: 30,
+                              height: 30.h,
                               child: ListView.separated(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
@@ -439,18 +440,18 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                           color: AppColors.white),
                                       child: Center(
                                           child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 4),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w, vertical: 4.w),
                                         child: Text(
                                           " ${state.articleModel.last.article?.tagList?[index]} ",
-                                          style: TextStyle(fontSize: 11),
+                                          style: TextStyle(fontSize: 11.sp),
                                         ),
                                       )));
                                 },
                                 separatorBuilder:
                                     (BuildContext context, int index) {
                                   return SizedBox(
-                                    width: 5,
+                                    width: 5.w,
                                   );
                                 },
                               ),
@@ -458,12 +459,12 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                           ),
                         Padding(
                           padding:
-                              EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                              EdgeInsets.only(left: 15.w, right: 15.w, bottom: 5.w),
                           child: Divider(),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 10),
+                          padding:  EdgeInsets.only(
+                              left: 15.w, right: 15.w, bottom: 10.w),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -493,8 +494,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 10,
+                                      padding: EdgeInsets.only(
+                                        left: 10.w,
                                       ),
                                       child: Container(
                                         child: Column(
@@ -508,7 +509,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                 child: Text(
                                                   "${state.articleModel.last.article?.author?.username.toString()}",
                                                   style: TextStyle(
-                                                      fontSize: 13,
+                                                      fontSize: 13.sp,
                                                       color: AppColors
                                                           .primaryColor),
                                                 )),
@@ -517,7 +518,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                               child: Text(
                                                 "${state.articleModel.last.article?.createdAt.toString().trimLeft()}",
                                                 style: TextStyle(
-                                                    fontSize: 9,
+                                                    fontSize: 9.sp,
                                                     color:
                                                         AppColors.text_color),
                                               ),
@@ -529,7 +530,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   ],
                                 ),
                               ),
-                              // SizedBox(width: 10,),
+                              // SizedBox(width: 10.w,),
                               Spacer(),
                               Container(
                                 decoration: BoxDecoration(
@@ -537,8 +538,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                     border: Border.all(
                                         color: AppColors.text_color)),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 7),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 2.w, horizontal: 7.w),
                                   child: Row(
                                     children: [
                                       Icon(
@@ -547,7 +548,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         color: AppColors.text_color,
                                       ),
                                       SizedBox(
-                                        width: 5,
+                                        width: 5.w,
                                       ),
                                       Text(
                                         "Follow",
@@ -560,7 +561,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                 ),
                               ),
                               SizedBox(
-                                width: 10,
+                                width: 10.w,
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -568,8 +569,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                     border: Border.all(
                                         color: AppColors.primaryColor)),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 7),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 2.w, horizontal: 7.w),
                                   child: Row(
                                     children: [
                                       Icon(
@@ -578,13 +579,13 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         color: AppColors.primaryColor,
                                       ),
                                       SizedBox(
-                                        width: 5,
+                                        width: 5.w,
                                       ),
                                       Text(
                                         "( ${state.articleModel.last.article!.favoritesCount} )",
                                         style: TextStyle(
                                             color: AppColors.primaryColor,
-                                            fontSize: 14),
+                                            fontSize: 14.sp),
                                       ),
                                     ],
                                   ),
@@ -615,7 +616,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                             }
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            padding: EdgeInsets.only(left: 15.w, right: 15.w),
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
@@ -642,44 +643,44 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         enabled: true,
                                         fillColor: AppColors.white2,
                                         contentPadding:
-                                            const EdgeInsets.all(10),
+                                            EdgeInsets.all(10.w),
                                         prefixIcon: Padding(
-                                          padding: const EdgeInsets.all(15.0),
+                                          padding: EdgeInsets.all(15.0.w),
                                         ),
                                         border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         disabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              width: 3,
+                                              width: 3.w,
                                               color: AppColors.white2),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              width: 3,
+                                              width: 3.w,
                                               color: AppColors.white2),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              width: 3,
+                                              width: 3.w,
                                               color: AppColors.white2),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              width: 3,
+                                              width: 3.w,
                                               color: AppColors.white2),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              width: 3,
+                                              width: 3.w,
                                               color: AppColors.white2),
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -694,8 +695,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3, horizontal: 8),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 3.w, horizontal: 8.w),
                                         child: Row(
                                           children: [
                                             CircleAvatar(
@@ -709,8 +710,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                             ),
                                             Spacer(),
                                             Container(
-                                              height: 30,
-                                              width: 120,
+                                              height: 30.h,
+                                              width: 120.w,
                                               decoration: BoxDecoration(
                                                 color: AppColors.primaryColor,
                                                 borderRadius:
@@ -761,7 +762,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: 10.h),
                                   ],
                                 ),
                               ),
@@ -776,9 +777,9 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                             }
                             if (state is CommentLoadingState) {
                               return Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding: EdgeInsets.all(10.w),
                                 child: SizedBox(
-                                  height: 30,
+                                  height: 30.h,
                                   child: CToast.instance.showLoader(),
                                 ),
                               );
@@ -791,8 +792,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                             }
                             if (state is CommentSuccessState) {
                               return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, right: 15, top: 10),
+                                padding: EdgeInsets.only(
+                                    left: 15.w, right: 15.w, top: 10.w),
                                 child: ListView.separated(
                                   primary: false,
                                   shrinkWrap: true,
@@ -808,7 +809,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   separatorBuilder:
                                       (BuildContext context, int index) {
                                     return SizedBox(
-                                      height: 10,
+                                      height: 10.h,
                                     );
                                   },
                                 ),
@@ -819,7 +820,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    SizedBox(height: 15.h),
                   ],
                 ),
               );
@@ -844,7 +845,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                 children: [
                   Container(
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 15.w),
                     child: Text(
                       "Are you sure you want to delete article?",
                       style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -855,12 +856,12 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.w),
                     child: Row(
                       children: [
                         Expanded(
                           child: FlatButton(
-                              height: 40,
+                              height: 40.h,
                               color: AppColors.white,
                               disabledColor: AppColors.pholder_background,
                               shape: RoundedRectangleBorder(
@@ -878,11 +879,11 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                               }),
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 10.w,
                         ),
                         Expanded(
                           child: FlatButton(
-                            height: 40,
+                            height: 40.h,
                             color: Colors.red[400],
                             // disabledColor: AppColors.Bottom_bar_color,
                             shape: RoundedRectangleBorder(

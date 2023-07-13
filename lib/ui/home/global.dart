@@ -4,6 +4,7 @@ import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_airtist_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/all_articles_bloc/all_articles_event.dart';
 
@@ -41,10 +42,10 @@ class _GlobalScreenState extends State<GlobalScreen> {
           if (state is AllArticlesInitialState ||
               state is AllArticlesLoadingState) {
             return Padding(
-              padding: const EdgeInsets.all(5),
+              padding:  EdgeInsets.all(5.w),
               child: Container(
                 child: Padding(
-                  padding: const EdgeInsets.all(7),
+                  padding:  EdgeInsets.all(7.w),
                   child: ListView.separated(
                     scrollDirection: Axis.vertical,
                     itemCount: 5,
@@ -52,7 +53,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
                       return AllAirtistWidget.shimmer();
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 10);
+                      return SizedBox(height: 10.h);
                     },
                   ),
                 ),
@@ -64,10 +65,10 @@ class _GlobalScreenState extends State<GlobalScreen> {
             return SingleChildScrollView(
               controller: _scrollController,
               child: Padding(
-                padding: const EdgeInsets.all(5),
+                padding:  EdgeInsets.all(5.w),
                 child: Container(
                   child: Padding(
-                    padding: const EdgeInsets.all(7),
+                    padding:  EdgeInsets.all(7.w),
                     child: ListView.separated(
                       primary: false,
                       shrinkWrap: true,
@@ -85,7 +86,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
                         }
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(height: 10);
+                        return SizedBox(height: 10.h);
                       },
                     ),
                   ),
@@ -101,7 +102,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
 
   Widget _buildLoadMoreIndicator() {
     return SizedBox(
-      height: 30,
+      height: 30.h,
       child: CToast.instance.showLoader(),
     );
   }

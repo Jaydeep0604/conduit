@@ -50,12 +50,12 @@
 //               return SingleChildScrollView(
 //                 controller: _scrollController,
 //                 child: Padding(
-//                   padding: const EdgeInsets.all(5),
+//                   padding: const EdgeInsets.all(5.w),
 //                   child: Container(
 //                     child: Column(
 //                       children: [
 //                         Padding(
-//                           padding: const EdgeInsets.all(7),
+//                           padding: const EdgeInsets.all(7.w),
 //                           child: ListView.separated(
 //                             primary: false,
 //                             shrinkWrap: true,
@@ -97,7 +97,7 @@
 
 //   Widget _buildLoadMoreIndicator() {
 //     return SizedBox(
-//       height: 30,
+//       height: 30.h,
 //       child: CToast.instance.showLoader(),
 //     );
 //   }

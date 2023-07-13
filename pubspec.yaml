@@ -48,6 +48,7 @@ dependencies:
   intl: ^0.18.1
   readmore: ^2.2.0
   shimmer: ^2.0.0
+  flutter_screenutil: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -103,3 +104,42 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - android/
+    - android/app/
+    - android/app/src/
+    - android/app/src/main/
+    - android/app/src/main/res/
+    - android/app/src/main/res/values/
+    - android/app/src/main/res/drawable/
+    - android/app/src/main/res/mipmap-hdpi/
+    - android/app/src/main/res/mipmap-mdpi/
+    - android/app/src/main/res/drawable-v21/
+    - android/app/src/main/res/mipmap-xhdpi/
+    - android/app/src/main/res/values-night/
+    - android/app/src/main/res/mipmap-xxhdpi/
+    - android/app/src/main/res/mipmap-xxxhdpi/
+    - android/app/src/main/java/
+    - android/app/src/main/java/io/
+    - android/app/src/main/java/io/flutter/
+    - android/app/src/main/java/io/flutter/plugins/
+    - android/app/src/main/kotlin/
+    - android/app/src/main/kotlin/com/
+    - android/app/src/main/kotlin/com/example/
+    - android/app/src/main/kotlin/com/example/conduit/
+    - android/app/src/debug/
+    - android/app/src/profile/
+    - android/gradle/
+    - android/gradle/wrapper/
+    - android/.gradle/
+    - android/.gradle/6.7/
+    - android/.gradle/6.7/fileHashes/
+    - android/.gradle/6.7/fileChanges/
+    - android/.gradle/6.7/javaCompile/
+    - android/.gradle/6.7/vcsMetadata-1/
+    - android/.gradle/6.7/executionHistory/
+    - android/.gradle/vcs-1/
+    - android/.gradle/checksums/
+    - android/.gradle/buildOutputCleanup/
+    - android/.gradle/configuration-cache/
+

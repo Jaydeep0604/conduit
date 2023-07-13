@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/config/shared_pref_store.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/new_article_model.dart';
@@ -155,7 +154,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 200) {
       ArticleModel articleModel = ArticleModel.fromJson(jsonData);
-      return [articleModel];
+      return [articleModel];  
 
       // dynamic data = jsonDecode(jsonData);
       // List<dynamic> data = jsonData["articles"];
