@@ -10,7 +10,7 @@ import 'package:conduit/bloc/profile_bloc/profile_state.dart';
 import 'package:conduit/ui/setting/setting_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
-import 'package:conduit/widget/all_airtist_widget.dart';
+import 'package:conduit/widget/all_article_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool myArticle = true;
   bool favArticle = false;
-  bool isLoading = false;
+  // bool isLoading = false;
 
   var _myAricleScrollController,
       _myFavAricleScrollController,
@@ -111,97 +111,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     elevation: 0,
                     automaticallyImplyLeading: false,
                     backgroundColor: AppColors.white2,
-                    expandedHeight: 320.h,
+                    expandedHeight: 265.h,
                     bottom: AppBar(
-                      centerTitle: true,
-                      automaticallyImplyLeading: false,
-                      titleSpacing: 6,
-                      elevation: 0,
-                      backgroundColor: AppColors.white2,
-                      title: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 5.w, horizontal: 10.w),
-                        child: Container(
-                          height: 40.h,
-                          decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Row(
-                            children: [
-                              Expanded(
+                            centerTitle: true,
+                            automaticallyImplyLeading: false,
+                            titleSpacing: 6,
+                            elevation: 0,
+                            backgroundColor: AppColors.white2,
+                            title: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.w, horizontal: 10.w),
+                              child: Container(
+                                // height: 45.h,
+                                decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(5)),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 7.w, horizontal: 10.w),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        myArticle = true;
-                                        favArticle = false;
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 30.h,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColors.primaryColor),
-                                          color: myArticle
-                                              ? AppColors.primaryColor
-                                              : AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Center(
-                                          child: Text(
-                                        "My Articles",
-                                        style: TextStyle(
-                                            color: myArticle
-                                                ? AppColors.white
-                                                : AppColors.black,
-                                            fontSize: 15.sp),
-                                      )),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 7.w, horizontal: 10.w),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        myArticle = false;
-                                        favArticle = true;
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 30.h,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColors.primaryColor),
-                                          color: favArticle
-                                              ? AppColors.primaryColor
-                                              : AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Center(
-                                        child: Text(
-                                          "FavArticle Articles",
-                                          style: TextStyle(
-                                              color: favArticle
-                                                  ? AppColors.white
-                                                  : AppColors.black,
-                                              fontSize: 15.sp),
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                myArticle = true;
+                                                favArticle = false;
+                                              });
+                                            },
+                                            child: Container(
+                                              height: 30.h,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: AppColors
+                                                          .primaryColor),
+                                                  color: myArticle
+                                                      ? AppColors.primaryColor
+                                                      : AppColors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Center(
+                                                  child: Text(
+                                                "My Articles",
+                                                style: TextStyle(
+                                                    color: myArticle
+                                                        ? AppColors.white
+                                                        : AppColors.black,
+                                                    fontSize: 15.sp),
+                                              )),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                myArticle = false;
+                                                favArticle = true;
+                                              });
+                                            },
+                                            child: Container(
+                                              height: 30.h,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: AppColors
+                                                          .primaryColor),
+                                                  color: favArticle
+                                                      ? AppColors.primaryColor
+                                                      : AppColors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Center(
+                                                child: Text(
+                                                  "FavArticle Articles",
+                                                  style: TextStyle(
+                                                      color: favArticle
+                                                          ? AppColors.white
+                                                          : AppColors.black,
+                                                      fontSize: 15.sp),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                     flexibleSpace: FlexibleSpaceBar(
                       background: SizedBox(
                         child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -235,6 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         CircleAvatar(
+                                          backgroundColor: Colors.transparent,
                                           child: Container(
                                             height: 80.h,
                                             width: 80.w,
@@ -352,27 +358,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             CircleAvatar(
-                                              child: Container(
-                                                height: 80.h,
-                                                width: 80.w,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(1.0.w),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(50),
-                                                    child: Image.network(
-                                                      '${state.profileList.last.user!.image}',
-                                                      fit: BoxFit.fill,
-                                                      alignment: Alignment.center,
-                                                    ),
-                                                  ),
+                                              radius: 25,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                child: Image.network(
+                                                  '${state.profileList.last.user!.image}',
+                                                  fit: BoxFit.fill,
+                                                  alignment: Alignment.center,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 20.h),
+                                            SizedBox(height: 10.h),
                                             Text(
                                               "${state.profileList.last.user!.username}",
                                               style: TextStyle(
@@ -555,7 +552,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                             if (state is MyArticlesLoadedStete) {
                               return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15.w, vertical: 5.w),
                                 child: ListView.separated(
                                   primary: false,
                                   shrinkWrap: true,
@@ -605,7 +603,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                             if (state is MyFavoriteArticlesLoadedStete) {
                               return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15.w, vertical: 5.w),
                                 child: ListView.separated(
                                   primary: false,
                                   shrinkWrap: true,

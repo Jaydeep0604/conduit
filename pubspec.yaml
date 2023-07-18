@@ -49,6 +49,8 @@ dependencies:
   readmore: ^2.2.0
   shimmer: ^2.0.0
   flutter_screenutil: ^5.0.1
+  liquid_pull_to_refresh: ^3.0.1
+  
 
 dev_dependencies:
   flutter_test:

@@ -23,6 +23,10 @@ abstract class AllArticlesRepo {
   Future<int> deleteComment(int commentId, String slug);
   Future<List<ProfileModel>> getProfileData();
   Future<dynamic> updateProfile(ProfileModel profileModel);
+  Future<dynamic> likeArticle(String slug);
+  Future<dynamic> removeLikeArticle(String slug);
+  Future<dynamic> followUser(String username);
+  Future<dynamic> unFollowUser(String username);
   Future<bool> logOut();
 }
 
@@ -30,7 +34,7 @@ class AllArticlesImpl extends AllArticlesRepo {
   @override
   Future<List<AllArticlesModel>> getAllArticlesData(
       {int? offset, int? limit}) async {
-    String url = ApiConstant.ALL_Articles + "?offset=$offset&limit=$limit";
+    String url = ApiConstant.ALL_ARTICLES + "?offset=$offset&limit=$limit";
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     // final pref = await sharedStore.getAllData();
     http.Response response = await http.get(
@@ -154,7 +158,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 200) {
       ArticleModel articleModel = ArticleModel.fromJson(jsonData);
-      return [articleModel];  
+      return [articleModel];
 
       // dynamic data = jsonDecode(jsonData);
       // List<dynamic> data = jsonData["articles"];
@@ -362,6 +366,86 @@ class AllArticlesImpl extends AllArticlesRepo {
       throw message;
     } else {
       throw message;
+    }
+  }
+
+  Future likeArticle(String slug) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.LIKE_ARTICLE + slug + "/favorite";
+    print(url);
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    print(response.body);
+    print(detailModel.values.first.token);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to like article');
+    }
+  }
+
+  Future removeLikeArticle(String slug) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.LIKE_ARTICLE + slug + "/favorite";
+    print(url);
+    http.Response response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    print(response.body);
+    print(detailModel.values.first.token);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to unlike article');
+    }
+  }
+
+  Future followUser(String slug) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.FOLLOW_USER + slug + "/follow";
+    print(url);
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    print(response.body);
+    print(detailModel.values.first.token);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to follow user');
+    }
+  }
+
+  Future unFollowUser(String username) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.FOLLOW_USER + username + "/follow";
+    print(url);
+    http.Response response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    print(response.body);
+    print(detailModel.values.first.token);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to unfollow user');
     }
   }
 

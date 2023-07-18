@@ -115,6 +115,7 @@ class AllArticlesModel {
   late bool favorited;
   int? favoritesCount;
   Author? author;
+  bool liked = false;
 
   AllArticlesModel(
       {this.slug,
@@ -126,7 +127,8 @@ class AllArticlesModel {
       this.updatedAt,
       required this.favorited,
       this.favoritesCount,
-      this.author});
+      this.author,
+      required this.liked});
 
   AllArticlesModel.fromJson(Map<String, dynamic> json) {
     slug = json['slug'];
@@ -140,6 +142,7 @@ class AllArticlesModel {
     favoritesCount = json['favoritesCount'];
     author =
         json['author'] != null ? new Author.fromJson(json['author']) : null;
+    
   }
 
   Map<String, dynamic> toJson() {
@@ -164,9 +167,9 @@ class Author {
   String? username;
   String? bio;
   String? image;
- late  bool following;
+  late bool following;
 
-  Author({this.username, this.bio, this.image,required this.following});
+  Author({this.username, this.bio, this.image, required this.following});
 
   Author.fromJson(Map<String, dynamic> json) {
     username = json['username'];

@@ -2,6 +2,8 @@ import 'package:conduit/bloc/add_comment_bloc/add_comment_bloc.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/article_bloc/article_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
+import 'package:conduit/bloc/follow_bloc/follow_bloc.dart';
+import 'package:conduit/bloc/like_article_bloc/like_article_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
 import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_bloc.dart';
@@ -48,10 +50,10 @@ Future<void> main() async {
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
       create: (context) => LoginBloc(),
@@ -78,7 +80,13 @@ Future<void> main() async {
       create: (context) => AddCommentBloc(),
     ),
     BlocProvider(
+      create: (context) => LikeBloc(repo: AllArticlesImpl()),
+    ),
+    BlocProvider(
       create: (context) => ProfileBloc(repo: AllArticlesImpl()),
+    ),
+    BlocProvider(
+      create: (context) => FollowBloc(repo: AllArticlesImpl()),
     ),
   ], child: MyApp()));
 }

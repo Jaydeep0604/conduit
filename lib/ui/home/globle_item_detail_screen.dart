@@ -8,7 +8,11 @@ import 'package:conduit/bloc/article_bloc/article_state.dart';
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/bloc/comment_bloc/comment_state.dart';
+import 'package:conduit/bloc/follow_bloc/follow_bloc.dart';
+import 'package:conduit/bloc/follow_bloc/follow_event.dart';
+import 'package:conduit/bloc/like_article_bloc/like_article_bloc.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
@@ -24,12 +28,12 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class GlobalItemDetailScreen extends StatefulWidget {
-  GlobalItemDetailScreen(
-      {Key? key, required this.slug, required this.favorited})
-      : super(key: key);
+  GlobalItemDetailScreen({
+    Key? key,
+    required this.allArticlesModel,
+  }) : super(key: key);
   // AllArticlesModel? allArticlesModel;
-  String slug;
-  bool favorited;
+  AllArticlesModel allArticlesModel;
 
   @override
   State<GlobalItemDetailScreen> createState() => _GlobalItemDetailScreenState();
@@ -47,6 +51,10 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
   bool isUsername = false;
   late CommentBloc commentBloc;
   late ArticleBloc articleBloc;
+  late LikeBloc likeBloc;
+  late FollowBloc followBloc;
+  bool? _isLike;
+  bool? _isFollow;
 
   void initState() {
     super.initState();
@@ -54,17 +62,23 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
     fetchdata();
 
     articleBloc = context.read<ArticleBloc>();
-    articleBloc.add(FetchArticleEvent(slug: widget.slug));
+    articleBloc.add(FetchArticleEvent(slug: widget.allArticlesModel.slug!));
 
     commentCtr = TextEditingController();
     addCommentBloc = context.read<AddCommentBloc>();
 
     commentBloc = context.read<CommentBloc>();
-    commentBloc.add(fetchCommentEvent(slug: widget.slug));
+    commentBloc.add(fetchCommentEvent(slug: widget.allArticlesModel.slug!));
+
+    likeBloc = context.read<LikeBloc>();
+    // _isLike = widget.isFav;
+
+    followBloc = context.read<FollowBloc>();
+    _isFollow = widget.allArticlesModel.author!.following;
   }
 
   void refreshComments() {
-    commentBloc.add(fetchCommentEvent(slug: widget.slug));
+    commentBloc.add(fetchCommentEvent(slug: widget.allArticlesModel.slug!));
   }
 
   void fetchdata() async {
@@ -73,6 +87,30 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
     setState(() {
       isUsername = true;
     });
+  }
+
+  changeFavState() {
+    setState(() {
+      _isFollow = !_isFollow!;
+      if (_isFollow == false) {
+        followBloc.add(
+          UnFollowUserEvent(
+            username: widget.allArticlesModel.author!.username!,
+          ),
+        );
+      } else {
+        followBloc.add(
+          FollowUserEvent(
+            username: widget.allArticlesModel.author!.username!,
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -90,40 +128,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
             "Details",
             style: TextStyle(color: AppColors.white, fontSize: 20.sp),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20.w),
-              child: Container(
-                height: 30.h,
-                width: 30.w,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //       color: AppColors.white.withOpacity(0.4), blurRadius: 8)
-                  // ],
-                ),
-                child: Transform.scale(
-                  scale: 0.9,
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0.w),
-                    child: widget.favorited
-                        ? Icon(
-                            Icons.favorite,
-                            // size: 60,
-                            color: AppColors.primaryColor,
-                          )
-                        : Icon(
-                            Icons.favorite_border,
-                            color: AppColors.primaryColor,
-                            // size: 60,
-                          ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
         body: SafeArea(
           child:
@@ -137,7 +141,10 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
               );
             }
             if (state is ArticleLoadedState) {
+              _isFollow = state.articleModel.last.article!.author!.following;
+              _isLike = state.articleModel.last.article!.favorited!;
               return SingleChildScrollView(
+                physics: PageScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,38 +255,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                       ),
                                     ),
                                     Spacer(),
-                                    if (dataUsername !=
-                                        state.articleModel.last.article?.author!
-                                            .username)
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border: Border.all(
-                                                color: AppColors.white2)),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 2.w, horizontal: 10.w),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.add,
-                                                size: 15,
-                                                color: AppColors.white2,
-                                              ),
-                                              SizedBox(
-                                                width: 5.w,
-                                              ),
-                                              Text(
-                                                "Follow",
-                                                style: TextStyle(
-                                                    color: AppColors.white2,
-                                                    fontSize: 13.sp),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
                                     if (dataUsername ==
                                         state.articleModel.last.article?.author!
                                             .username)
@@ -304,7 +279,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                   color: AppColors.white2)),
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 2.w, horizontal: 15.w),
+                                                vertical: 2.w,
+                                                horizontal: 15.w),
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -329,39 +305,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                     SizedBox(
                                       width: 10.w,
                                     ),
-                                    if (dataUsername !=
-                                        state.articleModel.last.article?.author!
-                                            .username)
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border: Border.all(
-                                                color: AppColors.primaryColor)),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 2.w, horizontal: 10.w),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.favorite,
-                                                size: 15,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                              SizedBox(
-                                                width: 5.w,
-                                              ),
-                                              Text(
-                                                "( ${state.articleModel.last.article!.favoritesCount} )",
-                                                style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontSize: 13.sp),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
                                     if (dataUsername ==
                                         state.articleModel.last.article?.author!
                                             .username)
@@ -377,7 +320,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                   color: Colors.red.shade400)),
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 2.w, horizontal: 10.w),
+                                                vertical: 2.w,
+                                                horizontal: 10.w),
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -393,6 +337,58 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                   style: TextStyle(
                                                       color:
                                                           Colors.red.shade400,
+                                                      fontSize: 13.sp),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (dataUsername !=
+                                        state.articleModel.last.article?.author!
+                                            .username)
+                                      Container(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.w, horizontal: 10.w),
+                                          child: InkWell(
+                                            onTap: () {
+                                              // setState(() {
+                                              //   _isLike = !_isLike!;
+                                              // });
+                                              // if (_isLike!) {
+                                              //   likeBloc.add(LikeArticleEvent(
+                                              //       slug: state.articleModel
+                                              //           .last.article!.slug!));
+                                              // } else {
+                                              //   likeBloc.add(
+                                              //       RemoveLikeArticleEvent(
+                                              //           slug: state
+                                              //               .articleModel
+                                              //               .last
+                                              //               .article!
+                                              //               .slug!));
+                                              // }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.favorite,
+                                                  size: 15,
+                                                  color: _isLike == false
+                                                      ? AppColors.white
+                                                      : AppColors.primaryColor,
+                                                ),
+                                                SizedBox(
+                                                  width: 5.w,
+                                                ),
+                                                Text(
+                                                  "${state.articleModel.last.article!.favoritesCount}",
+                                                  style: TextStyle(
+                                                      color: _isLike == false
+                                                          ? AppColors.white
+                                                          : AppColors
+                                                              .primaryColor,
                                                       fontSize: 13.sp),
                                                 ),
                                               ],
@@ -422,7 +418,10 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                             .articleModel.last.article!.tagList!.isNotEmpty)
                           Padding(
                             padding: EdgeInsets.only(
-                                left: 15.w, right: 15.w, top: 10.w, bottom: 10.w),
+                                left: 15.w,
+                                right: 15.w,
+                                top: 10.w,
+                                bottom: 10.w),
                             child: SizedBox(
                               height: 30.h,
                               child: ListView.separated(
@@ -458,12 +457,12 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                             ),
                           ),
                         Padding(
-                          padding:
-                              EdgeInsets.only(left: 15.w, right: 15.w, bottom: 5.w),
+                          padding: EdgeInsets.only(
+                              left: 15.w, right: 15.w, bottom: 5.w),
                           child: Divider(),
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(
+                          padding: EdgeInsets.only(
                               left: 15.w, right: 15.w, bottom: 10.w),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -530,64 +529,41 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   ],
                                 ),
                               ),
-                              // SizedBox(width: 10.w,),
                               Spacer(),
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                        color: AppColors.text_color)),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 2.w, horizontal: 7.w),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.add,
-                                        size: 16,
-                                        color: AppColors.text_color,
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      Text(
-                                        "Follow",
-                                        style: TextStyle(
-                                            color: AppColors.text_color,
-                                            fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                               SizedBox(
-                                width: 10.w,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
+                                width: 100,
+                                height: 30,
+                                child: MaterialButton(
+                                  color: _isFollow == true
+                                      ? AppColors.primaryColor
+                                      : null,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                        color: AppColors.primaryColor)),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 2.w, horizontal: 7.w),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.favorite,
-                                        size: 16,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                      SizedBox(
-                                        width: 5.w,
-                                      ),
-                                      Text(
-                                        "( ${state.articleModel.last.article!.favoritesCount} )",
-                                        style: TextStyle(
-                                            color: AppColors.primaryColor,
-                                            fontSize: 14.sp),
-                                      ),
-                                    ],
+                                    side: BorderSide(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                  onPressed: changeFavState,
+                                  child: SizedBox(
+                                    child: _isFollow == true
+                                        ? Text(
+                                            "Following",
+                                            style: TextStyle(
+                                              color: AppColors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            key: ValueKey<int>(1),
+                                          )
+                                        : Text(
+                                            "Follow",
+                                            style: TextStyle(
+                                              color: AppColors.primaryColor,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            key: ValueKey<int>(2),
+                                          ),
                                   ),
                                 ),
                               ),
@@ -642,8 +618,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         filled: true,
                                         enabled: true,
                                         fillColor: AppColors.white2,
-                                        contentPadding:
-                                            EdgeInsets.all(10.w),
+                                        contentPadding: EdgeInsets.all(10.w),
                                         prefixIcon: Padding(
                                           padding: EdgeInsets.all(15.0.w),
                                         ),
@@ -726,19 +701,17 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                       .validate()) {
                                                     addCommentBloc.add(
                                                       SubmitCommentEvent(
-                                                          addCommentModel:
-                                                              AddCommentModel(
-                                                            comment: Comment(
-                                                              body: commentCtr!
-                                                                  .text
-                                                                  .toString(),
-                                                            ),
+                                                        addCommentModel:
+                                                            AddCommentModel(
+                                                          comment: Comment(
+                                                            body: commentCtr!
+                                                                .text
+                                                                .toString(),
                                                           ),
-                                                          slug: state
-                                                              .articleModel
-                                                              .last
-                                                              .article!
-                                                              .slug),
+                                                        ),
+                                                        slug: state.articleModel
+                                                            .last.article!.slug,
+                                                      ),
                                                     );
                                                   }
                                                 },
@@ -802,7 +775,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                   itemCount: state.commentModel.length,
                                   itemBuilder: (context, index) {
                                     return CommentWidget(
-                                      slug: widget.slug,
+                                      slug: widget.allArticlesModel.slug,
                                       commentModel: state.commentModel[index],
                                     );
                                   },
@@ -845,7 +818,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                 children: [
                   Container(
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 15.w),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 25.w, vertical: 15.w),
                     child: Text(
                       "Are you sure you want to delete article?",
                       style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -856,7 +830,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.w),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.w),
                     child: Row(
                       children: [
                         Expanded(
@@ -900,7 +875,8 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                             ),
                             onPressed: () async {
                               articleBloc.add(
-                                DeleteArticleEvent(slug: widget.slug),
+                                DeleteArticleEvent(
+                                    slug: widget.allArticlesModel.slug!),
                               );
                               Navigator.pushReplacement(
                                   context,

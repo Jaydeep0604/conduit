@@ -109,21 +109,14 @@ class _SettingScreenState extends State<SettingScreen> {
                           SizedBox(
                             height: 20.h,
                           ),
-                          Container(
-                            height: 100.h,
-                            width: 100.w,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border.all(
-                                    color: AppColors.primaryColor, width: 1.w)),
-                            child: Padding(
-                              padding: EdgeInsets.all(1.0.w),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                    state.profileList.first.user!.image!,
-                                    alignment: Alignment.center),
-                              ),
+                          CircleAvatar(
+                            radius: 50,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(
+                                  state.profileList.first.user!.image!,
+                                  fit: BoxFit.fill,
+                                  alignment: Alignment.center),
                             ),
                           ),
                           Container(

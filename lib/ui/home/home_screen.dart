@@ -84,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           backgroundColor: AppColors.primaryColor,
           centerTitle: true,
+          elevation: 0,
           leading: InkWell(
               onTap: () {
                 Navigator.push(
