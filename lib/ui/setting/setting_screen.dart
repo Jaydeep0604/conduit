@@ -471,7 +471,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: FlatButton(
+                          child: MaterialButton(
                               height: 40.h,
                               color: AppColors.white,
                               disabledColor: AppColors.pholder_background,
@@ -517,7 +517,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           width: 10.w,
                         ),
                         Expanded(
-                          child: FlatButton(
+                          child: MaterialButton(
                             height: 40.h,
                             color: AppColors.primaryColor,
                             // disabledColor: AppColors.Bottom_bar_color,

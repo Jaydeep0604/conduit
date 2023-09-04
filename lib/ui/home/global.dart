@@ -28,32 +28,29 @@ class _GlobalScreenState extends State<GlobalScreen>
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
     articlesBloc = context.read<AllArticlesBloc>();
     likeBloc = context.read<LikeBloc>();
+
+    fetchData();
+
     _scrollController.addListener(() async {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
-          articlesBloc.add(FetchNextAllArticlesEvent(length: await length));
-        }
+      if (_scrollController.position.atEdge &&
+          _scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent) {
+        articlesBloc.add(FetchNextAllArticlesEvent(length: await length));
       }
     });
   }
 
-  Future<void> _handleRefresh() {
-    final Completer<void> completer = Completer<void>();
-    Timer(const Duration(seconds: 1), () {
-      completer.complete();
-    });
+  void fetchData() {
+    articlesBloc.add(FetchAllArticlesEvent());
+  }
 
-    return completer.future.then<void>((_) {
-      articlesBloc.add(FetchAllArticlesEvent());
-    });
+  Future<void> handleRefresh() async {
+    articlesBloc.add(FetchAllArticlesEvent());
   }
 
   @override
@@ -90,7 +87,7 @@ class _GlobalScreenState extends State<GlobalScreen>
               showChildOpacityTransition: false,
               animSpeedFactor: 3.0,
               color: AppColors.primaryColor,
-              onRefresh: _handleRefresh,
+              onRefresh: handleRefresh,
               child: SingleChildScrollView(
                 controller: _scrollController,
                 physics: BouncingScrollPhysics(),

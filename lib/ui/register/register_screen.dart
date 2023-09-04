@@ -261,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           left: 30.w,
                         ),
                         alignment: Alignment.topRight,
-                        child: FlatButton(
+                        child: MaterialButton(
                           minWidth: MediaQuery.of(context).size.width,
                           height: 40.h,
                           color: AppColors.primaryColor,

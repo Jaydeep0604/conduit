@@ -16,6 +16,7 @@ import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
+import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/ui/update_article/update_article.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
@@ -39,7 +40,8 @@ class GlobalItemDetailScreen extends StatefulWidget {
   State<GlobalItemDetailScreen> createState() => _GlobalItemDetailScreenState();
 }
 
-class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
+class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen>
+    with SingleTickerProviderStateMixin {
   Timer? timer;
   bool comment = false;
   bool isLoading = false;
@@ -55,10 +57,10 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
   late FollowBloc followBloc;
   bool? _isLike;
   bool? _isFollow;
+  bool? _followApi;
 
   void initState() {
     super.initState();
-
     fetchdata();
 
     articleBloc = context.read<ArticleBloc>();
@@ -71,7 +73,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
     commentBloc.add(fetchCommentEvent(slug: widget.allArticlesModel.slug!));
 
     likeBloc = context.read<LikeBloc>();
-    // _isLike = widget.isFav;
 
     followBloc = context.read<FollowBloc>();
     _isFollow = widget.allArticlesModel.author!.following;
@@ -89,9 +90,10 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
     });
   }
 
-  changeFavState() {
+  void changeFavState() {
     setState(() {
       _isFollow = !_isFollow!;
+      print(_isFollow);
       if (_isFollow == false) {
         followBloc.add(
           UnFollowUserEvent(
@@ -107,6 +109,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
       }
     });
   }
+
 
   @override
   void dispose() {
@@ -141,10 +144,9 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
               );
             }
             if (state is ArticleLoadedState) {
-              _isFollow = state.articleModel.last.article!.author!.following;
+              // _isFollow = state.articleModel.last.article!.author!.following!;
               _isLike = state.articleModel.last.article!.favorited!;
               return SingleChildScrollView(
-                physics: PageScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,43 +532,53 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                 ),
                               ),
                               Spacer(),
-                              SizedBox(
-                                width: 100,
-                                height: 30,
-                                child: MaterialButton(
-                                  color: _isFollow == true
-                                      ? AppColors.primaryColor
-                                      : null,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    side: BorderSide(
-                                      color: AppColors.primaryColor,
+                              if (dataUsername !=
+                                  state.articleModel.last.article?.author!
+                                      .username)
+                                Container(
+                                  width: 100,
+                                  height: 30,
+                                  child: InkWell(
+                                    onTap: changeFavState,
+                                    child: AnimatedSwitcher(
+                                      duration: Duration(milliseconds: 300),
+                                      switchInCurve: Curves.easeOut,
+                                      switchOutCurve: Curves.easeOut,
+                                      transitionBuilder: (Widget child,
+                                          Animation<double> animation) {
+                                        return ScaleTransition(
+                                          scale: animation,
+                                          child: child,
+                                        );
+                                      },
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            color: _isFollow == true
+                                                ? AppColors.primaryColor
+                                                : AppColors.white2,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                              color: AppColors.primaryColor,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              _isFollow == true
+                                                  ? "Following"
+                                                  : "Follow",
+                                              style: TextStyle(
+                                                color: _isFollow == true
+                                                    ? AppColors.white2
+                                                    : AppColors.primaryColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          )),
                                     ),
                                   ),
-                                  onPressed: changeFavState,
-                                  child: SizedBox(
-                                    child: _isFollow == true
-                                        ? Text(
-                                            "Following",
-                                            style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            key: ValueKey<int>(1),
-                                          )
-                                        : Text(
-                                            "Follow",
-                                            style: TextStyle(
-                                              color: AppColors.primaryColor,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            key: ValueKey<int>(2),
-                                          ),
-                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -835,7 +847,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: FlatButton(
+                          child: MaterialButton(
                               height: 40.h,
                               color: AppColors.white,
                               disabledColor: AppColors.pholder_background,
@@ -857,7 +869,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                           width: 10.w,
                         ),
                         Expanded(
-                          child: FlatButton(
+                          child: MaterialButton(
                             height: 40.h,
                             color: Colors.red[400],
                             // disabledColor: AppColors.Bottom_bar_color,

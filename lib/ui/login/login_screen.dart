@@ -236,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           padding: EdgeInsets.only(right: 30, left: 30, top: 20),
                           alignment: Alignment.topRight,
-                          child: FlatButton(
+                          child: MaterialButton(
                             minWidth: MediaQuery.of(context).size.width,
                             height: 40.h,
                             color: AppColors.primaryColor,

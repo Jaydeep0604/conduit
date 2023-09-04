@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AllArticlesBloc ArticlesBloc;
+  late AllArticlesBloc articlesBloc;
   late UserStateContainerState userState;
   bool isLoading = false;
 
@@ -36,8 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late GlobalKey<ScaffoldState> globalScaffoldKey;
   void initState() {
     super.initState();
-    ArticlesBloc = context.read<AllArticlesBloc>();
-    ArticlesBloc.add(FetchAllArticlesEvent());
+    articlesBloc = context.read<AllArticlesBloc>();
+    
     globalScaffoldKey = GlobalKey<ScaffoldState>();
     // hiveStore.isSessionValid.listen((event) {
     //   if (event == false) {
@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: FlatButton(
+                        child: MaterialButton(
                             height: 40.h,
                             color: AppColors.pholder_background,
                             disabledColor: AppColors.pholder_background,
@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 10.w,
                       ),
                       Expanded(
-                        child: FlatButton(
+                        child: MaterialButton(
                           height: 40.h,
                           color: AppColors.primaryColor,
                           // disabledColor: AppColors.Bottom_bar_color,

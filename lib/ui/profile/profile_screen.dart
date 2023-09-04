@@ -73,6 +73,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  void fetchApi() {
+    if (myArticle) {
+      myArticlesBloc.add(FetchMyArticlesEvent());
+    }
+    if (favArticle) {
+      myFavoriteArticlesBloc.add(FetchMyFavoriteArticlesEvent());
+    }
+  }
+
   // late final _tabController = TabController(length: 2, vsync: this);
   // final pages = [const MyArticlescreen(), FavoriteScreen()];
 
@@ -113,15 +122,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     backgroundColor: AppColors.white2,
                     expandedHeight: 265.h,
                     bottom: AppBar(
-                            centerTitle: true,
-                            automaticallyImplyLeading: false,
-                            titleSpacing: 6,
-                            elevation: 0,
-                            backgroundColor: AppColors.white2,
-                            title: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10.w, horizontal: 10.w),
-                              child: Container(
+                      centerTitle: true,
+                      automaticallyImplyLeading: false,
+                      titleSpacing: 6,
+                      elevation: 0,
+                      backgroundColor: AppColors.white2,
+                      title: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.w, horizontal: 10.w),
+                        child: BlocBuilder<ProfileBloc, ProfileState>(
+                          builder: (context, state) {
+                            if (state is ProfileInitialState ||
+                                state is ProfileLoadingState) {
+                              return Container(
+                                height: 40.h,
+                                decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          child: Shimmer.fromColors(
+                                            baseColor: AppColors.white2,
+                                            highlightColor:
+                                                Colors.white30.withOpacity(0.1),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: AppColors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          child: Shimmer.fromColors(
+                                            baseColor: AppColors.white2,
+                                            highlightColor:
+                                                Colors.white30.withOpacity(0.1),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: AppColors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            if (state is ProfileLoadedState) {
+                              return Container(
                                 // height: 45.h,
                                 decoration: BoxDecoration(
                                     color: AppColors.white,
@@ -140,6 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 myArticle = true;
                                                 favArticle = false;
                                               });
+                                              fetchApi();
                                             },
                                             child: Container(
                                               height: 30.h,
@@ -175,6 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 myArticle = false;
                                                 favArticle = true;
                                               });
+                                              fetchApi();
                                             },
                                             child: Container(
                                               height: 30.h,
@@ -204,9 +270,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                      ),
+                    ),
                     flexibleSpace: FlexibleSpaceBar(
                       background: SizedBox(
                         child: BlocBuilder<ProfileBloc, ProfileState>(
