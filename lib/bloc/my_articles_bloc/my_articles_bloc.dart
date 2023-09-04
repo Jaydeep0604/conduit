@@ -39,7 +39,7 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
         //     aData = [...currentState.myArticleslist, ...aData];
         //   }
         // }
-        emit(MyArticlesLoadedStete(myArticleslist: aData));
+        emit(MyArticlesLoadedState(myArticleslist: aData));
         offset = offset + 10;
       }
     } catch (e) {
@@ -50,8 +50,8 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
 
   _onFetchNextMyArticlesEvent(
       MyArticlesEvent event, Emitter<MyArticlesState> emit) async {
-    MyArticlesLoadedStete curentstate = state as MyArticlesLoadedStete;
-    if (curentstate is MyArticlesLoadedStete) {
+    MyArticlesLoadedState curentstate = state as MyArticlesLoadedState;
+    if (curentstate is MyArticlesLoadedState) {
       try {
         // if (event is FetchNextMyArticlesEvent) {
         //   offset = event.length!.toInt() + 1;
@@ -61,17 +61,17 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
             (await repo.getMyArticles(offset, limit)).cast<AllArticlesModel>();
         if (myArticleslist.isEmpty) {
           emit(
-            MyArticlesLoadedStete(
+            MyArticlesLoadedState(
                 myArticleslist: curentstate.myArticleslist,
                 hasReachedMax: true),
           );
         } else {
-          emit(MyArticlesLoadedStete(
+          emit(MyArticlesLoadedState(
               myArticleslist: curentstate.myArticleslist + myArticleslist));
           offset = offset + 10;
         }
       } catch (e) {
-        emit(MyArticlesLoadedStete(
+        emit(MyArticlesLoadedState(
             myArticleslist: curentstate.myArticleslist, hasReachedMax: true));
       }
     }

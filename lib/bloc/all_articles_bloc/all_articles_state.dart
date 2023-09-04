@@ -45,3 +45,6 @@ class AllArticlesErrorState extends AllArticlesState {
     return msg;
   }
 }
+class AllArticlesUnAuthorizedState extends AllArticlesState {
+  List<Object?> get props => [];
+}

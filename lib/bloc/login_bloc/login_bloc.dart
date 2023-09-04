@@ -1,6 +1,5 @@
 import 'package:conduit/bloc/login_bloc/login_event.dart';
 import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/config/shared_pref_store.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repository/auth_repo.dart';
@@ -21,6 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       print("Login response :: $data");
       dynamic jsonData = data['user'];
       // await sharedStore.openSession(jsonData["token"]);
+      // await hiveStore.init();
       bool isSessionOpen = await hiveStore.openSession(
         UserAccessData(
           email: jsonData["email"],

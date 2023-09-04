@@ -99,9 +99,9 @@ class UserClient {
   Future<http.Response> doUpdateArticle(String url, Map<String, dynamic> body,
       {Map<String, String>? header}) async {
     Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
-    
+
     print("TOKEN IS :: ${userData!.values.last.token}");
-    
+
     if (userData == null) {
       return http.Response("{'msg':'No user found'}", 404);
     }
@@ -208,10 +208,11 @@ class UserClient {
 
     ProfileModel profileModel = ProfileModel(
       user: User(
-        // email: body.values.first['email'],
-        // username: body.values.first["username"],
-        bio: body.values.first["bio "],
-        // image: body.values.first['image'],
+        email: body.values.first['email'],
+        username: body.values.first["username"],
+        bio: body.values.first["bio"],
+        image: body.values.first['image'],
+        password: body.values.first['password'],
       ),
     );
 
@@ -221,7 +222,7 @@ class UserClient {
         body: jsonEncode(profileModel.toJson()),
         headers: head,
       );
-
+      print("profile updated data is =========> ${response.body}");
       dynamic jsonData = jsonDecode(response.body);
       if (response.statusCode != 403 && response.statusCode != 401) {
         return response;
@@ -236,7 +237,55 @@ class UserClient {
       return http.Response('{"message":"${e.message}"}', e.statusCode);
     }
   }
+
+  Future<http.Response> doChangePassword(String url, Map<String, dynamic> body,
+      {Map<String, String>? header}) async {
+    Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
+    print("TOKEN IS :: ${userData!.values.last.token}");
+    if (userData == null) {
+      return http.Response("{'msg':'No user found'}", 404);
+    }
+
+    Map<String, String> head = {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${userData.values.last.token}"
+    };
+
+    if (header != null) {
+      head.addAll(header);
+    }
+
+    ProfileModel profileModel = ProfileModel(
+      user: User(
+        password: body.values.first['password'],
+      ),
+    );
+
+    try {
+      http.Response response = await http.put(
+        Uri.parse(url),
+        body: jsonEncode(profileModel.toJson()),
+        headers: head,
+      );
+      print("password updated data is =========> ${response.body}");
+      dynamic jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw UnAuthorizedException(
+          message: jsonData['message'] ?? "Session Expired..!".toString(),
+          statusCode: response.statusCode,
+        );
+      }
+    } on UnAuthorizedException catch (e) {
+      hiveStore.clossSession();
+      return http.Response('{"message":"${e.message}"}', e.statusCode);
+    }
+  }
 }
+
+
+
 
 // Future<http.Response> doUpdateArticle(String url, Map<String, dynamic> body,
 //     {Map<String, String>? header}) async {

@@ -1,12 +1,9 @@
 // import 'package:flash/flash.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../main.dart';
 
 class CToast {
   static final CToast instance = CToast._internal();
@@ -28,7 +25,7 @@ class CToast {
         style: TextStyle(
           color: Colors.white,
           //fontFamily: KSMFontFamily.robotomedium,
-          fontSize: 12.sp,
+          fontSize: 12,
         ),
       ),
       backgroundColor: Colors.red[400],
@@ -38,7 +35,7 @@ class CToast {
       duration: Duration(milliseconds: 1200),
       dismissDirection: DismissDirection.horizontal,
 
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.w),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));
   }
 
@@ -51,7 +48,7 @@ class CToast {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.primaryColor,
-          fontSize: 12.sp,
+          fontSize: 12,
           // fontFamily: KSMFontFamily.robotomedium
         ),
       ),
@@ -60,7 +57,7 @@ class CToast {
       // duration: Duration(seconds: 2),
       duration: Duration(milliseconds: 1200),
       elevation: 10,
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.w),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));
   }
 
@@ -75,7 +72,18 @@ class CToast {
     ));
   }
 
-  void showLoading(BuildContext context) {
+  showLoaderWhite() {
+    return Center(
+        child: LoadingAnimationWidget.threeArchedCircle(
+      color: AppColors.white,
+      // MyApp.themeNotifier.value == ThemeMode.dark
+      //     ? Colors.white
+      //     : Colors.black,
+      size: 40,
+    ));
+  }
+
+  showLoading(BuildContext context) {
     SmartDialog.showLoading(
         animationType: SmartAnimationType.fade,
         backDismiss: true,
@@ -86,6 +94,7 @@ class CToast {
 
   void dismiss() {
     SmartDialog.dismiss();
+    // showLoaderDialog(context).dismiss();
   }
 
   showToastSuccess(String message) {
@@ -96,7 +105,7 @@ class CToast {
         timeInSecForIosWeb: 1,
         backgroundColor: AppColors.button_color,
         textColor: Colors.white,
-        fontSize: 12.0.sp);
+        fontSize: 12.0);
   }
 
   showToastError(String message) {
@@ -107,7 +116,7 @@ class CToast {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red[400],
         textColor: Colors.white,
-        fontSize: 12.0.sp);
+        fontSize: 12.0);
   }
 
   showToast(BuildContext context, String msg) {
@@ -119,7 +128,7 @@ class CToast {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.black,
-          fontSize: 12.sp,
+          fontSize: 12,
           // fontFamily: KSMFontFamily.robotomedium
         ),
       ),
@@ -127,7 +136,52 @@ class CToast {
       duration: Duration(seconds: 2),
       elevation: 10,
       backgroundColor: AppColors.primaryColor,
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.w),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.black.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CToast.instance.showLoaderWhite(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Loading...",
+                    style: TextStyle(color: AppColors.white, fontSize: 14),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

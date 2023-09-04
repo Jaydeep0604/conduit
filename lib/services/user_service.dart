@@ -55,18 +55,6 @@ class UserStateContainerState extends State<UserStateContainer> {
     });
   }
 
-  // Future<bool>
-  Future<bool> logOutUser() async {
-    try {
-      bool message = await repo.logOut();
-      // CToast.instance.showSuccess(context, message);
-      return true;
-    } catch (e) {
-      CToast.instance.showError(context, (e as Exception).toString());
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return InheritedUserStateContainer(child: widget.child, data: this);

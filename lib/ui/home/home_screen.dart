@@ -1,28 +1,37 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
-import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/services/user_service.dart';
+import 'package:conduit/ui/change_password/change_password_screen.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
 import 'package:conduit/ui/home/global.dart';
 import 'package:conduit/ui/home/yourfeed.dart';
-import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
-import 'package:conduit/ui/setting/setting_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/functions.dart';
+import 'package:conduit/utils/message.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+
+  static openDrawer(BuildContext context) {
+    _HomeScreenState? state =
+        context.findAncestorStateOfType<_HomeScreenState>();
+    state?.openDrawer();
+  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AllArticlesBloc articlesBloc;
+  late AllArticlesBloc ArticlesBloc;
   late UserStateContainerState userState;
+  // late GlobalKey<ScaffoldState> globalScaffoldKey;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool isLoading = false;
 
   int _selectedIndex = 0;
@@ -33,12 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  late GlobalKey<ScaffoldState> globalScaffoldKey;
+  openDrawer() {
+    _scaffoldKey.currentState?.openDrawer();
+  }
+
   void initState() {
     super.initState();
-    articlesBloc = context.read<AllArticlesBloc>();
-    
-    globalScaffoldKey = GlobalKey<ScaffoldState>();
+    ArticlesBloc = context.read<AllArticlesBloc>();
+    ArticlesBloc.add(FetchAllArticlesEvent());
+
     // hiveStore.isSessionValid.listen((event) {
     //   if (event == false) {
     //     logOut();
@@ -75,68 +87,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+    return WillPopScope(
+      onWillPop: () async => true,
       child: Scaffold(
-        key: globalScaffoldKey,
-        backgroundColor: AppColors.white2,
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          centerTitle: true,
-          elevation: 0,
-          leading: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingScreen(),
-                  ),
-                );
-              },
-              child: Icon(Icons.settings)),
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "conduit",
-                textAlign: TextAlign.center,
-                style:
-                    TextStyle(color: AppColors.primaryColor2, fontSize: 28.sp),
-              ),
-              Text(
-                "A place to share your knowledge.",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.white, fontSize: 12.sp),
-              ),
-            ],
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 20.w),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(),
-                    ),
-                  );
-                },
-                child: Icon(Icons.person),
-              ),
-            )
-          ],
-        ),
+        key: _scaffoldKey,
+        // backgroundColor: AppColors.white2,
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: AppColors.white,
           // fixedColor: AppColors.white,
           currentIndex: _selectedIndex,
-          unselectedItemColor: AppColors.white2,
-          selectedItemColor: AppColors.white,
+          unselectedItemColor: AppColors.black.withOpacity(0.7),
+          selectedItemColor: AppColors.primaryColor,
 
+          
+         
           // unselectedItemColor: Colors.grey,
 
           type: BottomNavigationBarType.fixed,
@@ -145,114 +109,123 @@ class _HomeScreenState extends State<HomeScreen> {
               _selectedIndex = index;
             });
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.feed_outlined,
-                  color: AppColors.white,
+                  color: _selectedIndex == 0
+                      ? AppColors.primaryColor
+                      : AppColors.black.withOpacity(0.7),
                 ),
                 label: "Globle",
                 backgroundColor: AppColors.primaryColor),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.person,
-                  color: AppColors.white,
+                  color: _selectedIndex == 1
+                      ? AppColors.primaryColor
+                      : AppColors.black.withOpacity(0.7),
                 ),
                 label: "Your Feed",
                 backgroundColor: AppColors.primaryColor),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.add,
-                  color: AppColors.white,
+                  color: _selectedIndex == 2
+                      ? AppColors.primaryColor
+                      : AppColors.black.withOpacity(0.7),
                 ),
                 label: "Add",
                 backgroundColor: AppColors.primaryColor),
           ],
         ),
-        // drawer: Opacity(
-        //   opacity: 1,
-        //   child: Drawer(
-        //     backgroundColor: AppColors.white2,
-        //     child: ListView(
-        //       children: [
-        //         DrawerHeader(
-        //           decoration: BoxDecoration(
-        //             color: AppColors.white,
-        //           ),
-        //           child: Center(
-        //               child: GestureDetector(
-        //             onTap: () {
-        //               Navigator.pop(context);
-        //               Navigator.push(
-        //                   context,
-        //                   MaterialPageRoute(
-        //                       builder: (context) => ProfileScreen()));
-        //             },
-        //             child: Container(
-        //               decoration: BoxDecoration(
-        //                 border: Border.all(color: AppColors.primaryColor),
-        //                 borderRadius: BorderRadius.circular(50),
-        //               ),
-        //               child: CircleAvatar(
-        //                 backgroundColor: AppColors.white2,
-        //                 child: Icon(
-        //                   Icons.person,
-        //                   color: AppColors.primaryColor,
-        //                   size: 65,
-        //                 ),
-        //                 radius: 45,
-        //               ),
-        //             ),
-        //           )),
-        //         ),
-        //         ListTile(
-        //             title: const Text('Global'),
-        //             leading: Icon(Icons.feed),
-        //             onTap: () {
-        //               Navigator.pop(context);
-        //             }),
-        //         ListTile(
-        //           title: const Text('Your Feed'),
-        //           leading: Icon(Icons.people),
-        //           onTap: () {
-        //             Navigator.pop(context);
-        //           },
-        //         ),
-        //         Align(
-        //           alignment: Alignment.bottomRight,
-        //           child: InkWell(
-        //             onTap: onLogout,
-        //             child: IntrinsicWidth(
-        //               child: Padding(
-        //                 padding: EdgeInsets.only(
-        //                     left: 10.0.w, right: 10.0.w, bottom: 40.w),
-        //                 child: Row(
-        //                   children: [
-        //                     Text(
-        //                       "Sign Out",
-        //                       style: TextStyle(
-        //                         fontSize: 14.0.sp,
-        //                       ),
-        //                     ),
-        //                     SizedBox(width: 5.w),
-        //                     Icon(
-        //                       Icons.arrow_forward_ios_rounded,
-        //                       size: 16,
-        //                     )
-        //                   ],
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: pages[_selectedIndex]),
+        drawer: Opacity(
+          opacity: 1,
+          child: Drawer(
+            backgroundColor: AppColors.white2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20)),
+            ),
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                  ),
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.primaryColor),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.white2,
+                        child: Icon(
+                          Icons.person,
+                          color: AppColors.primaryColor,
+                          size: 65,
+                        ),
+                        radius: 45,
+                      ),
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Profile'),
+                  leading: Icon(
+                    CupertinoIcons.person,
+                    color: AppColors.primaryColor,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+                Divider(endIndent: 20, indent: 20),
+                ListTile(
+                  title: const Text('Change Password'),
+                  leading: Icon(
+                    Icons.password,
+                    color: AppColors.primaryColor,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ChangePassword(),
+                      ),
+                    );
+                  },
+                ),
+                Divider(endIndent: 20, indent: 20),
+                ListTile(
+                  title: const Text(
+                    "Sign Out",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.logout_outlined,
+                    color: AppColors.primaryColor,
+                  ),
+                  onTap: () {
+                    onLogout();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: pages[_selectedIndex],
       ),
     );
   }
@@ -278,8 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Container(
                   alignment: Alignment.centerLeft,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 25.w, vertical: 15.w),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                   child: Text(
                     "Are you sure you want to sign out ?",
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -290,17 +262,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.w),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: Row(
                     children: [
                       Expanded(
                         child: MaterialButton(
-                            height: 40.h,
+                            height: 40,
                             color: AppColors.pholder_background,
                             disabledColor: AppColors.pholder_background,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0)),
+                                borderRadius: BorderRadius.circular(10.0)),
                             child: new Text('Cancel',
                                 style: Theme.of(context)
                                     .textTheme
@@ -314,15 +285,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             }),
                       ),
                       SizedBox(
-                        width: 10.w,
+                        width: 10,
                       ),
                       Expanded(
                         child: MaterialButton(
-                          height: 40.h,
+                          height: 40,
                           color: AppColors.primaryColor,
-                          // disabledColor: AppColors.Bottom_bar_color,
+                          disabledColor: AppColors.Bottom_bar_color,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0)),
+                              borderRadius: BorderRadius.circular(10.0)),
                           child: new Text('Confirm',
                               style: Theme.of(context)
                                   .textTheme
@@ -332,13 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                   .copyWith(color: Colors.white)),
                           onPressed: () async {
-                            await hiveStore.logOut();
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                              (route) => false,
-                            );
+                            Navigator.pop(context);
+                            CToast.instance.showLoaderDialog(context);
+                            ConduitFunctions.logOut(context);
                           },
                         ),
                       ),

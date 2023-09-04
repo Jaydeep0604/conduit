@@ -12,8 +12,8 @@ class AddCommentBloc extends Bloc<AddCommentEvent, AddCommentState> {
     AllArticlesRepo repo = AllArticlesImpl();
     try {
       emit(AddCommentLoadingState());
-      dynamic data;
-      data = await repo.addComment(event.addCommentModel,event.slug!);
+      // ignore: unused_local_variable
+      dynamic data = await repo.addComment(event.addCommentModel, event.slug!);
       emit(AddCommentSuccessState(msg: "New article added successfully"));
     } catch (e) {
       emit(AddCommentErroeState(msg: e.toString()));

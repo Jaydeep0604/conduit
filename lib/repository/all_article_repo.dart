@@ -23,11 +23,13 @@ abstract class AllArticlesRepo {
   Future<int> deleteComment(int commentId, String slug);
   Future<List<ProfileModel>> getProfileData();
   Future<dynamic> updateProfile(ProfileModel profileModel);
+  Future<dynamic> changePassword(ProfileModel profileModel);
+  Future<dynamic> fetchAllTags();
+  Future<dynamic> fetchSearchTags(String title);
   Future<dynamic> likeArticle(String slug);
   Future<dynamic> removeLikeArticle(String slug);
   Future<dynamic> followUser(String username);
   Future<dynamic> unFollowUser(String username);
-  Future<bool> logOut();
 }
 
 class AllArticlesImpl extends AllArticlesRepo {
@@ -47,6 +49,10 @@ class AllArticlesImpl extends AllArticlesRepo {
     );
     Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
+    if (response.statusCode == 401) {
+      dynamic data = response.body;
+      return data;
+    }
     if (response.statusCode == 200) {
       // dynamic data = jsonDecode(jsonData);
       List<dynamic> data = jsonData["articles"];
@@ -70,7 +76,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     });
     Map<String, dynamic> jsonData = json.decode(response.body);
     int totalCount = jsonData['articlesCount'];
-    print(totalCount);
+    // print(totalCount);
     // Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonData["articles"];
@@ -95,7 +101,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     });
     Map<String, dynamic> jsonData = json.decode(response.body);
     int totalCount = jsonData['articlesCount'];
-    print(totalCount);
+    // print(totalCount);
     // Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonData["articles"];
@@ -114,7 +120,6 @@ class AllArticlesImpl extends AllArticlesRepo {
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
-
     if (jsonData['errors'] != null) {
       Map<String, dynamic> errors = jsonData['errors'];
       String fieldName = errors.keys.first;
@@ -133,9 +138,9 @@ class AllArticlesImpl extends AllArticlesRepo {
     //       .replaceAll(']', '')
     //       .replaceAll('"', '');
     // }
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       // dynamic jsonData = jsonDecode(response.body);
-      return message;
+      return response.reasonPhrase.toString();
     } else if (response.statusCode == 403) {
       throw message;
     } else {
@@ -341,10 +346,9 @@ class AllArticlesImpl extends AllArticlesRepo {
     Map<String, dynamic> body = profileModel.toJson();
     http.Response response =
         await UserClient.instance.doUpdateProfile(url, body);
-    // print(body);
+    print("updateProfile main repo body ==================> ${response.body}");
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
-    await hiveStore.logOut();
     if (jsonData['errors'] != null) {
       Map<String, dynamic> errors = jsonData['errors'];
       String fieldName = errors.keys.first;
@@ -352,20 +356,88 @@ class AllArticlesImpl extends AllArticlesRepo {
       message = '$fieldName $errorValue';
     }
     if (response.statusCode == 200) {
-      bool isSessionOpen = await hiveStore.openSession(
-        UserAccessData(
-          email: jsonData["email"],
-          userName: jsonData["username"],
-          bio: jsonData["bio"],
-          image: jsonData["image"],
-          token: jsonData["token"],
-        ),
+      await hiveStore.updateSession(
+        email: jsonData["email"],
+        userName: jsonData["username"],
+        bio: jsonData["bio"],
+        image: jsonData["image"],
+        token: jsonData["token"],
       );
-      return jsonData;
+      return response.body;
     } else if (response.statusCode == 403) {
       throw message;
     } else {
       throw message;
+    }
+  }
+
+  Future changePassword(ProfileModel profileModel) async {
+    String url = ApiConstant.UPDATE_USER;
+    Map<String, dynamic> body = profileModel.toJson();
+    http.Response response =
+        await UserClient.instance.doChangePassword(url, body);
+
+    print("password main repo body ==================> ${response.body}");
+    dynamic jsonData = jsonDecode(response.body);
+    String message = '';
+    if (jsonData['errors'] != null) {
+      Map<String, dynamic> errors = jsonData['errors'];
+      String fieldName = errors.keys.first;
+      String errorValue = errors[fieldName][0];
+      message = '$fieldName $errorValue';
+    }
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 403) {
+      throw message;
+    } else {
+      throw message;
+    }
+  }
+
+  Future fetchAllTags() async {
+    String url = ApiConstant.ALL_POPULAR_TAGS;
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer ${detailModel!.values.first.token}"
+      },
+    );
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    // if (response.statusCode == 401) {}
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body)["tags"];
+
+      List<String> tagsList = List.from(jsonData.map((tagData) {
+        return tagData.toString();
+      }));
+
+      return tagsList;
+    } else {
+      throw Exception("Failed to fetch tags");
+    }
+  }
+
+  Future fetchSearchTags(String title) async {
+    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
+    String url = ApiConstant.ARTICLE_BY_TAG + title;
+    // "${detailModel?.values.first.userName}" + "&offset=$offset&limit=$limit";
+    http.Response response = await http.get(Uri.parse(url), headers: {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${detailModel?.values.first.token}"
+    });
+    Map<String, dynamic> jsonData = json.decode(response.body);
+    // print(totalCount);
+    // Map<String, dynamic> jsonData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonData["articles"];
+      List<AllArticlesModel> s =
+          List.from((data).map((e) => AllArticlesModel.fromJson(e)));
+      return s;
+    } else {
+      throw Exception();
     }
   }
 
@@ -446,16 +518,6 @@ class AllArticlesImpl extends AllArticlesRepo {
       return true;
     } else {
       throw Exception('Failed to unfollow user');
-    }
-  }
-
-  @override
-  Future<bool> logOut() async {
-    await hiveStore.logOut();
-    if (hiveStore.logOut() == true) {
-      return true;
-    } else {
-      throw Exception("Something went wrong try again later");
     }
   }
 }

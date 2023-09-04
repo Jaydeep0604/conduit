@@ -4,8 +4,8 @@ import 'package:conduit/model/user_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,11 +24,11 @@ class _SplashScreenState extends State<SplashScreen> {
           await hiveStore.isExistUserAccessData();
       if (detailModel!.values.isNotEmpty) {
         Navigator.pushReplacement(
-            context, (MaterialPageRoute(builder: (context) => HomeScreen())));
+            context, (CupertinoPageRoute(builder: (context) => HomeScreen())));
       }
       if (detailModel.values.isEmpty)
         Navigator.pushReplacement(
-            context, (MaterialPageRoute(builder: (context) => LoginScreen())));
+            context, (CupertinoPageRoute(builder: (context) => LoginScreen())));
     });
     // Timer(
     //     Duration(seconds: 1),
@@ -40,30 +40,38 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: AppColors.primaryColor,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              child: Text(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(255, 115, 221, 166),
+              Color.fromARGB(255, 209, 225, 216),
+              Color.fromARGB(255, 209, 225, 216),
+              Color.fromARGB(255, 115, 221, 166),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
                 'conduit',
-                style: TextStyle(fontSize: 40.sp, color: AppColors.white),
+                style: TextStyle(
+                    fontSize: 40, color: AppColors.primaryColor),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  'A place to share your knowledge.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20.sp, color: AppColors.white),
-                )),
-          ],
+              Text(
+                'A place to share your knowledge.',
+                style: TextStyle(
+                    fontSize: 18, color: AppColors.primaryColor2),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -74,9 +82,9 @@ class _SplashScreenState extends State<SplashScreen> {
 //                 // key: _formKey,
 //                 child: Padding(
 //                     padding:
-//                          EdgeInsets.only(left: 10, right: 10, top: 50),
+//                         const EdgeInsets.only(left: 10, right: 10, top: 50),
 //                     child: Container(
-//                         height: 650.h,
+//                         height: 650,
 //                         decoration: BoxDecoration(
 //                           borderRadius: BorderRadius.circular(10),
 //                           color: Colors.grey[500],
@@ -84,11 +92,11 @@ class _SplashScreenState extends State<SplashScreen> {
 //                         child: Column(
 //                           children: [
 //                             SizedBox(
-//                               height: 20.h,
+//                               height: 20,
 //                             ),
 //                             Container(
-//                               height: 100.h,
-//                               width: 100.w,
+//                               height: 100,
+//                               width: 100,
 //                               child: CircleAvatar(
 //                                 child: Image.network(
 //                                     "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png",
@@ -139,35 +147,35 @@ class _SplashScreenState extends State<SplashScreen> {
 //                                                 BorderRadius.circular(10)),
 //                                         disabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         enabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         errorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedErrorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
@@ -209,35 +217,35 @@ class _SplashScreenState extends State<SplashScreen> {
 //                                                 BorderRadius.circular(10)),
 //                                         disabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         enabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         errorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedErrorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
@@ -278,35 +286,35 @@ class _SplashScreenState extends State<SplashScreen> {
 //                                                 BorderRadius.circular(10)),
 //                                         disabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         enabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         errorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedErrorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
@@ -348,28 +356,28 @@ class _SplashScreenState extends State<SplashScreen> {
 //                                                 BorderRadius.circular(10)),
 //                                         disabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         focusedBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         enabledBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
 //                                         ),
 //                                         errorBorder: OutlineInputBorder(
 //                                           borderSide: BorderSide(
-//                                               width: 3.w,
+//                                               width: 3,
 //                                               color: AppColors.white2),
 //                                           borderRadius:
 //                                               BorderRadius.circular(10),
@@ -392,8 +400,8 @@ class _SplashScreenState extends State<SplashScreen> {
 //                             Padding(
 //                               padding: EdgeInsets.only(top: 25),
 //                               child: SizedBox(
-//                                 width: 320.w,
-//                                 height: 45.h,
+//                                 width: 320,
+//                                 height: 45,
 //                                 child: MaterialButton(
 //                                   color: AppColors.primaryColor,
 //                                   textColor: AppColors.white,
@@ -409,7 +417,7 @@ class _SplashScreenState extends State<SplashScreen> {
 //                                       //       timeInSecForIosWeb: 1,
 //                                       //       backgroundColor: AppColors.cursorcolor,
 //                                       //       textColor: Colors.white,
-//                                       //       fontSize: 16.0.sp);
+//                                       //       fontSize: 16.0);
 //                                       //   Navigator.push(
 //                                       //     context,
 //                                       //     MaterialPageRoute(
@@ -425,8 +433,8 @@ class _SplashScreenState extends State<SplashScreen> {
 //                             Padding(
 //                               padding: EdgeInsets.only(top: 25),
 //                               child: SizedBox(
-//                                 width: 320.w,
-//                                 height: 45.h,
+//                                 width: 320,
+//                                 height: 45,
 //                                 child: MaterialButton(
 //                                   color: Colors.red[400],
 //                                   textColor: AppColors.white,
@@ -442,7 +450,7 @@ class _SplashScreenState extends State<SplashScreen> {
 //                                       //       timeInSecForIosWeb: 1,
 //                                       //       backgroundColor: AppColors.cursorcolor,
 //                                       //       textColor: Colors.white,
-//                                       //       fontSize: 16.0.sp);
+//                                       //       fontSize: 16.0);
 //                                       //   Navigator.push(
 //                                       //     context,
 //                                       //     MaterialPageRoute(

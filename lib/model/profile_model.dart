@@ -65,16 +65,22 @@ class User {
   String? username;
   String? bio;
   String? image;
-  // String? token;
+  String? password;
 
-  User({this.email, this.username, this.bio, this.image});
+  User({
+    this.email,
+    this.username,
+    this.bio,
+    this.image,
+    this.password,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     username = json['username'];
     bio = json['bio'];
     image = json['image'];
-    // token = json['token'];
+    password = json['password'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,7 +89,7 @@ class User {
     data['username'] = this.username;
     data['bio'] = this.bio;
     data['image'] = this.image;
-    // data['token'] = this.token;
+    data['password'] = this.password;
     return data;
   }
 }

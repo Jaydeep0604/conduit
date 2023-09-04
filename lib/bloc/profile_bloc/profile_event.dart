@@ -27,3 +27,10 @@ class UpdateProfileEvent extends ProfileEvent {
   @override
   List<Object?> get props => [profileModel];
 }
+
+class ChangePasswordEvent extends ProfileEvent {
+  ProfileModel profileModel;
+  ChangePasswordEvent({required this.profileModel});
+  @override
+  List<Object?> get props => [profileModel];
+}

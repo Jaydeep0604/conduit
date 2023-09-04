@@ -1,14 +1,14 @@
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ConduitEditText extends StatefulWidget {
   TextInputType? textInputType;
   String? hint;
-
+  int? maxLines;
+  int? minLines;
   String? name;
-  int?   maxLength;
+  int? maxLength;
   String? Function(String?)? validator;
   TextInputAction? textInputAction;
   void Function()? onEditingComplete;
@@ -16,16 +16,18 @@ class ConduitEditText extends StatefulWidget {
   Widget? prefixIcon;
   bool obsecureText;
   bool readOnly;
-  bool enabled; 
+  bool enabled;
 
   TextEditingController? controller;
-  List<TextInputFormatter>? inputformtters;
+  List<TextInputFormatter>? inputFormatters;
   bool autoFoucs;
 
   ConduitEditText(
       {this.textInputType,
       this.obsecureText = false,
       this.readOnly = false,
+      this.maxLines,
+      this.minLines,
       this.suffixIcon,
       this.prefixIcon,
       this.hint,
@@ -33,7 +35,7 @@ class ConduitEditText extends StatefulWidget {
       this.textInputAction,
       this.validator,
       this.controller,
-      this.inputformtters,
+      this.inputFormatters,
       this.enabled = true,
       this.maxLength,
       this.onEditingComplete,
@@ -59,17 +61,20 @@ class _ConduitEditTextState extends State<ConduitEditText> {
         obscureText: widget.obsecureText,
         readOnly: widget.readOnly,
         cursorColor: AppColors.button_color,
-        inputFormatters: widget.inputformtters,
+        inputFormatters: widget.inputFormatters,
         enabled: widget.enabled,
         maxLength: widget.maxLength,
         autofocus: widget.autoFoucs,
+        maxLines: widget.maxLines,
+        minLines: widget.minLines,
         toolbarOptions: ToolbarOptions(
           copy: true,
           cut: true,
-          paste: false,
-          selectAll: false,
+          paste: true,
+          selectAll: true,
         ),
-        style: TextStyle(fontSize: 14.sp, //fontFamily: KSMFontFamily.robotoRgular
+        style: TextStyle(
+          fontSize: 14, //fontFamily: KSMFontFamily.robotoRgular
         ),
         decoration: InputDecoration(
             suffixIcon: widget.suffixIcon,
@@ -82,7 +87,7 @@ class _ConduitEditTextState extends State<ConduitEditText> {
             hintStyle: Theme.of(context).textTheme.caption,
             hintText: widget.hint,
             filled: true,
-            contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
+            contentPadding: EdgeInsets.only(left: 10, right: 10,top: 10),
             label: widget.name != null ? Text(widget.name ?? "") : null,
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

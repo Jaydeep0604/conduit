@@ -5,9 +5,10 @@ import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
+import 'package:conduit/widget/conduitEditText_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UpdateArticleScreen extends StatefulWidget {
   UpdateArticleScreen({Key? key, required this.slug}) : super(key: key);
@@ -22,6 +23,7 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
   TextEditingController? titleCtr, aboutTitleCtr, articleCtr, tagsCtr;
   late ArticleBloc articleBloc;
   String? title, aboutTitle, article;
+  String? apiSlug;
   List<String>? tagsList;
   // List<ArticleModel>? articleModel;
   bool isLoading = false;
@@ -55,333 +57,165 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        backgroundColor: AppColors.white2,
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          centerTitle: true,
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back),
+      child: WillPopScope(
+        onWillPop: () async => true,
+        child: Scaffold(
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            backgroundColor: AppColors.primaryColor,
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Update Article",
+                  style: TextStyle(color: AppColors.white, fontSize: 18),
+                ),
+              ],
+            ),
           ),
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Update Article",
-                style: TextStyle(color: AppColors.white, fontSize: 18.sp),
-              ),
-            ],
-          ),
-        ),
-        body: SafeArea(
-          child: BlocBuilder<ArticleBloc, ArticleState>(
-            builder: (context, state) {
-              if (state is ArticleLoadingState) {
-                return Center(child: CToast.instance.showLoader());
-              }
-              if (state is UpdateArticleLoadingState) {
-                return Center(child: CToast.instance.showLoader());
-              }
-              if (state is UpdateArticleSuccessState) {
-                Future.delayed(Duration(seconds: 2), () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
-                });
-              }
-              if (state is ArticleErrorState) {
-                Future.delayed(Duration.zero, () {
-                  CToast.instance.showError(context, state.msg);
-                });
-              }
-              if (state is ArticleLoadedState) {
-                title = state.articleModel.last.article?.title;
-                aboutTitle = state.articleModel.last.article?.description;
-                article = state.articleModel.last.article?.body;
-                // tagsList = state.articleModel.last.article?.tagList as String;
-                addData();
+          body: SafeArea(
+            child: BlocBuilder<ArticleBloc, ArticleState>(
+              builder: (context, state) {
+                if (state is ArticleLoadingState) {
+                  return CToast.instance.showLoader();
+                }
+                if (state is UpdateArticleLoadingState) {
+                  // Center(child: CToast.instance.showLoaderDialog(context));
+                }
+                if (state is UpdateArticleSuccessState) {
+                  // Navigator.pop(context);
+                  Future.delayed(Duration(seconds: 2), () {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ));
+                  });
+                }
+                if (state is ArticleErrorState) {
+                  // Navigator.pop(context);
+                  Future.delayed(Duration.zero, () {
+                    CToast.instance.showError(context, state.msg);
+                  });
+                }
+                if (state is ArticleLoadedState) {
+                  title = state.articleModel.last.article?.title;
+                  aboutTitle = state.articleModel.last.article?.description;
+                  article = state.articleModel.last.article?.body;
+                  apiSlug = state.articleModel.last.article!.slug;
+                  // tagsList = state.articleModel.last.article?.tagList as String;
+                  addData();
+                }
                 return SingleChildScrollView(
                   child: Form(
                     key: _form,
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: 60.h,
-                        ),
                         Container(
                           padding:
-                              EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
+                              EdgeInsets.only(top: 50, right: 20, left: 20),
                           child: Column(
                             children: [
-                              TextFormField(
+                              ConduitEditText(
                                 controller: titleCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    contentPadding: EdgeInsets.all(10.w),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "Article Title"),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                controller: aboutTitleCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    contentPadding: EdgeInsets.all(10.w),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "What's this article about?"),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                maxLines: 4,
-                                controller: articleCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    contentPadding: EdgeInsets.all(10.w),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText:
-                                        "Write your article ( in markdown )"),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.only(top: 20.w, right: 20.w, left: 20.w),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                controller: tagsCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    contentPadding:  EdgeInsets.all(10.w),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3.w, color: AppColors.white),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    ),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 25.w, left: 60.w, right: 60.w),
-                          child: SizedBox(
-                            height: 40.h,
-                            child: MaterialButton(
-                              color: AppColors.primaryColor,
-                              // disabledColor: AppColors.Bottom_bar_color,
-                              minWidth: MediaQuery.of(context).size.width,
-                              textColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                // side: BorderSide(color: AppColors.primaryColor),
+                                maxLines: 1,
+                                hint: "Article title",
+                                textInputType: TextInputType.text,
                               ),
-                              onPressed: () {
-                                FocusManager.instance.primaryFocus!.unfocus();
-                                if (_form.currentState!.validate()) {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  articleBloc.add(
-                                    UpdateArticleEvent(
-                                        articleModel: ArticleModel(
-                                          article: Article(
-                                            title: titleCtr!.text.trim(),
-                                            description:
-                                                aboutTitleCtr!.text.trim(),
-                                            body: articleCtr!.text.trim(),
-                                            // tagList: tagsCtr!.text.trim(),
-                                          ),
-                                        ),
-                                        slug: state
-                                            .articleModel.last.article!.slug!),
-                                  );
-                                } else {
-                                  CToast.instance.showError(
-                                      context, "article not updated");
-                                }
-                              },
-                              child: isLoading == true
-                                  ? Container(
-                                      height: 40.h,
-                                      padding: EdgeInsets.all(8.w),
-                                      child: CToast.instance.showLoader(),
-                                    )
-                                  : Text(
-                                      'Update Article',
-                                      style: TextStyle(
-                                          color: AppColors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                            ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ConduitEditText(
+                                controller: aboutTitleCtr,
+                                hint: "About?",
+                                maxLines: 2,
+                                minLines: 1,
+                                textInputType: TextInputType.text,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ConduitEditText(
+                                maxLines: 8,
+                                minLines: 5,
+                                controller: articleCtr,
+                                hint: "Your article ( in markdown )",
+                                textInputType: TextInputType.text,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ConduitEditText(
+                                controller: tagsCtr,
+                                hint: "Tags",
+                                maxLines: 1,
+                                textInputType: TextInputType.text,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: CupertinoButton(
+                                  color: AppColors.primaryColor,
+                                  disabledColor: AppColors.Bottom_bar_color,
+                                
+                                  borderRadius: BorderRadius.circular(10),
+                                  
+                                  onPressed: () {
+                                    FocusManager.instance.primaryFocus!
+                                        .unfocus();
+                                    if (_form.currentState!.validate()) {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      CToast.instance.showLoaderDialog(context);
+                                      articleBloc.add(
+                                        UpdateArticleEvent(
+                                            articleModel: ArticleModel(
+                                              article: Article(
+                                                title: titleCtr!.text.trim(),
+                                                description:
+                                                    aboutTitleCtr!.text.trim(),
+                                                body: articleCtr!.text.trim(),
+                                                // tagList: tagsCtr!.text.trim(),
+                                              ),
+                                            ),
+                                            slug: apiSlug!),
+                                      );
+                                    } else {
+                                      CToast.instance.showError(
+                                          context, "article not updated");
+                                    }
+                                  },
+                                  child: Text(
+                                    'Update Article',
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 20.h)
+                        SizedBox(height: 20)
                       ],
                     ),
                   ),
                 );
-              }
-              return isLoading
-                  ? Center(
-                      child: CToast.instance.showLoader(),
-                    )
-                  : Center(
-                      child:
-                          Text("Something want wrong plesee try again later."),
-                    );
-            },
+              },
+            ),
           ),
         ),
       ),

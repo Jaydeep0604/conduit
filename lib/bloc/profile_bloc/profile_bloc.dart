@@ -8,6 +8,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({required this.repo}) : super(ProfileInitialState()) {
     on<FetchProfileEvent>(_onFetchProfileEvent);
     on<UpdateProfileEvent>(_onUpdateProfileEvent);
+    on<ChangePasswordEvent>(_onChangePasswordEvent);
   }
 
   _onFetchProfileEvent(
@@ -29,17 +30,34 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   _onUpdateProfileEvent(
       UpdateProfileEvent event, Emitter<ProfileState> emit) async {
-    emit(ProfileUpdateLoadingState());
+    emit(UpdateProfileLoadingState());
     try {
       dynamic data = await repo.updateProfile(event.profileModel);
-      if (data != null) {
-        emit(ProfileUpdateSuccessState());
+      if (data != true) {
+        emit(UpdateProfileSuccessState());
       } else {
         emit(NoProfileState());
       }
     } catch (e) {
       print(e);
-      emit(ProfileUpdateErrorState(msg: e.toString()));
+      emit(UpdateProfileErrorState(msg: e.toString()));
+    }
+  }
+
+  _onChangePasswordEvent(
+      ChangePasswordEvent event, Emitter<ProfileState> emit) async {
+    emit(ChangePasswordLoadingState());
+    try {
+      dynamic data = await repo.changePassword(event.profileModel);
+      if (data == true) {
+        emit(ChangePasswordSuccessState());
+      } else {
+        emit(ChangePasswordErrorState(
+            message: "Something want wrong, please try again later"));
+      }
+    } catch (e) {
+      print(e);
+      emit(ChangePasswordErrorState(message: e.toString()));
     }
   }
 }

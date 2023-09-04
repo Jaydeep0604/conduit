@@ -17,11 +17,11 @@ class MyArticlesLoadingState extends MyArticlesState {
   List<Object?> get props => [];
 }
 
-class MyArticlesLoadedStete extends MyArticlesState {
+class MyArticlesLoadedState extends MyArticlesState {
   List<AllArticlesModel> myArticleslist;
   bool hasReachedMax;
 
-  MyArticlesLoadedStete(
+  MyArticlesLoadedState(
       {this.hasReachedMax = true, required this.myArticleslist});
   @override
   List<Object?> get props => [this.myArticleslist, hasReachedMax];

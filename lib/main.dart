@@ -9,6 +9,7 @@ import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
 import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
+import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
@@ -18,34 +19,38 @@ import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserAccessDataAdapter());
   await hiveStore.init();
+  // Directory tempDir =
+  await getTemporaryDirectory();
+  // String tempPath = tempDir.path;
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
-    systemNavigationBarColor: AppColors.white2,
+    systemNavigationBarColor: AppColors.white,
   ));
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
     statusBarColor: Colors.transparent, // transparent status bar
-    systemNavigationBarColor: AppColors.white2,
+    systemNavigationBarColor: AppColors.white,
   ));
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
     statusBarColor: Colors.transparent, // transparent status bar
-    systemNavigationBarColor: AppColors.white2,
+    systemNavigationBarColor: AppColors.white,
   ));
 
   // ignore: unrelated_type_equality_checks
   if (SystemUiOverlayStyle.light == true) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // transparent status bar
-      systemNavigationBarColor: AppColors.white2,
+      systemNavigationBarColor: AppColors.white,
     ));
   }
 
@@ -54,6 +59,10 @@ Future<void> main() async {
   //   DeviceOrientation.portraitUp,
   //   DeviceOrientation.portraitDown,
   // ]);
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getTemporaryDirectory(),
+  );
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
       create: (context) => LoginBloc(),
@@ -80,10 +89,13 @@ Future<void> main() async {
       create: (context) => AddCommentBloc(),
     ),
     BlocProvider(
-      create: (context) => LikeBloc(repo: AllArticlesImpl()),
+      create: (context) => ProfileBloc(repo: AllArticlesImpl()),
     ),
     BlocProvider(
-      create: (context) => ProfileBloc(repo: AllArticlesImpl()),
+      create: (context) => TagsBloc(repo: AllArticlesImpl()),
+    ),
+    BlocProvider(
+      create: (context) => LikeBloc(repo: AllArticlesImpl()),
     ),
     BlocProvider(
       create: (context) => FollowBloc(repo: AllArticlesImpl()),
@@ -114,17 +126,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: SplashScreen(),
-        );
-      },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      title: 'Conduit',
+      // theme: KSTheme.dark,
+      home: SplashScreen(),
     );
   }
 }

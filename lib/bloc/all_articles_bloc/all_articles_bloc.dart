@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:conduit/model/all_artist_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
-
 import 'all_articles_event.dart';
 import 'all_articles_state.dart';
 
@@ -44,7 +43,7 @@ class AllArticlesBloc extends Bloc<AllArticlesEvent, AllArticlesState> {
     on<AllArticlesEvent>(_onAllArticlesEvent);
   }
 
-  void _onAllArticlesEvent(
+ void _onAllArticlesEvent(
       AllArticlesEvent event, Emitter<AllArticlesState> emit) async {
     try {
       if (event is FetchNextAllArticlesEvent) {

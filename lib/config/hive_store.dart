@@ -1,5 +1,6 @@
 import 'package:conduit/model/user_model.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:rxdart/subjects.dart';
 
 class HiveStore {
@@ -21,16 +22,18 @@ class HiveStore {
     await Hive.openBox<String>(tokenKey);
   }
 
-  Future logOut() async {
+   logOut() async {
     try {
       await Hive.deleteBoxFromDisk(hiveStore.userDetailKey);
     } catch (e) {}
     try {
       await Hive.deleteBoxFromDisk(hiveStore.userId);
     } catch (e) {}
+    await HydratedBloc.storage.clear();
+    await hiveStore.init();
   }
 
-  Future delteToken() async {
+   delteToken() async {
     try {
       await Hive.deleteBoxFromDisk(hiveStore.tokenKey);
     } catch (e) {}
@@ -84,9 +87,6 @@ class HiveStore {
   Future<bool> openSession(UserAccessData userAccessData) async {
     Box<UserAccessData> userBox = Hive.box<UserAccessData>(userDetailKey);
     userBox.put(userId, userAccessData);
-    // DownloadService.instance.changeScheduledTask(userData.accessToken);
-    // downloadStore.updateDownloadTaskWithAccessToken(userData.accessToken);
-
     if (userBox.containsKey(userId)) {
       _isSessionValid.add(true);
       return true;
@@ -132,6 +132,29 @@ class HiveStore {
       return null;
     } on HiveError {
       return null;
+    }
+  }
+
+  updateSession(
+      {String? email,
+      String? userName,
+      String? bio,
+      String? image,
+      String? token}) async {
+    final userBox = await Hive.openBox<UserAccessData>(userDetailKey);
+    final userId = "userId"; // Change this to your actual userId
+    if (userBox.containsKey(userId)) {
+      final userAccessData = userBox.get(userId) as UserAccessData?;
+      if (userAccessData != null) {
+        // Update the fields if provided
+        if (email != null) userAccessData.email = email;
+        if (userName != null) userAccessData.userName = userName;
+        if (bio != null) userAccessData.bio = bio;
+        if (image != null) userAccessData.image = image;
+        if (token != null) userAccessData.token = token;
+
+        userBox.put(userId, userAccessData);
+      }
     }
   }
 
