@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/bloc/tags_bloc/tags_event.dart';
 import 'package:conduit/bloc/tags_bloc/tags_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_article_widget.dart';
@@ -48,7 +49,12 @@ class _TagScreenState extends State<TagScreen> {
                 Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back)),
-          title: Text(widget.title!),
+          title: Text(
+            widget.title!,
+            style: TextStyle(
+              fontFamily: ConduitFontFamily.robotoRegular,
+            ),
+          ),
           centerTitle: false,
         ),
         body: ThemeContainer(
@@ -68,8 +74,8 @@ class _TagScreenState extends State<TagScreen> {
               if (state is SearchTagSuccessState) {
                 return SingleChildScrollView(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
                     child: ListView.separated(
                       primary: false,
                       shrinkWrap: true,
@@ -88,7 +94,7 @@ class _TagScreenState extends State<TagScreen> {
                   ),
                 );
               }
-              return Center(child: Text("Something went wrong"));
+              return Center(child: Text("Something went wrong",style: TextStyle(fontFamily: ConduitFontFamily.robotoRegular,),));
             },
           )),
         ),

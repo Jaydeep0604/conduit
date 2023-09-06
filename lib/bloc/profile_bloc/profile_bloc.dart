@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:conduit/bloc/profile_bloc/profile_event.dart';
 import 'package:conduit/bloc/profile_bloc/profile_state.dart';
 import 'package:conduit/repository/all_article_repo.dart';
@@ -22,6 +24,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         // } else {
         emit(ProfileLoadedState(profileList: aData));
       }
+    } on SocketException {
+      emit(ProfileNoInternetState());
     } catch (e) {
       print(e);
       emit(ProfileLoadedErrorState(msg: e.toString()));
@@ -38,6 +42,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else {
         emit(NoProfileState());
       }
+    } on SocketException {
+      emit(ProfileNoInternetState());
     } catch (e) {
       print(e);
       emit(UpdateProfileErrorState(msg: e.toString()));
@@ -55,6 +61,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ChangePasswordErrorState(
             message: "Something want wrong, please try again later"));
       }
+    } on SocketException {
+      emit(ProfileNoInternetState());
     } catch (e) {
       print(e);
       emit(ChangePasswordErrorState(message: e.toString()));

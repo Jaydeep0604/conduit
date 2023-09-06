@@ -2,12 +2,17 @@ import 'package:equatable/equatable.dart';
 
 abstract class LoginState extends Equatable {}
 
+class LoginInitialState extends LoginState {
+  @override
+  List<Object?> get props => [];
+}
+
 class LoginNoInternetState extends LoginState {
   @override
   List<Object?> get props => [];
 }
 
-class LoginInitialState extends LoginState {
+class LoginLoadingState extends LoginState {
   @override
   List<Object?> get props => [];
 }
@@ -18,11 +23,6 @@ class LoginSuccessState extends LoginState {
   LoginSuccessState({required this.msg});
   @override
   List<Object?> get props => [msg];
-}
-
-class LoginLoadingState extends LoginState {
-  @override
-  List<Object?> get props => [];
 }
 
 // ignore: must_be_immutable

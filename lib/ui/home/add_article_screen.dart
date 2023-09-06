@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/article_bloc/article_bloc.dart';
 import 'package:conduit/bloc/article_bloc/article_event.dart';
 import 'package:conduit/bloc/article_bloc/article_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -28,6 +29,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
   TextEditingController? articleCtr;
   TextEditingController? tagsCtr;
   late ArticleBloc articleBloc;
+  List<String>? tags;
   // List<ArticleModel>? articleModel;
   bool isLoading = false;
   @override
@@ -76,6 +78,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
               "Add Article",
               style: TextStyle(
                 color: AppColors.white,
+                fontFamily: ConduitFontFamily.robotoRegular,
               ),
             ),
           ),
@@ -130,7 +133,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                 hint: "Article title",
                                 textInputType: TextInputType.text,
                                 inputFormatters: [
-                                  LengthLimitingTextInputFormatter(150)
+                                  LengthLimitingTextInputFormatter(150),
                                 ],
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -197,6 +200,8 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                     FocusManager.instance.primaryFocus!
                                         .unfocus();
                                     if (_form.currentState!.validate()) {
+                                      tags = tagsCtr!.text.split(',');
+                                      print(tags);
                                       articleBloc.add(
                                         SubmitArticleEvent(
                                           articleModel: ArticleModel(
@@ -205,18 +210,21 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                               description:
                                                   aboutTitleCtr!.text.trim(),
                                               body: articleCtr!.text.trim(),
-                                              // tagList: tagsCtr!.text.trim(),
+                                              tagList: tags,
                                             ),
                                           ),
                                         ),
                                       );
-                                    } else {}
+                                    }
                                   },
                                   child: Text(
                                     'Publish Article',
                                     style: TextStyle(
-                                        color: AppColors.white,
-                                        fontWeight: FontWeight.bold),
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    ),
                                   ),
                                 ),
                               ),

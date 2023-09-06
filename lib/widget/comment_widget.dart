@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -11,7 +12,10 @@ import 'package:intl/intl.dart';
 
 class CommentWidget extends StatefulWidget {
   CommentWidget(
-      {Key? key, required this.commentModel,this.deleteWidget, required this.slug})
+      {Key? key,
+      required this.commentModel,
+      this.deleteWidget,
+      required this.slug})
       : super(key: key);
   CommentModel commentModel;
   String? slug;
@@ -57,6 +61,7 @@ class _CommentWidgetState extends State<CommentWidget> {
             autofocus: false,
             initialValue: "${widget.commentModel.body ?? ''}",
             readOnly: true,
+
             cursorColor: AppColors.primaryColor,
             keyboardType: TextInputType.text,
             style: TextStyle(
@@ -121,6 +126,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                     "${widget.commentModel.author?.username ?? ''}",
                     style: TextStyle(
                       color: AppColors.primaryColor,
+                      fontFamily: ConduitFontFamily.robotoRegular,
                     ),
                   ),
                   SizedBox(
@@ -129,7 +135,10 @@ class _CommentWidgetState extends State<CommentWidget> {
                   Text(
                     DateFormat('dd-MM-yyyy').format(
                         DateTime.parse(widget.commentModel.createdAt ?? '')),
-                    style: TextStyle(color: AppColors.Box_width_color),
+                    style: TextStyle(
+                      color: AppColors.Box_width_color,
+                      fontFamily: ConduitFontFamily.robotoRegular,
+                    ),
                   ),
                   Spacer(),
                   ValueListenableBuilder(
@@ -146,7 +155,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                                 onTap: () {
                                   commentBloc.add(deleteCommentEvent(
                                       slug: widget.slug!,
-                                      commentId:widget.commentModel.id!));
+                                      commentId: widget.commentModel.id!));
                                 },
                                 child: Icon(
                                   Icons.delete_forever_rounded,

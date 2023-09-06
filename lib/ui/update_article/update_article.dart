@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/article_bloc/article_bloc.dart';
 import 'package:conduit/bloc/article_bloc/article_event.dart';
 import 'package:conduit/bloc/article_bloc/article_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -77,7 +78,11 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
               children: [
                 Text(
                   "Update Article",
-                  style: TextStyle(color: AppColors.white, fontSize: 18),
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 18,
+                    fontFamily: ConduitFontFamily.robotoRegular,
+                  ),
                 ),
               ],
             ),
@@ -169,9 +174,7 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
                                 child: CupertinoButton(
                                   color: AppColors.primaryColor,
                                   disabledColor: AppColors.Bottom_bar_color,
-                                
                                   borderRadius: BorderRadius.circular(10),
-                                  
                                   onPressed: () {
                                     FocusManager.instance.primaryFocus!
                                         .unfocus();
@@ -201,8 +204,11 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
                                   child: Text(
                                     'Update Article',
                                     style: TextStyle(
-                                        color: AppColors.white,
-                                        fontWeight: FontWeight.bold),
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    ),
                                   ),
                                 ),
                               ),

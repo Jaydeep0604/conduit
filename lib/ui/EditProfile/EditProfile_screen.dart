@@ -2,6 +2,7 @@ import 'package:conduit/bloc/article_bloc/article_state.dart';
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_event.dart';
 import 'package:conduit/bloc/profile_bloc/profile_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/profile_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
@@ -59,7 +60,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             title: Text(
               "EditProfiles",
-              style: TextStyle(color: AppColors.white),
+              style: TextStyle(
+                color: AppColors.white,
+                fontFamily: ConduitFontFamily.robotoRegular,
+              ),
             ),
           ),
           body: SafeArea(
@@ -339,7 +343,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 },
                                 child: Text(
                                   'Save',
-                                  style: TextStyle(color: AppColors.white),
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontFamily: ConduitFontFamily.robotoRegular,
+                                  ),
                                 ),
                               ),
                             ),

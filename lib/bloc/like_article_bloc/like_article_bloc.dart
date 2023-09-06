@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:conduit/bloc/like_article_bloc/like_article_event.dart';
@@ -24,7 +25,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     } catch (e) {
       print(e.toString());
       emit(
-        LikeErroeState(msg: e.toString()),
+        LikeErrorState(msg: e.toString()),
       );
     }
   }
@@ -44,7 +45,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     } catch (e) {
       print(e.toString());
       emit(
-        LikeErroeState(msg: e.toString()),
+        LikeErrorState(msg: e.toString()),
       );
     }
   }

@@ -1,5 +1,6 @@
 import 'package:conduit/bloc/all_articles_bloc/all_articles_bloc.dart';
 import 'package:conduit/bloc/all_articles_bloc/all_articles_event.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/services/user_service.dart';
 import 'package:conduit/ui/change_password/change_password_screen.dart';
 import 'package:conduit/ui/home/add_article_screen.dart';
@@ -27,7 +28,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AllArticlesBloc ArticlesBloc;
+  // late AllArticlesBloc ArticlesBloc;
   late UserStateContainerState userState;
   // late GlobalKey<ScaffoldState> globalScaffoldKey;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -48,14 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void initState() {
     super.initState();
-    ArticlesBloc = context.read<AllArticlesBloc>();
-    ArticlesBloc.add(FetchAllArticlesEvent());
 
-    // hiveStore.isSessionValid.listen((event) {
-    //   if (event == false) {
-    //     logOut();
-    //   }
-    // });
+
   }
 
   // logOut() {
@@ -99,8 +94,6 @@ class _HomeScreenState extends State<HomeScreen> {
           unselectedItemColor: AppColors.black.withOpacity(0.7),
           selectedItemColor: AppColors.primaryColor,
 
-          
-         
           // unselectedItemColor: Colors.grey,
 
           type: BottomNavigationBarType.fixed,
@@ -173,7 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
-                  title: const Text('Profile'),
+                  title: const Text(
+                    'Profile',
+                    style: TextStyle(
+                      fontFamily: ConduitFontFamily.robotoRegular,
+                    ),
+                  ),
                   leading: Icon(
                     CupertinoIcons.person,
                     color: AppColors.primaryColor,
@@ -190,7 +188,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Divider(endIndent: 20, indent: 20),
                 ListTile(
-                  title: const Text('Change Password'),
+                  title: const Text(
+                    'Change Password',
+                    style: TextStyle(
+                      fontFamily: ConduitFontFamily.robotoRegular,
+                    ),
+                  ),
                   leading: Icon(
                     Icons.password,
                     color: AppColors.primaryColor,
@@ -211,6 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     "Sign Out",
                     style: TextStyle(
                       fontSize: 14.0,
+                      fontFamily: ConduitFontFamily.robotoRegular,
                     ),
                   ),
                   leading: Icon(
@@ -255,8 +259,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     "Are you sure you want to sign out ?",
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          color: Color.fromARGB(255, 197, 197, 197),
-                          // fontFamily: KSMFontFamily.robotoThin,
+                          color: AppColors.white,
+                          fontFamily: ConduitFontFamily.robotoThin,
                           fontWeight: FontWeight.w800,
                         ),
                   ),
@@ -277,8 +281,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .textTheme
                                     .button
                                     ?.copyWith(
-                                        // fontFamily: KSMFontFamily.robotoRgular
-                                        )
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    )
                                     .copyWith(color: Colors.white)),
                             onPressed: () {
                               Navigator.pop(context, false);
@@ -299,8 +304,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   .textTheme
                                   .button
                                   ?.copyWith(
-                                      //fontFamily: KSMFontFamily.robotoRgular
-                                      )
+                                    fontFamily: ConduitFontFamily.robotoRegular,
+                                  )
                                   .copyWith(color: Colors.white)),
                           onPressed: () async {
                             Navigator.pop(context);

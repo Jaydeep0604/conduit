@@ -7,6 +7,7 @@ class FollowInitialState extends FollowState {
   List<Object?> get props => [];
 }
 
+
 class FollowNoInternetState extends FollowState {
   @override
   List<Object?> get props => [];

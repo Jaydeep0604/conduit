@@ -7,6 +7,11 @@ class AddCommentInitialState extends AddCommentState {
   List<Object?> get props => [];
 }
 
+class AddCommentNoInternetState extends AddCommentState {
+  @override
+  List<Object?> get props => [];
+}
+
 class AddCommentLoadingState extends AddCommentState {
   @override
   List<Object?> get props => [];

@@ -3,6 +3,7 @@ import 'package:conduit/bloc/all_articles_bloc/all_articles_state.dart';
 import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/bloc/tags_bloc/tags_event.dart';
 import 'package:conduit/bloc/tags_bloc/tags_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/ui/tag_screen/tag_screen.dart';
@@ -29,6 +30,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
   late ScrollController _scrollController;
   late AllArticlesBloc articlesBloc;
   bool isBack = false;
+  bool isNoInternet = false;
   GlobalKey<ScaffoldState> _key = GlobalKey();
   late TagsBloc tagsBloc;
   int? length;
@@ -37,6 +39,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
     super.initState();
     _scrollController = ScrollController();
     articlesBloc = context.read<AllArticlesBloc>();
+    articlesBloc.add(FetchAllArticlesEvent());
     tagsBloc = context.read<TagsBloc>();
     tagsBloc.add(FetchAllTagsEvent());
     _scrollController.addListener(() async {
@@ -73,11 +76,19 @@ class _GlobalScreenState extends State<GlobalScreen> {
           children: [
             Text(
               "conduit",
-              style: TextStyle(color: AppColors.primaryColor2, fontSize: 30),
+              style: TextStyle(
+                color: AppColors.primaryColor2,
+                fontSize: 30,
+                fontFamily: ConduitFontFamily.robotoBold,
+              ),
             ),
             Text(
               "A place to share your knowledge.",
-              style: TextStyle(color: AppColors.white, fontSize: 12),
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 12,
+                fontFamily: ConduitFontFamily.robotoRegular,
+              ),
             ),
           ],
         ),
@@ -127,12 +138,16 @@ class _GlobalScreenState extends State<GlobalScreen> {
                       print("tag error state");
                       print(state.msg.toString());
                     }
+                    if (state is TagsNoInternetState) {
+                      return Container();
+                    }
                     if (state is TagsSuccessState) {
                       return Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +160,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                   style: TextStyle(
                                     color: AppColors.black,
                                     fontSize: 18,
-                                    fontWeight: FontWeight.w500,
+                                    fontFamily: ConduitFontFamily.robotoBold,
                                   ),
                                 ),
                               ),
@@ -193,10 +208,12 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                               horizontal: 10,
                                             ),
                                             child: Text(
-                                              "#${state.allTagsModel.tags![index]}",
+                                              "${state.allTagsModel.tags![index]}",
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: AppColors.white,
+                                                fontFamily: ConduitFontFamily
+                                                    .robotoRegular,
                                               ),
                                             ),
                                           ),
@@ -211,7 +228,12 @@ class _GlobalScreenState extends State<GlobalScreen> {
                         ),
                       );
                     }
-                    return Text("something want wrong");
+                    return Text(
+                      "something want wrong",
+                      style: TextStyle(
+                        fontFamily: ConduitFontFamily.robotoRegular,
+                      ),
+                    );
                   },
                 ),
                 SizedBox(height: 25),
@@ -266,7 +288,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
                               style: TextStyle(
                                 color: AppColors.black,
                                 fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                                fontFamily: ConduitFontFamily.robotoBold,
                               ),
                             ),
                             SizedBox(height: 20),
@@ -300,6 +322,15 @@ class _GlobalScreenState extends State<GlobalScreen> {
                     }
                     if (state is AllArticlesUnAuthorizedState) {
                       ConduitFunctions.logOut(context);
+                    }
+                    if (state is AllArticlesNoInternateState) {
+                      return Container(
+                        height: 500,
+                        width: MediaQuery.sizeOf(context).width,
+                        child: Center(
+                          child: Text("No internet"),
+                        ),
+                      );
                     }
                     return SizedBox();
                   },

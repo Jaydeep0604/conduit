@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_event.dart';
 import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_state.dart';
-import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/all_article_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,6 +49,8 @@ class MyFavoriteArticlesBloc
         );
         offset = offset + 10;
       }
+    } on SocketException {
+      emit(MyFavoriteArticlesNoInternetState());
     } catch (e) {
       print(e);
       emit(MyFavoriteArticlesErrorState(msg: e.toString()));
@@ -74,7 +78,9 @@ class MyFavoriteArticlesBloc
                   curentstate.myFavoriteArticleslist + myFavoriteArticleslist));
           offset = offset + 1;
         }
-      } catch (e) {
+      } on SocketException {
+      emit(MyFavoriteArticlesNoInternetState());
+    }  catch (e) {
         emit(MyFavoriteArticlesLoadedStete(
             myFavoriteArticleslist: curentstate.myFavoriteArticleslist,
             hasReachedMax: true));

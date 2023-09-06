@@ -1,4 +1,5 @@
-import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/main.dart';
+import 'package:conduit/model/all_article_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,11 @@ class _UserProfileDetailScreenState extends State<UserProfileDetailScreen> {
               icon: Icon(Icons.arrow_back)),
           title: Text(
             "Profile",
-            style: TextStyle(color: AppColors.white, fontSize: 20),
+            style: TextStyle(
+              color: AppColors.white,
+              fontSize: 20,
+              fontFamily: ConduitFontFamily.robotoRegular,
+            ),
           ),
         ),
         body: SafeArea(
@@ -76,8 +81,8 @@ class _UserProfileDetailScreenState extends State<UserProfileDetailScreen> {
                             '${widget.allArticlesModel.author!.username}',
                             style: TextStyle(
                               fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
                               color: AppColors.black,
+                              fontFamily: ConduitFontFamily.robotoRegular,
                             ),
                           ),
                         ],
@@ -98,6 +103,7 @@ class _UserProfileDetailScreenState extends State<UserProfileDetailScreen> {
                                 : "Follow",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontFamily: ConduitFontFamily.robotoRegular,
                                 color: widget.allArticlesModel.author!.following
                                     ? AppColors.white
                                     : AppColors.primaryColor),

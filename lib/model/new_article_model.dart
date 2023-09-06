@@ -116,11 +116,11 @@ class Article {
     title = json['title'];
     description = json['description'];
     body = json['body'];
-    if (json['tagList'] != null) {
-      tagList = <String>[];
-      json['tagList'];
-    }
-    // tagList = json['tagList'].cast<String>();
+    // if (json['tagList'] != null) {
+    //   tagList = <String>[];
+    //   json['tagList'];
+    // }
+    tagList = json['tagList'].cast<String>();
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     favorited = json['favorited'];
@@ -135,9 +135,9 @@ class Article {
     data['title'] = this.title;
     data['description'] = this.description;
     data['body'] = this.body;
-    if (this.tagList != null) {
-      data['tagList'];
-    }
+    // if (this.tagList != null) {
+    //   data['tagList'];
+    // }
     data['tagList'] = this.tagList;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;

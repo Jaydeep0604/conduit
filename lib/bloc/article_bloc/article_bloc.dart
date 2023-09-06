@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:conduit/bloc/article_bloc/article_event.dart';
 import 'package:conduit/bloc/article_bloc/article_state.dart';
 import 'package:conduit/model/new_article_model.dart';
@@ -11,10 +13,10 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
     on<FetchArticleEvent>(onFetchArticleEvent);
     on<UpdateArticleEvent>(_onUpdateArticle);
     on<DeleteArticleEvent>(_onDeleteArticleEvent);
-
   }
 
-  _onSubmitArticleEvent(SubmitArticleEvent event, Emitter<ArticleState> emit) async {
+  _onSubmitArticleEvent(
+      SubmitArticleEvent event, Emitter<ArticleState> emit) async {
     try {
       emit(ArticleLoadingState());
       dynamic data;
@@ -35,6 +37,8 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       } else {
         emit(ArticleLoadedState(articleModel: data));
       }
+    } on SocketException {
+      emit(ArticleNoInternetState());
     } catch (e) {
       emit(
         ArticleErrorState(
@@ -51,7 +55,9 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       dynamic data;
       data = await repo.updateArticle(event.articleModel, event.slug);
       emit(UpdateArticleSuccessState(msg: "Article updated successfully"));
-    } catch (e) {
+    } on SocketException {
+      emit(ArticleNoInternetState());
+    }  catch (e) {
       emit(UpdateArticleErroeState(msg: e.toString()));
     }
   }
@@ -66,7 +72,9 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
         emit(ArticleDeleteErrorState(
             msg: "Something want wrong please try again later"));
       }
-    } catch (e) {
+    } on SocketException {
+      emit(ArticleNoInternetState());
+    }  catch (e) {
       emit(
         ArticleDeleteErrorState(
           msg: e.toString(),

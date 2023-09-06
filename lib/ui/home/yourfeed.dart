@@ -1,3 +1,4 @@
+import 'package:conduit/main.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/widget/theme_container.dart';
@@ -32,6 +33,7 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
           "Feed",
           style: TextStyle(
             color: AppColors.white,
+            fontFamily: ConduitFontFamily.robotoRegular,
           ),
         ),
       ),
@@ -42,7 +44,11 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
             child: Center(
               child: Text(
                 "No articles are hear... yet.",
-                style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 16,
+                  fontFamily: ConduitFontFamily.robotoRegular,
+                ),
               ),
             ),
           ),

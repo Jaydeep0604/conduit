@@ -1,5 +1,5 @@
 
-import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/all_article_model.dart';
 
 abstract class MyArticlesState {
   late bool hasReachedMax;
@@ -17,6 +17,15 @@ class MyArticlesLoadingState extends MyArticlesState {
   List<Object?> get props => [];
 }
 
+class NoMyArticlesState extends MyArticlesState {
+  @override
+  List<Object?> get props => [];
+  @override
+  String toString() {
+    return "NO User Data Available";
+  }
+}
+
 class MyArticlesLoadedState extends MyArticlesState {
   List<AllArticlesModel> myArticleslist;
   bool hasReachedMax;
@@ -27,14 +36,6 @@ class MyArticlesLoadedState extends MyArticlesState {
   List<Object?> get props => [this.myArticleslist, hasReachedMax];
 }
 
-class NoMyArticlesState extends MyArticlesState {
-  @override
-  List<Object?> get props => [];
-  @override
-  String toString() {
-    return "NO User Data Available";
-  }
-}
 
 class MyArticlesErrorState extends MyArticlesState {
   final String msg;

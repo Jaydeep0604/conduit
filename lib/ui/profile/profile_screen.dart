@@ -8,6 +8,7 @@ import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_state.
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_event.dart';
 import 'package:conduit/bloc/profile_bloc/profile_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/ui/EditProfile/EditProfile_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -100,6 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             "Profile",
             style: TextStyle(
               color: AppColors.white,
+              fontFamily: ConduitFontFamily.robotoRegular,
             ),
           ),
         ),
@@ -114,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return [
                 SliverAppBar(
                   pinned: true,
-                  snap: true,
+                  snap: false,
                   floating: true,
                   elevation: 0,
                   automaticallyImplyLeading: false,
@@ -204,10 +206,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 child: Text(
                                               "My Articles",
                                               style: TextStyle(
-                                                  color: myArticle
-                                                      ? AppColors.white
-                                                      : AppColors.black,
-                                                  fontSize: 15),
+                                                color: myArticle
+                                                    ? AppColors.white
+                                                    : AppColors.black,
+                                                fontSize: 15,
+                                                fontFamily: ConduitFontFamily
+                                                    .robotoRegular,
+                                              ),
                                             )),
                                           ),
                                         ),
@@ -239,10 +244,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               child: Text(
                                                 "FavArticle Articles",
                                                 style: TextStyle(
-                                                    color: favArticle
-                                                        ? AppColors.white
-                                                        : AppColors.black,
-                                                    fontSize: 15),
+                                                  color: favArticle
+                                                      ? AppColors.white
+                                                      : AppColors.black,
+                                                  fontSize: 15,
+                                                  fontFamily: ConduitFontFamily
+                                                      .robotoRegular,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -381,8 +389,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Text(
                                             "${state.profileList.last.user!.username}",
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               fontSize: 16,
+                                              fontFamily:
+                                                  ConduitFontFamily.robotoBold,
                                             ),
                                           ),
                                           SizedBox(height: 10),
@@ -583,8 +592,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                           if (state is MyArticlesLoadedState) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 10,left: 15,right: 15,),
+                              padding: const EdgeInsets.only(
+                                bottom: 10,
+                                left: 15,
+                                right: 15,
+                              ),
                               child: ListView.separated(
                                 primary: false,
                                 shrinkWrap: true,
@@ -649,16 +661,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           if (state is NoMyFavoriteArticlesState) {
                             return Center(
-                              child: Text("No articles are here... yet"),
+                              child: Text(
+                                "No articles are here... yet",
+                                style: TextStyle(
+                                  fontFamily: ConduitFontFamily.robotoRegular,
+                                ),
+                              ),
                             );
                           }
                           if (state is MyFavoriteArticlesLoadedStete) {
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: 10,left: 15,right: 15,),
+                              padding: const EdgeInsets.only(
+                                bottom: 10,
+                                left: 15,
+                                right: 15,
+                              ),
                               child: ListView.separated(
                                 primary: false,
                                 shrinkWrap: true,
-                                reverse: true,
+                                
                                 padding: EdgeInsets.zero,
                                 scrollDirection: Axis.vertical,
                                 // physics: const AlwaysScrollableScrollPhysics(),

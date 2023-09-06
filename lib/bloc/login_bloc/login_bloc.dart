@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:conduit/bloc/login_bloc/login_event.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/user_model.dart';
@@ -45,6 +47,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           msg: jsonData["user"].toString(),
         ),
       );
+    } on SocketException {
+      emit(LoginNoInternetState());
     } catch (e) {
       emit(
         LoginErrorState(
@@ -80,6 +84,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         //     ),
         //   );
       }
+    } on SocketException {
+      emit(LoginNoInternetState());
     } catch (e) {
       emit(
         LoginErrorState(

@@ -1,4 +1,4 @@
-import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/all_article_model.dart';
 
 abstract class MyFavoriteArticlesState {
   late bool hasReachedMax;
@@ -8,15 +8,26 @@ class MyFavoriteArticlesInitialState extends MyFavoriteArticlesState {
   List<Object?> get props => [];
 }
 
-class MyFavoriteArticlesNoInternateState extends MyFavoriteArticlesState {
+class MyFavoriteArticlesNoInternetState extends MyFavoriteArticlesState {
   List<Object?> get props => [];
 }
+
 
 class MyFavoriteArticlesLoadingState extends MyFavoriteArticlesState {
   List<Object?> get props => [];
 }
+
 class MyFavoriteArticlesNextDataLoadingState extends MyFavoriteArticlesState {
   List<Object?> get props => [];
+}
+
+class NoMyFavoriteArticlesState extends MyFavoriteArticlesState {
+  @override
+  List<Object?> get props => [];
+  @override
+  String toString() {
+    return "NO User Data Available";
+  }
 }
 
 class MyFavoriteArticlesLoadedStete extends MyFavoriteArticlesState {
@@ -29,14 +40,6 @@ class MyFavoriteArticlesLoadedStete extends MyFavoriteArticlesState {
   List<Object?> get props => [this.myFavoriteArticleslist, hasReachedMax];
 }
 
-class NoMyFavoriteArticlesState extends MyFavoriteArticlesState {
-  @override
-  List<Object?> get props => [];
-  @override
-  String toString() {
-    return "NO User Data Available";
-  }
-}
 
 class MyFavoriteArticlesErrorState extends MyFavoriteArticlesState {
   final String msg;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:conduit/bloc/register_bloc/register_event.dart';
 import 'package:conduit/bloc/register_bloc/register_state.dart';
 import 'package:conduit/model/auth_model.dart';
@@ -38,10 +40,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       // }
       emit(
         RegisterDoneState(
-            authModel: (state.props[0] as AuthModel),
-            msg: jsonData['user']
-          ),
+            authModel: (state.props[0] as AuthModel), msg: jsonData['user']),
       );
+    } on SocketException {
+      emit(RegisterNoInternetState());
     } catch (e) {
       emit(
         RegisterErrorState(
@@ -72,16 +74,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           ),
         );
       }
-    }
-    //  on SocketException {
-    //   emit(
-    //     RegisterErrorState(
-    //       authModel: (state.props[0] as AuthModel),
-    //       msg: ApiConstant.COULDT_REACH.toString(),
-    //     ),
-    //   );
-    // }
-    catch (e) {
+    } on SocketException {
+      emit(RegisterNoInternetState());
+    } catch (e) {
       emit(
         RegisterErrorState(
           authModel: (state.props[0] as AuthModel),

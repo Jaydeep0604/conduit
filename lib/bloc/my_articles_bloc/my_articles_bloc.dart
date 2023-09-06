@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:conduit/bloc/my_articles_bloc/my_articles_event.dart';
 import 'package:conduit/bloc/my_articles_bloc/my_articles_state.dart';
-import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/all_article_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,6 +44,8 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
         emit(MyArticlesLoadedState(myArticleslist: aData));
         offset = offset + 10;
       }
+    } on SocketException {
+      emit(MyArticlesNoInternateState());
     } catch (e) {
       print(e);
       emit(MyArticlesErrorState(msg: e.toString()));
@@ -70,6 +74,8 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
               myArticleslist: curentstate.myArticleslist + myArticleslist));
           offset = offset + 10;
         }
+      } on SocketException {
+        emit(MyArticlesNoInternateState());
       } catch (e) {
         emit(MyArticlesLoadedState(
             myArticleslist: curentstate.myArticleslist, hasReachedMax: true));
@@ -87,6 +93,8 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
         emit(DeleteMyArticleErrorState(
             msg: "Something want wrong please try again later"));
       }
+    } on SocketException {
+      emit(MyArticlesNoInternateState());
     } catch (e) {
       emit(
         DeleteMyArticleErrorState(

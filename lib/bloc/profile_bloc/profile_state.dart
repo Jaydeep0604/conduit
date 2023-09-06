@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:conduit/model/profile_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,6 +8,10 @@ abstract class ProfileState extends Equatable {}
 // fetch profile
 
 class ProfileInitialState extends ProfileState {
+  @override
+  List<Object?> get props => [];
+}
+class ProfileNoInternetState extends ProfileState {
   @override
   List<Object?> get props => [];
 }

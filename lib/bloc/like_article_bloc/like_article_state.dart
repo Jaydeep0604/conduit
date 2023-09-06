@@ -1,4 +1,3 @@
-import 'package:conduit/model/all_artist_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class LikeState extends Equatable {}
@@ -7,6 +6,7 @@ class LikeInitialState extends LikeState {
   @override
   List<Object?> get props => [];
 }
+
 class LikeNoInternetState extends LikeState {
   @override
   List<Object?> get props => [];
@@ -34,9 +34,9 @@ class RemoveLikeSuccessState extends LikeState {
     return msg;
   }
 }
-class LikeErroeState extends LikeState {
+class LikeErrorState extends LikeState {
   final String msg;
-  LikeErroeState({required this.msg});
+  LikeErrorState({required this.msg});
   @override
   List<Object?> get props => [this.msg];
   String toString(){

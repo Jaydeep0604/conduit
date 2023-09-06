@@ -8,6 +8,16 @@ class CommentInitialState extends CommentState {
   List<Object?> get props => [];
 }
 
+class CommentNoInternetState extends CommentState {
+  @override
+  List<Object?> get props => [];
+}
+
+class NoCommentState extends CommentState {
+  @override
+  List<Object?> get props => [];
+}
+
 class CommentLoadingState extends CommentState {
   @override
   List<Object?> get props => [];
@@ -18,10 +28,6 @@ class CommentLoadedState extends CommentState {
   List<Object?> get props => [];
 }
 
-class NoCommentState extends CommentState {
-  @override
-  List<Object?> get props => [];
-}
 
 class CommentSuccessState extends CommentState {
   List<CommentModel> commentModel;
@@ -47,6 +53,13 @@ class CommentErrorState extends CommentState {
   }
 }
 
+// delete comment 
+
+class DeleteCommentLoadingState extends CommentState {
+  @override
+  List<Object?> get props => [];
+}
+
 class DeleteCommentErrorState extends CommentState {
   String msg;
   DeleteCommentErrorState({required this.msg});
@@ -63,7 +76,4 @@ class DeleteCommentSuccessState extends CommentState {
   List<Object?> get props => [];
 }
 
-class DeleteCommentLoadingState extends CommentState {
-  @override
-  List<Object?> get props => [];
-}
+

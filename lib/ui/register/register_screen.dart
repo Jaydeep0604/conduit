@@ -1,5 +1,6 @@
 import 'package:conduit/bloc/register_bloc/register_event.dart';
 import 'package:conduit/bloc/register_bloc/register_state.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/auth_model.dart';
 import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -134,18 +135,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Text(
                                   "conduit",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 50,
-                                      color: AppColors.primaryColor),
+                                    fontSize: 50,
+                                    color: AppColors.primaryColor,
+                                    fontFamily: ConduitFontFamily.robotoBold,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Text("A place to share your knowledge.",
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 17,
-                                        color: AppColors.black))
+                                      fontSize: 17,
+                                      color: AppColors.black,
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    ))
                               ],
                             ),
                           ),
@@ -155,7 +159,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'Sign Up',
-                            style: TextStyle(fontSize: 25),
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontFamily: ConduitFontFamily.robotoRegular,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -370,7 +377,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Text(
                               "Already have an account? ",
-                              style: TextStyle(color: AppColors.black),
+                              style: TextStyle(
+                                color: AppColors.black,
+                                fontFamily: ConduitFontFamily.robotoRegular,
+                              ),
                             ),
                             GestureDetector(
                               onTap: (() {
@@ -378,7 +388,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }),
                               child: Text(
                                 "Sign In",
-                                style: TextStyle(color: AppColors.primaryColor),
+                                style: TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontFamily: ConduitFontFamily.robotoRegular,
+                                ),
                               ),
                             ),
                           ],

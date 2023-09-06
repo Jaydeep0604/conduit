@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_state.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/auth_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/ui/register/register_screen.dart';
@@ -130,9 +131,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Text(
                                   "conduit",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 50,
-                                      color: AppColors.primaryColor),
+                                    fontSize: 50,
+                                    color: AppColors.primaryColor,
+                                    fontFamily: ConduitFontFamily.robotoBold,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -141,6 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 17,
+                                        fontFamily:
+                                            ConduitFontFamily.robotoRegular,
                                         color: AppColors.black))
                               ],
                             ),
@@ -151,7 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'Sign In',
-                            style: TextStyle(fontSize: 25),
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontFamily: ConduitFontFamily.robotoRegular,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -233,7 +240,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-
                         SizedBox(
                           height: 20,
                         ),
@@ -246,7 +252,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: isLoading
                                   ? AppColors.text_color
                                   : AppColors.primaryColor,
-
                               borderRadius: BorderRadius.circular(10),
                               child: Text(
                                 'Sign in',
@@ -259,19 +264,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                             : Colors.white,
                                         fontWeight: FontWeight.w500),
                               ),
-                              // isLoading
-                              //     ? Container(
-                              //         height: 40,
-                              //         padding: EdgeInsets.all(8),
-                              //         child: CToast.instance.showLoader(),
-                              //       )
-                              //     : Text('Sign in',
-                              //         style: Theme.of(context)
-                              //             .textTheme
-                              //             .button
-                              //             ?.copyWith(
-                              //                 color: Colors.white,
-                              //                 fontWeight: FontWeight.w500)),
                               onPressed: () {
                                 FocusNode? focusNode =
                                     FocusManager.instance.primaryFocus;
@@ -300,96 +292,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   // CToast.instance.showSuccess(context,
                                   //     "Data added in ( RegisterSubmitEvent )");
                                 }
-
-                                // if (_form.currentState?.validate() ?? false) {
-                                //   RegisterModel regModel =
-                                //       _createRegisterModel()!;
-                                //   if (_createRegisterModel != null) {
-                                //     registerBloc.add(
-                                //       RegisterSubmitEvent(
-                                //         registerModel: regModel,
-                                //       ),
-                                //     );
-                                //     CToast.instance.showSuccess(context,
-                                //         "Data added in ( RegisterSubmitEvent )");
-                                //   } else {
-                                //     CToast.instance
-                                //         .showError(context, "Data not added");
-                                //   }
-                                // }
                               },
                             ),
                           ),
                         ),
-                        // Container(
-                        //   padding: EdgeInsets.only(right: 30, left: 30, top: 20),
-                        //   alignment: Alignment.topRight,
-                        //   child: MaterialButton(
-                        //     minWidth: MediaQuery.of(context).size.width,
-                        //     height: 40,
-                        //     color: AppColors.primaryColor,
-                        //     disabledColor: AppColors.Box_width_color,
-                        //     shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(12.0)),
-                        //     child: isLoading
-                        //         ? Container(
-                        //             height: 40,
-                        //             padding: EdgeInsets.all(8),
-                        //             child: CToast.instance.showLoader(),
-                        //           )
-                        //         : Text('Sign in',
-                        //             style: Theme.of(context)
-                        //                 .textTheme
-                        //                 .button
-                        //                 ?.copyWith(
-                        //                     color: Colors.white,
-                        //                     fontWeight: FontWeight.w700)),
-                        //     onPressed: isLoading
-                        //         ? null
-                        //         : () {
-                        //             FocusNode? focusNode =
-                        //                 FocusManager.instance.primaryFocus;
-                        //             if (focusNode != null) {
-                        //               if (focusNode.hasPrimaryFocus) {
-                        //                 focusNode.unfocus();
-                        //               }
-                        //             }
-                        //             if (formKey.currentState?.validate() ??
-                        //                 false) {
-                        //               loginBloc.add(
-                        //                 LoginSubmitEvent(
-                        //                   // email: emailCtr.text.trim(),
-                        //                   // password: passwordCtr.text.trim(),
-                        //                   // fcmToken: '1',
-                        //                   // userDeviceId: '1',
-                        //                   authModel: AuthModel(
-                        //                     password: passwordCtr.text.trim(),
-                        //                     email: emailCtr.text.trim(),
-                        //                   ),
-                        //                 ),
-                        //               );
-                        //               // CToast.instance.showSuccess(context,
-                        //               //     "Data added in ( RegisterSubmitEvent )");
-                        //             }
-                        //             // if (_form.currentState?.validate() ?? false) {
-                        //             //   RegisterModel regModel =
-                        //             //       _createRegisterModel()!;
-                        //             //   if (_createRegisterModel != null) {
-                        //             //     registerBloc.add(
-                        //             //       RegisterSubmitEvent(
-                        //             //         registerModel: regModel,
-                        //             //       ),
-                        //             //     );
-                        //             //     CToast.instance.showSuccess(context,
-                        //             //         "Data added in ( RegisterSubmitEvent )");
-                        //             //   } else {
-                        //             //     CToast.instance
-                        //             //         .showError(context, "Data not added");
-                        //             //   }
-                        //             // }
-                        //           },
-                        //   ),
-                        // ),
                         Spacer(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -397,7 +303,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Text(
                               "Don't have an account? ",
-                              style: TextStyle(color: AppColors.black),
+                              style: TextStyle(
+                                color: AppColors.black,
+                                fontFamily: ConduitFontFamily.robotoRegular,
+                              ),
                             ),
                             GestureDetector(
                               onTap: (() {
@@ -415,7 +324,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               }),
                               child: Text(
                                 "Sign Up",
-                                style: TextStyle(color: AppColors.primaryColor),
+                                style: TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontFamily: ConduitFontFamily.robotoRegular,
+                                ),
                               ),
                             ),
                           ],

@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -50,7 +49,9 @@ dependencies:
   shimmer: ^2.0.0
   flutter_screenutil: ^5.0.1
   liquid_pull_to_refresh: ^3.0.1
+  internet_connection_checker: ^1.0.0+1
   
+
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +71,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -92,17 +92,55 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: Roboto Black
+      fonts:
+        - asset: assets/fonts/Roboto-Black.ttf
+
+    - family: Roboto BlackItalic
+      fonts:
+        - asset: assets/fonts/Roboto-BlackItalic.ttf
+
+    - family: Roboto Bold
+      fonts:
+        - asset: assets/fonts/Roboto-Bold.ttf
+    
+    - family: Roboto BoldItalic
+      fonts:
+        - asset: assets/fonts/Roboto-BoldItalic.ttf
+    
+    - family: Roboto Italic
+      fonts:
+        - asset: assets/fonts/Roboto-Italic.ttf
+
+    - family: Roboto Light
+      fonts:
+        - asset: assets/fonts/Roboto-Light.ttf
+
+    - family: Roboto LightItalic
+      fonts:
+        - asset: assets/fonts/Roboto-LightItalic.ttf
+
+    - family: Roboto Medium
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
+
+    - family: Roboto MediumItalic
+      fonts:
+        - asset: assets/fonts/Roboto-MediumItalic.ttf
+
+    - family: Roboto Regular
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+
+    - family: Roboto Thin
+      fonts:
+        - asset: assets/fonts/Roboto-Thin.ttf
+
+    - family: Roboto ThinItalic
+      fonts:
+        - asset: assets/fonts/Roboto-ThinItalic.ttf
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
@@ -144,4 +182,3 @@ flutter:
     - android/.gradle/checksums/
     - android/.gradle/buildOutputCleanup/
     - android/.gradle/configuration-cache/
-

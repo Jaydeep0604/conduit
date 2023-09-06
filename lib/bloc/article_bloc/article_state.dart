@@ -34,6 +34,11 @@ class ArticleInitialState extends ArticleState {
   List<Object?> get props => [];
 }
 
+class ArticleNoInternetState extends ArticleState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ArticleLoadingState extends ArticleState {
   @override
   List<Object?> get props => [];

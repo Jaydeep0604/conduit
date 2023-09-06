@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:conduit/bloc/tags_bloc/tags_event.dart';
 import 'package:conduit/bloc/tags_bloc/tags_state.dart';
-import 'package:conduit/model/all_artist_model.dart';
+import 'package:conduit/model/all_article_model.dart';
 import 'package:conduit/model/all_tags_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 

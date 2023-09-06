@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:conduit/config/hive_store.dart';
+import 'package:conduit/main.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
 import 'package:conduit/ui/login/login_screen.dart';
@@ -63,12 +64,18 @@ class _SplashScreenState extends State<SplashScreen> {
               Text(
                 'conduit',
                 style: TextStyle(
-                    fontSize: 40, color: AppColors.primaryColor),
+                  fontSize: 40,
+                  color: AppColors.primaryColor,
+                  fontFamily: ConduitFontFamily.robotoRegular,
+                ),
               ),
               Text(
                 'A place to share your knowledge.',
                 style: TextStyle(
-                    fontSize: 18, color: AppColors.primaryColor2),
+                  fontSize: 18,
+                  color: AppColors.primaryColor2,
+                  fontFamily: ConduitFontFamily.robotoRegular,
+                ),
               )
             ],
           ),

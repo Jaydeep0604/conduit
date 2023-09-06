@@ -135,3 +135,18 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class ConduitFontFamily {
+  static const robotoBlack = "Roboto Black";
+  static const robotoBlackItalic = "Roboto BlackItalic";
+  static const robotoBold = "Roboto Bold";
+  static const robotoBoldItalic = "Roboto BoldItalic";
+  static const robotoItalic = "Roboto Italic";
+  static const robotoLight = "Roboto Light";
+  static const robotoLightItalic = "Roboto LightItalic";
+  static const robotoMedium = "Roboto Medium";
+  static const robotoMediumItalic = "Roboto MediumItalic";
+  static const robotoRegular = "Roboto Regular";
+  static const robotoThin = "Roboto Thin";
+  static const robotoThinItalic = "Roboto ThinItalic";
+}

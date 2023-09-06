@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/bloc/comment_bloc/comment_state.dart';
@@ -20,6 +22,8 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       } else {
         emit(CommentSuccessState(commentModel: data));
       }
+    } on SocketException {
+      emit(CommentNoInternetState());
     } catch (e) {
       emit(
         CommentErrorState(
@@ -40,6 +44,8 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         emit(DeleteCommentErrorState(
             msg: "Something want wrong please try again later"));
       }
+    } on SocketException {
+      emit(CommentNoInternetState());
     } catch (e) {
       emit(
         CommentErrorState(
