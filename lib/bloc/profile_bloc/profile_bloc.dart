@@ -36,6 +36,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       UpdateProfileEvent event, Emitter<ProfileState> emit) async {
     emit(UpdateProfileLoadingState());
     try {
+      emit(ProfileLoadingState());
       dynamic data = await repo.updateProfile(event.profileModel);
       if (data != true) {
         emit(UpdateProfileSuccessState());

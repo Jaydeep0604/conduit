@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/login_bloc/login_bloc.dart';
 import 'package:conduit/bloc/login_bloc/login_state.dart';
 import 'package:conduit/bloc/register_bloc/register_bloc.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/auth_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
@@ -67,6 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
               listeners: [
                 BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
+                    if (state is LoginNoInternetState) {
+                      CToast.instance.showError(context, NO_INTERNET);
+                    }
                     if (state is LoginLoadingState) {
                       setState(() {
                         isLoading = true;

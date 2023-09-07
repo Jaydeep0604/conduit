@@ -1,11 +1,13 @@
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_event.dart';
 import 'package:conduit/bloc/profile_bloc/profile_state.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/profile_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/message.dart';
+import 'package:conduit/widget/no_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +24,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController confirmPasswordCtr = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool isNoInternet = false;
   bool _obsecureText = false;
   bool _obsecureText2 = false;
   late ProfileBloc profileBloc;
@@ -78,6 +81,11 @@ class _ChangePasswordState extends State<ChangePassword> {
               listener: (context, state) {
                 if (state is ChangePasswordLoadingState) {
                   //return CToast.instance.showLoader();
+                  CToast.instance.showLoaderDialog(context);
+                }
+                if (state is ProfileNoInternetState) {
+                  Navigator.pop(context);
+                  CToast.instance.showError(context, NO_INTERNET);
                 }
                 if (state is ChangePasswordSuccessState) {
                   passwordCtr.clear();
@@ -274,7 +282,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                             onPressed: () {
                               FocusManager.instance.primaryFocus!.unfocus();
                               if (_formKey.currentState?.validate() ?? false) {
-                                CToast.instance.showLoaderDialog(context);
                                 profileBloc.add(
                                   ChangePasswordEvent(
                                     profileModel: ProfileModel(

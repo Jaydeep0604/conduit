@@ -22,7 +22,10 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       dynamic data;
       data = await repo.addNewArticle(event.articleModel);
       emit(ArticleAddSuccessState(msg: "New article added successfully"));
-    } catch (e) {
+    }on SocketException{
+      emit(ArticleNoInternetState());
+    }
+     catch (e) {
       emit(ArticleAddErrorState(msg: e.toString()));
     }
   }
@@ -51,7 +54,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
   _onUpdateArticle(UpdateArticleEvent event, Emitter<ArticleState> emit) async {
     AllArticlesRepo repo = AllArticlesImpl();
     try {
-      emit(UpdateArticleLoadingState());
+      emit(ArticleLoadingState());
       dynamic data;
       data = await repo.updateArticle(event.articleModel, event.slug);
       emit(UpdateArticleSuccessState(msg: "Article updated successfully"));

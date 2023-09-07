@@ -4,12 +4,14 @@ import 'package:conduit/bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/bloc/comment_bloc/comment_state.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/comment_widget.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
+import 'package:conduit/widget/no_internet.dart';
 import 'package:conduit/widget/theme_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,7 @@ class CommentsScreen extends StatefulWidget {
 }
 
 class CommentsScreenState extends State<CommentsScreen> {
+  bool isNoInternet = false;
   late CommentBloc commentBloc;
   late AddCommentBloc addCommentBloc;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -67,61 +70,129 @@ class CommentsScreenState extends State<CommentsScreen> {
           child: Column(
             children: [
               Expanded(
-                child: BlocBuilder<CommentBloc, CommentState>(
-                  builder: (context, state) {
-                    if (state is CommentErrorState) {
-                      return CToast.instance.showError(context, state.msg);
-                    }
-                    if (state is CommentLoadingState) {
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: SizedBox(
-                          height: 30,
-                          child: CToast.instance.showLoader(),
-                        ),
-                      );
-                    }
-                    if (state is NoCommentState) {
-                      return Center(
-                        child: Text(
-                          "No Comments",
-                          style: TextStyle(
-                            fontFamily: ConduitFontFamily.robotoRegular,
-                          ),
-                        ),
-                      );
-                    }
-                    if (state is DeleteCommentSuccessState) {
-                      refreshComments();
-                    }
-                    if (state is CommentSuccessState) {
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(left: 15, right: 15, top: 10),
-                        child: ListView.separated(
-                          primary: false,
-                          shrinkWrap: true,
-                          // reverse: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: state.commentModel.length,
-                          itemBuilder: (context, index) {
-                            return CommentWidget(
-                              slug: widget.slug,
-                              commentModel: state.commentModel[index],
-                            );
+                  child: isNoInternet
+                      ? NoInternet(
+                          isWidget: true,
+                        )
+                      : BlocConsumer<CommentBloc, CommentState>(
+                          listener: (context, state) {
+                            if (state is CommentNoInternetState) {
+                              setState(() {
+                                isNoInternet = true;
+                              });
+                            }
                           },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(
-                              height: 10,
-                            );
+                          builder: (context, state) {
+                            if (state is NoCommentState) {
+                              return Center(
+                                child: Text(
+                                  "No Comments",
+                                  style: TextStyle(
+                                    fontFamily: ConduitFontFamily.robotoRegular,
+                                  ),
+                                ),
+                              );
+                            }
+                            if (state is CommentErrorState) {
+                              return CToast.instance
+                                  .showError(context, state.msg);
+                            }
+                            if (state is CommentLoadingState) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: SizedBox(
+                                  height: 30,
+                                  child: CToast.instance.showLoader(),
+                                ),
+                              );
+                            }
+                            if (state is DeleteCommentSuccessState) {
+                              refreshComments();
+                            }
+                            if (state is CommentSuccessState) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, top: 10),
+                                child: ListView.separated(
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  // reverse: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: state.commentModel.length,
+                                  itemBuilder: (context, index) {
+                                    return CommentWidget(
+                                      slug: widget.slug,
+                                      commentModel: state.commentModel[index],
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return SizedBox(
+                                      height: 10,
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                            return Container();
                           },
-                        ),
-                      );
-                    }
-                    return SizedBox();
-                  },
-                ),
-              ),
+                        )
+
+                  // BlocBuilder<CommentBloc, CommentState>(
+                  //   builder: (context, state) {
+                  //     if (state is CommentErrorState) {
+                  //       return CToast.instance.showError(context, state.msg);
+                  //     }
+                  //     if (state is CommentLoadingState) {
+                  //       return Padding(
+                  //         padding: const EdgeInsets.all(10),
+                  //         child: SizedBox(
+                  //           height: 30,
+                  //           child: CToast.instance.showLoader(),
+                  //         ),
+                  //       );
+                  //     }
+                  //     if (state is NoCommentState) {
+                  //       return Center(
+                  //         child: Text(
+                  //           "No Comments",
+                  //           style: TextStyle(
+                  //             fontFamily: ConduitFontFamily.robotoRegular,
+                  //           ),
+                  //         ),
+                  //       );
+                  //     }
+                  //     if (state is DeleteCommentSuccessState) {
+                  //       refreshComments();
+                  //     }
+                  //     if (state is CommentSuccessState) {
+                  //       return Padding(
+                  //         padding:
+                  //             const EdgeInsets.only(left: 15, right: 15, top: 10),
+                  //         child: ListView.separated(
+                  //           primary: false,
+                  //           shrinkWrap: true,
+                  //           // reverse: true,
+                  //           scrollDirection: Axis.vertical,
+                  //           itemCount: state.commentModel.length,
+                  //           itemBuilder: (context, index) {
+                  //             return CommentWidget(
+                  //               slug: widget.slug,
+                  //               commentModel: state.commentModel[index],
+                  //             );
+                  //           },
+                  //           separatorBuilder: (BuildContext context, int index) {
+                  //             return SizedBox(
+                  //               height: 10,
+                  //             );
+                  //           },
+                  //         ),
+                  //       );
+                  //     }
+                  //     return SizedBox();
+                  //   },
+                  // ),
+                  ),
               // Padding(
               //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               //   child: Row(
@@ -147,6 +218,9 @@ class CommentsScreenState extends State<CommentsScreen> {
                   BlocListener<AddCommentBloc, AddCommentState>(
                     listener: (context, state) {
                       if (state is AddCommentLoadingState) {}
+                      if (state is AddCommentNoInternetState) {
+                        CToast.instance.showError(context, NO_INTERNET);
+                      }
                       if (state is AddCommentErroeState) {
                         Navigator.pop(context);
                         formKey.currentState!.reset();
@@ -162,8 +236,8 @@ class CommentsScreenState extends State<CommentsScreen> {
                       }
                     },
                     child: Container(
-                      padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 15),
                       // decoration: BoxDecoration(
                       //   borderRadius: BorderRadius.circular(5),
                       //   border: Border.all(
@@ -390,7 +464,8 @@ class CommentsScreenState extends State<CommentsScreen> {
                                             style: TextStyle(
                                               color: AppColors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontFamily: ConduitFontFamily.robotoRegular,
+                                              fontFamily: ConduitFontFamily
+                                                  .robotoRegular,
                                             ),
                                           ),
                                         ),

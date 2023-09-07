@@ -1,5 +1,6 @@
 import 'package:conduit/bloc/register_bloc/register_event.dart';
 import 'package:conduit/bloc/register_bloc/register_state.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/auth_model.dart';
 import 'package:conduit/ui/login/login_screen.dart';
@@ -83,9 +84,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      // CToast.instance.dismiss();
                     }
-
+                    if (state is RegisterNoInternetState) {
+                      Navigator.pop(context);
+                      CToast.instance.showError(context, NO_INTERNET);
+                    }
                     if (state is RegisterDoneState) {
                       Navigator.popUntil(context, (route) => route.isFirst);
                       Navigator.pushReplacement(
@@ -319,57 +322,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                           ),
                         ),
-                        // Container(
-                        //   padding: EdgeInsets.only(right: 30, left: 30, top: 20),
-                        //   alignment: Alignment.topRight,
-                        //   child: MaterialButton(
-                        //     minWidth: MediaQuery.of(context).size.width,
-                        //     height: 40,
-                        //     color: AppColors.primaryColor,
-                        //     disabledColor: AppColors.Box_width_color,
-                        //     shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(12.0)),
-                        //     child: isLoading
-                        //         ? Container(
-                        //             height: 40,
-                        //             padding: EdgeInsets.all(8),
-                        //             child: CToast.instance.showLoader(),
-                        //           )
-                        //         : Text('Sign Up',
-                        //             style: Theme.of(context)
-                        //                 .textTheme
-                        //                 .button
-                        //                 ?.copyWith(
-                        //                     color: Colors.white,
-                        //                     fontWeight: FontWeight.w700)),
-                        //     onPressed: isLoading
-                        //         ? null
-                        //         : () {
-                        //             FocusNode? focusNode =
-                        //                 FocusManager.instance.primaryFocus;
-                        //             if (focusNode != null) {
-                        //               if (focusNode.hasPrimaryFocus) {
-                        //                 focusNode.unfocus();
-                        //               }
-                        //             }
-                        //             if (_form.currentState?.validate() ?? false) {
-                        //               AuthModel aModel = _createRegisterModel()!;
-                        //               if (_createRegisterModel != null) {
-                        //                 registerBloc.add(
-                        //                   RegisterSubmitEvent(
-                        //                     authModel: aModel,
-                        //                   ),
-                        //                 );
-                        //                 // CToast.instance.showSuccess(context,
-                        //                 //     "Data added in ( RegisterSubmitEvent )");
-                        //               } else {
-                        //                 CToast.instance
-                        //                     .showError(context, "Data not added");
-                        //               }
-                        //             }
-                        //           },
-                        //   ),
-                        // ),
                         Spacer(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

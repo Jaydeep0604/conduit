@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/bloc/tags_bloc/tags_event.dart';
 import 'package:conduit/bloc/tags_bloc/tags_state.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
@@ -58,45 +59,53 @@ class _TagScreenState extends State<TagScreen> {
           centerTitle: false,
         ),
         body: ThemeContainer(
-          child: SafeArea(child: BlocBuilder<TagsBloc, TagsState>(
-            builder: (context, state) {
-              if (state is SearchNoTagState) {
-                return Container();
-              }
-              if (state is SearchTagLoadingState) {
-                return Center(
-                  child: CToast.instance.showLoader(),
-                );
-              }
-              if (state is SearchTagErrorState) {
-                print(state.msg.toString());
-              }
-              if (state is SearchTagSuccessState) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    child: ListView.separated(
-                      primary: false,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.vertical,
-                      itemCount: state.myFavoriteArticleslist.length,
-                      itemBuilder: (context, index) {
-                        return AllAirtistWidget(
-                          articlesModel: state.myFavoriteArticleslist[index],
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(height: 10);
-                      },
+          child: SafeArea(
+            child: BlocConsumer<TagsBloc, TagsState>(
+              listener: (context, state) {
+                // TODO: implement listener
+                if (state is TagsNoInternetState) {
+                  CToast.instance.showError(context, NO_INTERNET);
+                }
+              },
+              builder: (context, state) {
+                if (state is SearchNoTagState) {
+                  return Container();
+                }
+                if (state is SearchTagLoadingState) {
+                  return Center(
+                    child: CToast.instance.showLoader(),
+                  );
+                }
+                if (state is SearchTagErrorState) {
+                  print(state.msg.toString());
+                }
+                if (state is SearchTagSuccessState) {
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: ListView.separated(
+                        primary: false,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        scrollDirection: Axis.vertical,
+                        itemCount: state.myFavoriteArticleslist.length,
+                        itemBuilder: (context, index) {
+                          return AllAirtistWidget(
+                            articlesModel: state.myFavoriteArticleslist[index],
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(height: 10);
+                        },
+                      ),
                     ),
-                  ),
-                );
-              }
-              return Center(child: Text("Something went wrong",style: TextStyle(fontFamily: ConduitFontFamily.robotoRegular,),));
-            },
-          )),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ),
         ),
       ),
     );

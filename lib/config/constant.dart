@@ -33,3 +33,6 @@ class ApiConstant {
   static const TOKEN =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpheWRlZXBwcEBtYWlsaW5hdG9yLmNvbSIsInVzZXJuYW1lIjoiSmF5ZGVlcHBwIiwiaWF0IjoxNjg0NDk2NTY1LCJleHAiOjE2ODk2ODA1NjV9.TAKbvNlhVw0Qu4P7cuJ3H9shzwKp5QvpRrMUP8P93M0";
 }
+
+const String NO_INTERNET =
+    "Conduit app is not responding to server. Check your internet connection or try again later.";

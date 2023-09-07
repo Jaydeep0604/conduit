@@ -1,6 +1,7 @@
 import 'package:conduit/bloc/article_bloc/article_bloc.dart';
 import 'package:conduit/bloc/article_bloc/article_event.dart';
 import 'package:conduit/bloc/article_bloc/article_state.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/new_article_model.dart';
 import 'package:conduit/ui/home/home_screen.dart';
@@ -31,7 +32,8 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
   late ArticleBloc articleBloc;
   List<String>? tags;
   // List<ArticleModel>? articleModel;
-  bool isLoading = false;
+  // bool isLoading = false;
+  bool isNoInternet = false;
   @override
   void initState() {
     super.initState();
@@ -87,39 +89,33 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
               onWillPop: () async => true,
               child: SingleChildScrollView(
                 child: SafeArea(
-                  child: BlocListener<ArticleBloc, ArticleState>(
-                    listener: (context, state) {
-                      if (state is ArticleLoadingState) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        CToast.instance.showLoaderDialog(context);
-                      } else {
-                        setState(() {
-                          isLoading = false;
-                        });
-                        // CToast.instance.dismiss();
-                      }
+                    child: BlocConsumer<ArticleBloc, ArticleState>(
+                  listener: (context, state) {
+                    if (state is ArticleLoadingState) {
+                      CToast.instance.showLoaderDialog(context);
+                    }
+                    if (state is ArticleNoInternetState) {
+                      Navigator.pop(context);
+                      CToast.instance.showError(context, NO_INTERNET);
+                    }
+                    if (state is ArticleAddSuccessState) {
+                      clear();
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                      Navigator.pushReplacement(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => HomeScreen()));
+                      CToast.instance
+                          .showSuccess(context, state.msg.toString());
+                    }
 
-                      if (state is ArticleAddSuccessState) {
-                        clear();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushReplacement(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => HomeScreen()));
-                        CToast.instance
-                            .showSuccess(context, state.msg.toString());
-                      }
-
-                      if (state is ArticleAddErrorState) {
-                        // this pop for showLoaderDialog dismiss
-                        Navigator.pop(context);
-                        CToast.instance
-                            .showError(context, state.msg.toString());
-                      }
-                    },
-                    child: Form(
+                    if (state is ArticleAddErrorState) {
+                      Navigator.pop(context);
+                      CToast.instance.showError(context, state.msg.toString());
+                    }
+                  },
+                  builder: (context, state) {
+                    return Form(
                       key: _form,
                       child: Column(children: [
                         Container(
@@ -232,9 +228,9 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           ),
                         ),
                       ]),
-                    ),
-                  ),
-                ),
+                    );
+                  },
+                )),
               ),
             ),
           ),
