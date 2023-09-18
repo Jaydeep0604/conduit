@@ -5,11 +5,16 @@ import 'package:conduit/bloc/profile_bloc/profile_state.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/profile_model.dart';
+import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/functions.dart';
+import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
+import 'package:conduit/widget/conduitEditText_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -38,6 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     emailCtr = TextEditingController(text: email);
     usernameCtr = TextEditingController(text: username);
     bioCtr = TextEditingController(text: bio);
+    imageCtr = TextEditingController(text: image);
     image;
   }
 
@@ -76,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 CToast.instance.showLoaderDialog(context);
               }
               if (state is ProfileNoInternetState) {
-                Navigator.pop(context);
+                CToast.instance.dismiss(context);
                 CToast.instance.showError(context, NO_INTERNET);
               }
               if (state is ProfileErrorState) {
@@ -84,10 +90,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 return CToast.instance.showError(context, state.message);
               }
               if (state is UpdateProfileSuccessState) {
-                Navigator.pop(context);
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) {
+                    return ProfileScreen();
+                  }),
+                );
               }
               if (state is UpdateArticleErroeState) {
-                Navigator.pop(context);
+                CToast.instance.dismiss(context);
                 print("Profile not updated, please try again later");
                 CToast.instance.showToastError(
                     "Profile not updated, please try again later");
@@ -98,290 +110,183 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 bio = state.profileList.first.user!.bio;
                 image = state.profileList.first.user!.image;
                 addData();
-                Navigator.pop(context);
+                CToast.instance.dismiss(context);
               }
             },
             builder: (context, state) {
-              return SingleChildScrollView(
-                child: GestureDetector(
-                  onTap: () {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-                    if (!currentFocus.hasPrimaryFocus) {
-                      currentFocus.unfocus();
-                    }
-                  },
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                  color: AppColors.primaryColor, width: 1)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: image != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.network(image!,
-                                        alignment: Alignment.center),
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 45,
-                                        color: AppColors.text_color,
+              return ScrollConfiguration(
+                behavior: NoGlow(),
+                child: SingleChildScrollView(
+                  child: GestureDetector(
+                    onTap: () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                    },
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                      color: AppColors.primaryColor, width: 1)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: image != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Image.network(image!,
+                                            alignment: Alignment.center),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 45,
+                                            color: AppColors.text_color,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                autofocus: false, controller: usernameCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    prefixIcon: Icon(
-                                      CupertinoIcons.person,
-                                      color: AppColors.primaryColor,
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    //prefixText: 'GJ011685',
-                                    hintText: "Username"),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                maxLines: 5,
-                                autofocus: false,
-                                // initialValue: detail.bio.toString(),
-                                controller: bioCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    // prefixIcon: Icon(
-                                    //   CupertinoIcons
-                                    //       .pencil_ellipsis_rectangle,
-                                    //   color: AppColors.primaryColor,
-                                    // ),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "Bio"),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.only(top: 20, right: 20, left: 20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                autofocus: false,
-                                // initialValue: detail.email.toString(),
-                                controller: emailCtr,
-                                cursorColor: AppColors.primaryColor,
-                                keyboardType: TextInputType.text,
-
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.white2,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    prefixIcon: Icon(
-                                      CupertinoIcons.mail,
-                                      color: AppColors.primaryColor,
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 3, color: AppColors.white2),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: "Email"
-                                    //prefixText: 'GJ011685',
-                                    ),
-                                // controller: emailCtr,
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 25),
-                          child: SizedBox(
-                            width: 320,
-                            height: 45,
-                            child: MaterialButton(
-                              color: AppColors.primaryColor,
-                              textColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
                               ),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  FocusManager.instance.primaryFocus!.unfocus();
-                                  profileBloc.add(
-                                    UpdateProfileEvent(
-                                      profileModel: ProfileModel(
-                                        user: User(
-                                            username:
-                                                usernameCtr!.text.toString(),
-                                            email: emailCtr!.text.toString(),
-                                            bio: bioCtr!.text.toString(),
-                                            image: image.toString()),
-                                      ),
-                                    ),
-                                  );
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                              controller: imageCtr,
+                              maxLines: 1,
+                              minLines: 1,
+                              prefixIcon: Icon(
+                                Icons.link,
+                                color: AppColors.primaryColor,
+                              ),
+                              textInputType: TextInputType.url,
+                              hint: "Profile photo url",
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                              controller: usernameCtr,
+                              textInputType: TextInputType.text,
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: SvgPicture.asset(
+                                  ic_profile_icon,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                              hint: "Username",
+                              validator: (value) {
+                                if (value!.length == 0) {
+                                  return "Enter username";
                                 }
+                                return null;
                               },
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontFamily: ConduitFontFamily.robotoRegular,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                                controller: bioCtr,
+                                textInputType: TextInputType.text,
+                                minLines: 5,
+                                maxLines: 5,
+                                hint: "Bio"),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                                controller: emailCtr,
+                                textInputType: TextInputType.emailAddress,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: SvgPicture.asset(
+                                    ic_mail_icon,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                                hint: "Email"),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 45,
+                              child: MaterialButton(
+                                color: AppColors.primaryColor,
+                                textColor: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    FocusManager.instance.primaryFocus!
+                                        .unfocus();
+                                    profileBloc.add(
+                                      UpdateProfileEvent(
+                                        profileModel: ProfileModel(
+                                          user: User(
+                                              username:
+                                                  usernameCtr!.text.toString(),
+                                              email: emailCtr!.text.toString(),
+                                              bio: bioCtr!.text.toString(),
+                                              image: imageCtr!.text.toString()),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontFamily: ConduitFontFamily.robotoRegular,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 20,
+                            )
+                            // Padding(
+                            //   padding: EdgeInsets.only(top: 25),
+                            //   child: SizedBox(
+                            //     width: 320,
+                            //     height: 45,
+                            //     child: MaterialButton(
+                            //       textColor: AppColors.white,
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         side: BorderSide(color: Colors.red[400]!),
+                            //       ),
+                            //       onPressed: () {
+                            //         FocusManager.instance.primaryFocus!.unfocus();
+                            //         setState(() {
+                            //           onLogout();
+                            //         });
+                            //       },
+                            //       child: Text(
+                            //         'Logout',
+                            //         style: TextStyle(color: Colors.red[400]),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        )
-                        // Padding(
-                        //   padding: EdgeInsets.only(top: 25),
-                        //   child: SizedBox(
-                        //     width: 320,
-                        //     height: 45,
-                        //     child: MaterialButton(
-                        //       textColor: AppColors.white,
-                        //       shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(10),
-                        //         side: BorderSide(color: Colors.red[400]!),
-                        //       ),
-                        //       onPressed: () {
-                        //         FocusManager.instance.primaryFocus!.unfocus();
-                        //         setState(() {
-                        //           onLogout();
-                        //         });
-                        //       },
-                        //       child: Text(
-                        //         'Logout',
-                        //         style: TextStyle(color: Colors.red[400]),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
+                      ),
                     ),
                   ),
                 ),

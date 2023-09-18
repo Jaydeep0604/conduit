@@ -1,4 +1,3 @@
-// import 'package:flash/flash.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -92,11 +91,6 @@ class CToast {
         msg: "Loading");
   }
 
-  void dismiss() {
-    SmartDialog.dismiss();
-    // showLoaderDialog(context).dismiss();
-  }
-
   showToastSuccess(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -183,5 +177,13 @@ class CToast {
         return alert;
       },
     );
+  }
+
+  void showLodingLoader(BuildContext context) {
+    SmartDialog.showLoading();
+  }
+
+  void dismiss(context) {
+    Navigator.pop(context);
   }
 }

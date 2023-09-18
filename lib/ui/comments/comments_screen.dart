@@ -8,6 +8,7 @@ import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/comment_widget.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
@@ -15,6 +16,7 @@ import 'package:conduit/widget/no_internet.dart';
 import 'package:conduit/widget/theme_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CommentsScreen extends StatefulWidget {
   CommentsScreen({Key? key, required this.slug}) : super(key: key);
@@ -45,6 +47,13 @@ class CommentsScreenState extends State<CommentsScreen> {
     commentBloc.add(fetchCommentEvent(slug: widget.slug));
   }
 
+  onRetryData() {
+    setState(() {
+      isNoInternet = false;
+      commentBloc.add(fetchCommentEvent(slug: widget.slug));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +61,14 @@ class CommentsScreenState extends State<CommentsScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.primaryColor,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            ic_back_arrow_icon,
+            color: AppColors.white,
+          ),
+        ),
         title: Text(
           "Comments",
           style: TextStyle(
@@ -73,6 +86,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                   child: isNoInternet
                       ? NoInternet(
                           isWidget: true,
+                          onClickRetry: onRetryData,
                         )
                       : BlocConsumer<CommentBloc, CommentState>(
                           listener: (context, state) {
@@ -80,6 +94,9 @@ class CommentsScreenState extends State<CommentsScreen> {
                               setState(() {
                                 isNoInternet = true;
                               });
+                            }
+                            if (state is CommentErrorState) {
+                              CToast.instance.showError(context, state.msg);
                             }
                           },
                           builder: (context, state) {
@@ -93,12 +110,8 @@ class CommentsScreenState extends State<CommentsScreen> {
                                 ),
                               );
                             }
-                            if (state is CommentErrorState) {
-                              return CToast.instance
-                                  .showError(context, state.msg);
-                            }
                             if (state is CommentLoadingState) {
-                              return Padding(
+                             return Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: SizedBox(
                                   height: 30,
@@ -217,12 +230,15 @@ class CommentsScreenState extends State<CommentsScreen> {
                 children: [
                   BlocListener<AddCommentBloc, AddCommentState>(
                     listener: (context, state) {
-                      if (state is AddCommentLoadingState) {}
+                      if (state is AddCommentLoadingState) {
+                        CToast.instance.showLoaderDialog(context);
+                      }
                       if (state is AddCommentNoInternetState) {
+                        CToast.instance.dismiss(context);
                         CToast.instance.showError(context, NO_INTERNET);
                       }
                       if (state is AddCommentErroeState) {
-                        Navigator.pop(context);
+                        CToast.instance.dismiss(context);
                         formKey.currentState!.reset();
                         Future.delayed(Duration.zero, () {
                           CToast.instance.showError(context, state.msg);
@@ -231,7 +247,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                       if (state is AddCommentSuccessState) {
                         commentCtr!.clear();
                         formKey.currentState!.reset();
-                        Navigator.pop(context);
+                        CToast.instance.dismiss(context);
                         refreshComments();
                       }
                     },
@@ -268,7 +284,6 @@ class CommentsScreenState extends State<CommentsScreen> {
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
                                     if (commentCtr!.text != "") {
-                                      CToast.instance.showLoaderDialog(context);
                                       addCommentBloc.add(
                                         SubmitCommentEvent(
                                           addCommentModel: AddCommentModel(
@@ -329,7 +344,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                     listener: (context, state) {
                       if (state is AddCommentLoadingState) {}
                       if (state is AddCommentErroeState) {
-                        Navigator.pop(context);
+                        CToast.instance.dismiss(context);
                         formKey.currentState!.reset();
                         Future.delayed(Duration.zero, () {
                           CToast.instance.showError(context, state.msg);
@@ -338,7 +353,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                       if (state is AddCommentSuccessState) {
                         commentCtr!.clear();
                         formKey.currentState!.reset();
-                        Navigator.pop(context);
+                        CToast.instance.dismiss(context);
                         refreshComments();
                       }
                     },

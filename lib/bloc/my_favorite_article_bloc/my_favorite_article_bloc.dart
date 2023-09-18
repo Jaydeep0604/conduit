@@ -13,40 +13,24 @@ class MyFavoriteArticlesBloc
   int limit = 10;
   MyFavoriteArticlesBloc({required this.repo})
       : super(MyFavoriteArticlesInitialState()) {
-    on<FetchMyFavoriteArticlesEvent>(_onMyFavoriteArticlesEvent);
+    on<FetchMyFavoriteArticlesEvent>(_onFetchMyFavoriteArticlesEvent);
     on<FetchNextMyFavoriteArticlesEvent>(_onFetchNextMyFavoriteArticlesEvent);
   }
 
-  void _onMyFavoriteArticlesEvent(MyFavoriteArticlesEvent event,
+  _onFetchMyFavoriteArticlesEvent(MyFavoriteArticlesEvent event,
       Emitter<MyFavoriteArticlesState> emit) async {
     try {
-      // if (event is FetchNextMyFavoriteArticlesEvent) {
-      //   print(" The Length is ${event.length!.toInt()}");
-      //   offset = event.length!.toInt();
-      // } else {
-      //   offset = 0;
-      // }
-      // if (offset == 0) {
-      // }
       offset = 0;
       emit(MyFavoriteArticlesLoadingState());
 
       List<AllArticlesModel> aData =
           (await repo.getMyFavoriteArticles(offset, limit))
               .cast<AllArticlesModel>();
+
       if (aData.isEmpty) {
         emit(NoMyFavoriteArticlesState());
       } else {
-        // bool hasReachedMax = aData.length < 10;
-        // if (event is FetchNextMyFavoriteArticlesEvent) {
-        //   final currentState = state;
-        //   if (currentState is MyFavoriteArticlesLoadedStete) {
-        //     aData = [...currentState.myFavoriteArticleslist, ...aData];
-        //   }
-        // }
-        emit(
-          MyFavoriteArticlesLoadedStete(myFavoriteArticleslist: aData),
-        );
+        emit(MyFavoriteArticlesLoadedStete(myFavoriteArticleslist: aData));
         offset = offset + 10;
       }
     } on SocketException {
@@ -59,32 +43,65 @@ class MyFavoriteArticlesBloc
 
   _onFetchNextMyFavoriteArticlesEvent(FetchNextMyFavoriteArticlesEvent event,
       Emitter<MyFavoriteArticlesState> emit) async {
-    MyFavoriteArticlesLoadedStete curentstate =
+    MyFavoriteArticlesLoadedStete currentState =
         state as MyFavoriteArticlesLoadedStete;
-    if (curentstate is MyFavoriteArticlesLoadedStete) {
+    emit(MyFavoriteArticlesLoadedStete(
+        myFavoriteArticleslist: currentState.myFavoriteArticleslist,
+        hasReachedMax: false));
+    if (currentState is MyFavoriteArticlesLoadedStete) {
       try {
-        List<AllArticlesModel> myFavoriteArticleslist =
+        List<AllArticlesModel> aData =
             (await repo.getMyFavoriteArticles(offset, limit))
                 .cast<AllArticlesModel>();
-        if (myFavoriteArticleslist.isEmpty) {
-          emit(
-            MyFavoriteArticlesLoadedStete(
-                myFavoriteArticleslist: curentstate.myFavoriteArticleslist,
-                hasReachedMax: true),
-          );
+        if (aData.isEmpty) {
+          emit(MyFavoriteArticlesLoadedStete(
+              myFavoriteArticleslist: currentState.myFavoriteArticleslist,
+              hasReachedMax: true));
         } else {
           emit(MyFavoriteArticlesLoadedStete(
-              myFavoriteArticleslist:
-                  curentstate.myFavoriteArticleslist + myFavoriteArticleslist));
-          offset = offset + 1;
+            myFavoriteArticleslist: currentState.myFavoriteArticleslist + aData,
+          ));
+          offset = offset + 10;
         }
-      } on SocketException {
-      emit(MyFavoriteArticlesNoInternetState());
-    }  catch (e) {
-        emit(MyFavoriteArticlesLoadedStete(
-            myFavoriteArticleslist: curentstate.myFavoriteArticleslist,
-            hasReachedMax: true));
-      }
+      } catch (e) {}
     }
   }
 }
+// _onFetchMyFavoriteArticlesEvent(MyFavoriteArticlesEvent event,
+//       Emitter<MyFavoriteArticlesState> emit) async {
+//     try {
+//       if (event is FetchNextMyFavoriteArticlesEvent) {
+//         print(" The Length is ${event.length!.toInt()}");
+//         offset = event.length!.toInt();
+//       } else {
+//         offset = 0;
+//       }
+//       if (offset == 0) {
+//         emit(MyFavoriteArticlesLoadingState());
+//       }
+
+//       List<AllArticlesModel> aData =
+//           (await repo.getMyFavoriteArticles(offset, limit))
+//               .cast<AllArticlesModel>();
+//       if (aData.isEmpty) {
+//         emit(NoMyFavoriteArticlesState());
+//       } else {
+//         bool hasReachedMax = aData.length < 10;
+//         if (event is FetchNextMyFavoriteArticlesEvent) {
+//           final currentState = state;
+//           if (currentState is MyFavoriteArticlesLoadedStete) {
+//             aData = [...currentState.myFavoriteArticleslist, ...aData];
+//           }
+//         }
+//         emit(
+//           MyFavoriteArticlesLoadedStete(
+//               myFavoriteArticleslist: aData, hasReachedMax: hasReachedMax),
+//         );
+//       }
+//     } on SocketException {
+//       emit(MyFavoriteArticlesNoInternetState());
+//     } catch (e) {
+//       print(e);
+//       emit(MyFavoriteArticlesErrorState(msg: e.toString()));
+//     }
+//   }

@@ -39,12 +39,14 @@ class TagsBloc extends Bloc<TagsEvent, TagsState> {
       // offset = 0;
       List<AllArticlesModel> data;
       data = await repo.fetchSearchTags(event.title);
-      if (data.isEmpty) {
+      if (data.length == 0) {
         emit(SearchNoTagState());
+      } else {
+        emit(
+          SearchTagSuccessState(myFavoriteArticleslist: data),
+        );
       }
-      emit(SearchTagSuccessState(myFavoriteArticleslist: data));
       // offset = offset + 10;
-      
     } on SocketException {
       emit(SearchTagNoInternetState());
     } catch (e) {

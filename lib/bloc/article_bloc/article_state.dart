@@ -43,6 +43,10 @@ class ArticleLoadingState extends ArticleState {
   @override
   List<Object?> get props => [];
 }
+class ArticleUpdateLoadingState extends ArticleState {
+  @override
+  List<Object?> get props => [];
+}
 
 class NoArticleState extends ArticleState {
   @override

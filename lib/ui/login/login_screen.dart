@@ -4,11 +4,14 @@ import 'package:conduit/bloc/register_bloc/register_bloc.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/auth_model.dart';
-import 'package:conduit/ui/home/home_screen.dart';
+import 'package:conduit/ui/base/home_screen.dart';
 import 'package:conduit/ui/register/register_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
+import 'package:conduit/utils/responsive.dart';
+import 'package:conduit/widget/theme_container.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -62,119 +66,130 @@ class _LoginScreenState extends State<LoginScreen> {
       child: WillPopScope(
         onWillPop: () async => true,
         child: Scaffold(
-          backgroundColor: AppColors.white2,
-          body: SingleChildScrollView(
-            child: MultiBlocListener(
-              listeners: [
-                BlocListener<LoginBloc, LoginState>(
-                  listener: (context, state) {
-                    if (state is LoginNoInternetState) {
-                      CToast.instance.showError(context, NO_INTERNET);
-                    }
-                    if (state is LoginLoadingState) {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      FocusManager.instance.primaryFocus!.unfocus();
-                      CToast.instance.showLoaderDialog(context);
-                      // CToast.instance.showLoading(context);
-                    } else {
-                      setState(() {
-                        isLoading = false;
-                      });
-                      // CToast.instance.dismiss();
-                    }
-                    if (state is LoginErrorState) {
-                      setState(() {
-                        isLoading = false;
-                      });
-                      // this pop is for showLoaderDialog dismiss
-                      Navigator.pop(context);
-                      CToast.instance.showError(context, state.msg);
-                    }
-
-                    if (state is LoginSuccessState) {
-                      Navigator.popUntil(context, (route) => route.isFirst);
-                      Navigator.pushReplacement(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ),
-                      );
-                      CToast.instance.showSuccess(context, "login successfull");
-                    }
-                  },
-                ),
-              ],
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 188, 215, 202),
-                      Color.fromARGB(255, 234, 243, 238),
-                      Color.fromARGB(255, 234, 243, 238),
-                      Color.fromARGB(255, 234, 243, 238),
-                      Color.fromARGB(255, 188, 215, 202),
-                    ],
+          backgroundColor: AppColors.black,
+          appBar: Responsive.isSmallScreen(context)
+              ? null
+              : AppBar(
+                  elevation: 0,
+                  backgroundColor: AppColors.primaryColor,
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    "Conduit",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 25,
+                      fontFamily: ConduitFontFamily.robotoBold,
+                    ),
                   ),
                 ),
-                child: Form(
+          body: BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state is LoginNoInternetState) {
+                CToast.instance.dismiss(context);
+                CToast.instance.showError(context, NO_INTERNET);
+              }
+              if (state is LoginLoadingState) {
+                CToast.instance.showLoaderDialog(context);
+                setState(() {
+                  isLoading = true;
+                });
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+              if (state is LoginErrorState) {
+                CToast.instance.dismiss(context);
+                setState(() {
+                  isLoading = false;
+                });
+                CToast.instance.showError(context, state.msg);
+              }
+              if (state is LoginSuccessState) {
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => BaseScreen(),
+                  ),
+                );
+                CToast.instance.showSuccess(context, "login successfull");
+              }
+            },
+            child: ThemeContainer(
+              screenSize: screenSize,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: Responsive.isSmallScreen(context)
+                        ? screenSize.width / 25
+                        : screenSize.width / 50,
+                    right: Responsive.isSmallScreen(context)
+                        ? screenSize.width / 25
+                        : screenSize.width / 50,
+                  ),
+                  child: Form(
                     key: formKey,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 100),
-                          child: Container(
-                            height: 110,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "conduit",
-                                  style: TextStyle(
-                                    fontSize: 50,
-                                    color: AppColors.primaryColor,
-                                    fontFamily: ConduitFontFamily.robotoBold,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text("A place to share your knowledge.",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 17,
-                                        fontFamily:
-                                            ConduitFontFamily.robotoRegular,
-                                        color: AppColors.black))
-                              ],
+                        SizedBox(
+                          height: 70,
+                        ),
+                        Center(
+                          child: Text(
+                            "conduit",
+                            style: TextStyle(
+                              fontSize: 50,
+                              color: AppColors.primaryColor,
+                              fontFamily: ConduitFontFamily.robotoBold,
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Center(
+                          child: Text("A place to share your knowledge.",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: AppColors.black,
+                                fontFamily: ConduitFontFamily.robotoRegular,
+                              )),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
                         Container(
-                          padding: EdgeInsets.only(left: 30, top: 50),
                           alignment: Alignment.topLeft,
                           child: Text(
-                            'Sign In',
+                            'Log in to Conduit',
                             style: TextStyle(
-                              fontSize: 25,
-                              fontFamily: ConduitFontFamily.robotoRegular,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: ConduitFontFamily.robotoBold,
                             ),
                           ),
                         ),
                         SizedBox(
                           height: 20,
                         ),
+                        Text(
+                          "Email*",
+                          style: TextStyle(
+                            fontFamily: ConduitFontFamily.robotoLight,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
-                          padding:
-                              EdgeInsets.only(top: 15, right: 30, left: 30),
                           child: Column(
                             children: [
                               ConduitEditText(
-                                hint: "Enter Email Address",
+                                hint: "Email",
                                 controller: emailCtr,
                                 maxLines: 1,
                                 inputFormatters: [
@@ -194,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                                 validator: (value) {
                                   if (value?.trim().isEmpty ?? true) {
-                                    return "Please enter email address";
+                                    return "Enter email address";
                                   } else if (!RegExp(
                                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                       .hasMatch(value ?? "")) {
@@ -206,14 +221,24 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Password*",
+                          style: TextStyle(
+                            fontFamily: ConduitFontFamily.robotoLight,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
-                          padding:
-                              EdgeInsets.only(top: 15, right: 30, left: 30),
                           child: Column(
                             children: [
                               ConduitEditText(
                                 controller: passwordCtr,
-                                hint: "Enter Password",
+                                hint: "Password",
                                 obsecureText: _obsecureText,
                                 maxLines: 1,
                                 textInputType: TextInputType.visiblePassword,
@@ -224,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 validator: (value) {
                                   if (value == "" ||
                                       (value?.trim().isEmpty ?? true)) {
-                                    return "Please enter password";
+                                    return "Enter password";
                                   }
                                   return null;
                                 },
@@ -245,102 +270,154 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Container(
-                            height: 45,
-                            width: MediaQuery.of(context).size.width,
-                            child: CupertinoButton(
-                              color: isLoading
-                                  ? AppColors.text_color
-                                  : AppColors.primaryColor,
-                              borderRadius: BorderRadius.circular(10),
-                              child: Text(
-                                'Sign in',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button
-                                    ?.copyWith(
-                                        color: isLoading
-                                            ? Colors.white60
-                                            : Colors.white,
-                                        fontWeight: FontWeight.w500),
-                              ),
-                              onPressed: () {
-                                FocusNode? focusNode =
-                                    FocusManager.instance.primaryFocus;
-                                if (focusNode != null) {
-                                  if (focusNode.hasPrimaryFocus) {
-                                    focusNode.unfocus();
-                                  }
-                                }
-
-                                if (formKey.currentState?.validate() ?? false) {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  loginBloc.add(
-                                    LoginSubmitEvent(
-                                      // email: emailCtr.text.trim(),
-                                      // password: passwordCtr.text.trim(),
-                                      // fcmToken: '1',
-                                      // userDeviceId: '1',
-                                      authModel: AuthModel(
-                                        password: passwordCtr.text.trim(),
-                                        email: emailCtr.text.trim(),
-                                      ),
-                                    ),
-                                  );
-                                  // CToast.instance.showSuccess(context,
-                                  //     "Data added in ( RegisterSubmitEvent )");
-                                }
-                              },
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: CupertinoButton(
+                            color: isLoading
+                                ? AppColors.text_color
+                                : AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Text(
+                              'Sign in',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  ?.copyWith(
+                                      color: isLoading
+                                          ? Colors.white60
+                                          : Colors.white,
+                                      fontWeight: FontWeight.w500),
                             ),
-                          ),
-                        ),
-                        Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: TextStyle(
-                                color: AppColors.black,
-                                fontFamily: ConduitFontFamily.robotoRegular,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: (() {
+                            onPressed: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              // FocusNode? focusNode =
+                              //     FocusManager.instance.primaryFocus;
+                              // if (focusNode != null) {
+                              //   if (focusNode.hasPrimaryFocus) {
+                              //     focusNode.unfocus();
+                              //   }
+                              // }
+                              if (formKey.currentState?.validate() ?? false) {
                                 setState(() {
-                                  emailCtr.clear();
-                                  passwordCtr.clear();
+                                  isLoading = true;
                                 });
-                                formKey.currentState?.reset();
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => RegisterScreen(),
+                                loginBloc.add(
+                                  LoginSubmitEvent(
+                                    authModel: AuthModel(
+                                      password: passwordCtr.text.trim(),
+                                      email: emailCtr.text.trim(),
+                                    ),
                                   ),
                                 );
-                              }),
-                              child: Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                  color: AppColors.primaryColor,
-                                  fontFamily: ConduitFontFamily.robotoRegular,
-                                ),
-                              ),
-                            ),
-                          ],
+                              }
+                            },
+                          ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 30,
+                        ),
+                        Center(
+                          child: Responsive.isSmallScreen(context)
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Don't have an account? ",
+                                      style: TextStyle(
+                                        color: AppColors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily:
+                                            ConduitFontFamily.robotoRegular,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    GestureDetector(
+                                      onTap: (() {
+                                        setState(() {
+                                          emailCtr.clear();
+                                          passwordCtr.clear();
+                                        });
+                                        formKey.currentState?.reset();
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) =>
+                                                RegisterScreen(
+                                              screenSize: screenSize,
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                      child: Text(
+                                        "Sign up for Conduit.",
+                                        style: TextStyle(
+                                          color: AppColors.primaryColor,
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily:
+                                              ConduitFontFamily.robotoRegular,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    text: "Don't have an account? ",
+                                    style: TextStyle(
+                                      color: Color(0xFF000000),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: "Sign up for Conduit.",
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            setState(() {
+                                              emailCtr.clear();
+                                              passwordCtr.clear();
+                                            });
+                                            formKey.currentState?.reset();
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    RegisterScreen(
+                                                  screenSize: screenSize,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        style: TextStyle(
+                                          color: AppColors.primaryColor,
+                                          fontSize: 14,
+                                          fontFamily:
+                                              ConduitFontFamily.robotoRegular,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                        ),
+                        SizedBox(
+                          height: 50,
                         ),
                       ],
-                    )),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

@@ -12,7 +12,6 @@ class MyFavoriteArticlesNoInternetState extends MyFavoriteArticlesState {
   List<Object?> get props => [];
 }
 
-
 class MyFavoriteArticlesLoadingState extends MyFavoriteArticlesState {
   List<Object?> get props => [];
 }
@@ -39,7 +38,6 @@ class MyFavoriteArticlesLoadedStete extends MyFavoriteArticlesState {
   @override
   List<Object?> get props => [this.myFavoriteArticleslist, hasReachedMax];
 }
-
 
 class MyFavoriteArticlesErrorState extends MyFavoriteArticlesState {
   final String msg;

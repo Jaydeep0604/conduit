@@ -953,12 +953,6 @@
 //     );
 //   }
 
-//   Widget _buildLoadMoreIndicator() {
-//     return SizedBox(
-//       height: 30,
-//       child: CToast.instance.showLoader(),
-//     );
-//   }
 
 //   @override
 //   void dispose() {

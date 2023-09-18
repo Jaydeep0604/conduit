@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:conduit/config/constant.dart';
-import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/model/auth_model.dart';
 import 'package:conduit/services/auth_client.dart';
 import "package:http/http.dart" as http;
@@ -17,14 +15,27 @@ class AuthRepoImpl extends AuthRepo {
     Map<String, dynamic> body = authModel.toJson();
     http.Response response =
         await AuthClient.instance.doPost(ApiConstant.REGISTER, body);
-    // dynamic jsonData = jsonDecode(response.body);
-    // print("register $jsonData");
-    if (response.statusCode == 200) {
-      return body;
-    } else if (response.statusCode == 422) {
-      throw response.body;
+    print(response.body);
+    dynamic jsonData = jsonDecode(response.body);
+    String message = '';
+    if (jsonData['errors'] != null) {
+      Map<String, dynamic> errors = jsonData['errors'];
+      if (errors.containsKey('email')) {
+        String emailError = errors['email'][0];
+        message += 'email $emailError';
+      }
+      if (errors.containsKey('username')) {
+        if (message.isNotEmpty) {
+          message += ', ';
+        }
+        String usernameError = errors['username'][0];
+        message += 'username $usernameError';
+      }
+    }
+    if (response.statusCode == 201) {
+      return response;
     } else {
-      throw response.body;
+      throw message;
     }
   }
 
@@ -37,26 +48,20 @@ class AuthRepoImpl extends AuthRepo {
     print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
-
     if (jsonData['errors'] != null) {
       Map<String, dynamic> errors = jsonData['errors'];
       String fieldName = errors.keys.first;
       String errorValue = errors[fieldName][0];
-
       // Construct the error message with the field name
       message = '$fieldName $errorValue';
     }
     print(message);
     if (response.statusCode == 200) {
-      // dynamic jsonData = jsonDecode(response.body);
       return jsonData;
-      // } else if (response.statusCode == 403) {
-      //   throw "Email or password is invalid";
     } else {
       throw message;
     }
   }
-
 }
 
 

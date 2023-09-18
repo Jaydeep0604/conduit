@@ -42,9 +42,6 @@
 // }
 
 
-
-
-
 class AuthModel {
   String? email;
   String? username;

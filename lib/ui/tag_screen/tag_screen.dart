@@ -4,11 +4,14 @@ import 'package:conduit/bloc/tags_bloc/tags_state.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/functions.dart';
+import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_article_widget.dart';
 import 'package:conduit/widget/theme_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class TagScreen extends StatefulWidget {
   TagScreen({Key? key, required this.title}) : super(key: key);
@@ -46,10 +49,14 @@ class _TagScreenState extends State<TagScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: AppColors.primaryColor,
           leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: SvgPicture.asset(
+              ic_back_arrow_icon,
+              color: AppColors.white,
+            ),
+          ),
           title: Text(
             widget.title!,
             style: TextStyle(
@@ -62,14 +69,35 @@ class _TagScreenState extends State<TagScreen> {
           child: SafeArea(
             child: BlocConsumer<TagsBloc, TagsState>(
               listener: (context, state) {
-                // TODO: implement listener
                 if (state is TagsNoInternetState) {
                   CToast.instance.showError(context, NO_INTERNET);
                 }
               },
               builder: (context, state) {
                 if (state is SearchNoTagState) {
-                  return Container();
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          "assets/icons/empty_search.png",
+                          height: 80,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          "No data found",
+                          style: TextStyle(
+                            color: AppColors.black,
+                            fontFamily: ConduitFontFamily.robotoBold,
+                          ),
+                        )
+                      ],
+                    ),
+                  );
                 }
                 if (state is SearchTagLoadingState) {
                   return Center(
@@ -80,24 +108,28 @@ class _TagScreenState extends State<TagScreen> {
                   print(state.msg.toString());
                 }
                 if (state is SearchTagSuccessState) {
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      child: ListView.separated(
-                        primary: false,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.vertical,
-                        itemCount: state.myFavoriteArticleslist.length,
-                        itemBuilder: (context, index) {
-                          return AllAirtistWidget(
-                            articlesModel: state.myFavoriteArticleslist[index],
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(height: 10);
-                        },
+                  return ScrollConfiguration(
+                    behavior: NoGlow(),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: ListView.separated(
+                          primary: false,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          scrollDirection: Axis.vertical,
+                          itemCount: state.myFavoriteArticleslist.length,
+                          itemBuilder: (context, index) {
+                            return AllAirtistWidget(
+                              articlesModel:
+                                  state.myFavoriteArticleslist[index],
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 10);
+                          },
+                        ),
                       ),
                     ),
                   );
@@ -108,13 +140,6 @@ class _TagScreenState extends State<TagScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildLoadMoreIndicator() {
-    return SizedBox(
-      height: 30,
-      child: CToast.instance.showLoader(),
     );
   }
 }

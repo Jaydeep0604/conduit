@@ -8,9 +8,10 @@ import 'package:conduit/main.dart';
 import 'package:conduit/model/all_article_model.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/ui/comments/comments_screen.dart';
-import 'package:conduit/ui/home/globle_item_detail_screen.dart';
+import 'package:conduit/ui/global/global_item_detail_screen.dart';
 import 'package:conduit/ui/tag_screen/tag_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/route_transition.dart';
 import 'package:conduit/widget/shimmer_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
   Widget build(BuildContext context) {
     if (widget.isLoading) {
       return Container(
-        height: 110,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             border: Border.all(color: AppColors.black.withOpacity(0.031)),
@@ -101,62 +102,119 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: ShimmerWidget(
+                    height: 35,
+                    width: 35,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ShimmerWidget(
+                        height: 10,
+                        width: 110,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ShimmerWidget(
+                        height: 10,
+                        width: 110,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+                child: ShimmerWidget(
+              height: 25,
+            )),
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+                child: ShimmerWidget(
+              height: 25,
+            )),
+            SizedBox(
+              height: 5,
+            ),
+            Align(
+              alignment: Alignment.centerRight,
               child: Container(
-                  height: 43,
-                  width: MediaQuery.of(context).size.width,
-                  child: ShimmerWidget()),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-              child: Container(height: 8, child: ShimmerWidget()),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-              child: Container(height: 8, child: ShimmerWidget()),
+                height: 15,
+                child: ListView.separated(
+                  reverse: true,
+                  shrinkWrap: true,
+                  primary: false,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: ShimmerWidget(
+                          height: 15,
+                          width: 45,
+                        ));
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      width: 5,
+                    );
+                  },
+                ),
+              ),
             ),
             SizedBox(
               height: 5,
             ),
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child:
-                      Container(height: 18, width: 100, child: ShimmerWidget()),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ShimmerWidget(
+                    height: 20,
+                    width: 20,
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
                 ),
                 Container(
-                  height: 18,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: ListView.separated(
-                      reverse: true,
-                      shrinkWrap: true,
-                      primary: false,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        return Container(
-                            height: 18,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: AppColors.white2),
-                            child: ShimmerWidget());
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          width: 5,
-                        );
-                      },
-                    ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ShimmerWidget(
+                    height: 20,
+                    width: 20,
                   ),
                 ),
               ],
-            ),
-            SizedBox(
-              height: 5,
             )
           ],
         ),
@@ -178,6 +236,16 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
             ),
           ),
         );
+        // Navigator.push(
+        //     context,
+        //     SlideRightRoute(
+        //       page: GlobalItemDetailScreen(
+        //         username: widget.articlesModel!.author!.username,
+        //         isFollowed: widget.articlesModel!.author!.following,
+        //         slug: widget.articlesModel!.slug!,
+        //         favorited: widget.articlesModel!.favorited,
+        //       ),
+        //     ));
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -370,14 +438,16 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
                   child: Container(
                     height: widget.articlesModel!.tagList!.length > 0 ? 20 : 0,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 10,left: 10),
+                      padding: const EdgeInsets.only(right: 10, left: 50),
                       child: ListView.separated(
                         reverse: true,
-                        shrinkWrap: false,
+                        shrinkWrap: true,
                         primary: false,
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.articlesModel!.tagList!.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
+                        itemCount: widget.articlesModel!.tagList!.length <= 4
+                            ? widget.articlesModel!.tagList!.length
+                            : 4, // Set a maximum limit of 4
+                        itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -386,8 +456,8 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
                                   builder: (context) {
                                     return BlocProvider(
                                       create: (context) => TagsBloc(
-                                          repo:
-                                              AllArticlesImpl()), // Create a new instance
+                                        repo: AllArticlesImpl(),
+                                      ), // Create a new instance
                                       child: TagScreen(
                                         title: widget
                                             .articlesModel?.tagList![index],
@@ -398,19 +468,27 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
                               );
                             },
                             child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: AppColors.white2),
-                                child: Center(
-                                    child: Padding(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColors.white2,
+                              ),
+                              child: Center(
+                                child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 3),
+                                    horizontal: 6,
+                                    vertical: 3,
+                                  ),
                                   child: Text(
                                     " ${widget.articlesModel?.tagList![index]} ",
-                                    style: TextStyle(fontSize: 11,
-                                    fontFamily: ConduitFontFamily.robotoRegular,),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    ),
                                   ),
-                                ))),
+                                ),
+                              ),
+                            ),
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) {

@@ -48,126 +48,95 @@ class _CommentWidgetState extends State<CommentWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          color: AppColors.black.withOpacity(0.5),
-        ),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextFormField(
-            minLines: 1,
-            maxLines: null,
-            autofocus: false,
-            initialValue: "${widget.commentModel.body ?? ''}",
-            readOnly: true,
-
-            cursorColor: AppColors.primaryColor,
-            keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            decoration: InputDecoration(
-              //hintText: "Write a comment...",
-              filled: true,
-              fillColor: AppColors.white2,
-              contentPadding: const EdgeInsets.all(10),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(15.0),
-              ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              disabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 3, color: AppColors.white2),
-                borderRadius: BorderRadius.circular(10),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              widget.commentModel.body ?? '',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
               ),
             ),
-            // controller: emailCtr,
           ),
           Divider(
             color: AppColors.black.withOpacity(0.5),
+            height: 0,
           ),
-          Container(
-            decoration: BoxDecoration(
-                // color: AppColors.white,
-                borderRadius: BorderRadius.circular(5)),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 15,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(
-                          "${widget.commentModel.author?.image ?? ''}"),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  
+                  foregroundColor: AppColors.text_color,
+                  backgroundImage: AssetImage(
+                    "assets/icons/user_foreground.png",
+                  ),
+                  foregroundImage:
+                      NetworkImage(widget.commentModel.author?.image ?? ''),
+                ),
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.commentModel.author?.username ?? '',
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "${widget.commentModel.author?.username ?? ''}",
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontFamily: ConduitFontFamily.robotoRegular,
+                    Text(
+                      DateFormat('dd-MM-yyyy').format(
+                        DateTime.parse(widget.commentModel.createdAt ?? ''),
+                      ),
+                      style: TextStyle(
+                        color: AppColors.Box_width_color,
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    DateFormat('dd-MM-yyyy').format(
-                        DateTime.parse(widget.commentModel.createdAt ?? '')),
-                    style: TextStyle(
-                      color: AppColors.Box_width_color,
-                      fontFamily: ConduitFontFamily.robotoRegular,
-                    ),
-                  ),
-                  Spacer(),
-                  ValueListenableBuilder(
-                    valueListenable:
-                        Hive.box<UserAccessData>(hiveStore.userDetailKey)
-                            .listenable(),
-                    builder:
-                        (BuildContext context, dynamic box, Widget? child) {
-                      UserAccessData? detail = box.get(hiveStore.userId);
-                      return detail!.userName ==
-                              widget.commentModel.author!.username
-                          ? SizedBox(
-                              child: InkWell(
-                                onTap: () {
-                                  commentBloc.add(deleteCommentEvent(
-                                      slug: widget.slug!,
-                                      commentId: widget.commentModel.id!));
-                                },
-                                child: Icon(
-                                  Icons.delete_forever_rounded,
-                                  color: Colors.red[400],
-                                ),
-                              ),
-                            )
-                          : SizedBox();
-                    },
-                  ),
-                ],
-              ),
+                  ],
+                ),
+                Spacer(),
+                ValueListenableBuilder(
+                  valueListenable:
+                      Hive.box<UserAccessData>(hiveStore.userDetailKey)
+                          .listenable(),
+                  builder: (BuildContext context, dynamic box, Widget? child) {
+                    UserAccessData? detail = box.get(hiveStore.userId);
+                    return detail!.userName ==
+                            widget.commentModel.author!.username
+                        ? InkWell(
+                            onTap: () {
+                              commentBloc.add(deleteCommentEvent(
+                                  slug: widget.slug!,
+                                  commentId: widget.commentModel.id!));
+                            },
+                            child: Icon(
+                              Icons.delete_forever_rounded,
+                              color: Colors.red[400],
+                            ),
+                          )
+                        : SizedBox();
+                  },
+                ),
+              ],
             ),
           ),
         ],

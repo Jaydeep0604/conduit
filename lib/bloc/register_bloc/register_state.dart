@@ -22,20 +22,21 @@ class RegisterLoadingState extends RegisterState {
 
 // ignore: must_be_immutable
 class RegisterDoneState extends RegisterState {
-  AuthModel authModel;
+  
   String msg;
-  RegisterDoneState({required this.authModel, required this.msg});
+  RegisterDoneState({
+     required this.msg});
   @override
-  List<Object?> get props => [authModel, msg];
+  List<Object?> get props => [msg];
 }
 
 // ignore: must_be_immutable
 class RegisterErrorState extends RegisterState {
-  AuthModel authModel;
+  
   String msg;
-  RegisterErrorState({required this.msg, required this.authModel});
+  RegisterErrorState({required this.msg, });
   @override
-  List<Object?> get props => [authModel, msg];
+  List<Object?> get props => [msg];
 
   // @override
   // String toString() {

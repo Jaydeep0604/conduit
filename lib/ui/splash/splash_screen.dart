@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/user_model.dart';
-import 'package:conduit/ui/home/home_screen.dart';
+import 'package:conduit/ui/base/home_screen.dart';
 import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,12 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(milliseconds: 1200), () async {
+    Timer(Duration(milliseconds: 1800), () async {
       Box<UserAccessData>? detailModel =
           await hiveStore.isExistUserAccessData();
       if (detailModel!.values.isNotEmpty) {
         Navigator.pushReplacement(
-            context, (CupertinoPageRoute(builder: (context) => HomeScreen())));
+            context, (CupertinoPageRoute(builder: (context) => BaseScreen())));
       }
       if (detailModel.values.isEmpty)
         Navigator.pushReplacement(
@@ -40,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

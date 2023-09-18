@@ -35,7 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.1
   fluttertoast: ^8.1.2
-  flutter_smart_dialog: ^4.2.5
+  flutter_smart_dialog: ^4.9.4
   loading_animation_widget: ^1.2.0+4
   http: ^0.13.5
   equatable: ^2.0.5
@@ -50,6 +50,10 @@ dependencies:
   flutter_screenutil: ^5.0.1
   liquid_pull_to_refresh: ^3.0.1
   internet_connection_checker: ^1.0.0+1
+  flutter_svg: ^2.0.7
+  url_strategy: ^0.2.0
+  animations: ^2.0.8
+  # image_picker: ^1.0.4
   
 
 
@@ -77,21 +81,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
+    - assets/icons/
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
   fonts:
     - family: Roboto Black
       fonts:
@@ -144,41 +137,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-  assets:
-    - android/
-    - android/app/
-    - android/app/src/
-    - android/app/src/main/
-    - android/app/src/main/res/
-    - android/app/src/main/res/values/
-    - android/app/src/main/res/drawable/
-    - android/app/src/main/res/mipmap-hdpi/
-    - android/app/src/main/res/mipmap-mdpi/
-    - android/app/src/main/res/drawable-v21/
-    - android/app/src/main/res/mipmap-xhdpi/
-    - android/app/src/main/res/values-night/
-    - android/app/src/main/res/mipmap-xxhdpi/
-    - android/app/src/main/res/mipmap-xxxhdpi/
-    - android/app/src/main/java/
-    - android/app/src/main/java/io/
-    - android/app/src/main/java/io/flutter/
-    - android/app/src/main/java/io/flutter/plugins/
-    - android/app/src/main/kotlin/
-    - android/app/src/main/kotlin/com/
-    - android/app/src/main/kotlin/com/example/
-    - android/app/src/main/kotlin/com/example/conduit/
-    - android/app/src/debug/
-    - android/app/src/profile/
-    - android/gradle/
-    - android/gradle/wrapper/
-    - android/.gradle/
-    - android/.gradle/6.7/
-    - android/.gradle/6.7/fileHashes/
-    - android/.gradle/6.7/fileChanges/
-    - android/.gradle/6.7/javaCompile/
-    - android/.gradle/6.7/vcsMetadata-1/
-    - android/.gradle/6.7/executionHistory/
-    - android/.gradle/vcs-1/
-    - android/.gradle/checksums/
-    - android/.gradle/buildOutputCleanup/
-    - android/.gradle/configuration-cache/

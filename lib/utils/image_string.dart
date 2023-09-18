@@ -1,0 +1,15 @@
+const String ic_back_arrow_icon = "assets/icons/back_arrow.svg";
+const String ic_add_icon = "assets/icons/add.svg";
+const String ic_empty_search_icon = "assets/icons/empty_search.png";
+const String ic_account_logo_icon = "assets/icons/account_logo.svg";
+const String ic_icon_global = "assets/icons/global.png";
+const String ic_favourite_icon = "assets/icons/favourite.svg";
+const String ic_reset_password_icon = "assets/icons/reset_password.svg";
+const String ic_log_out_icon = "assets/icons/log_out.svg";
+const String ic_mail_icon = "assets/icons/mail.svg";
+const String ic_menu_icon = "assets/icons/menu.svg";
+const String ic_password_icon = "assets/icons/Password.svg";
+const String ic_profile_icon = "assets/icons/Profile.svg";
+const String ic_settings_icon = "assets/icons/settings";
+const String ic_search_icon = "assets/icons/search";
+const String ic_delete_icon = "assets/icons/delete.svg";

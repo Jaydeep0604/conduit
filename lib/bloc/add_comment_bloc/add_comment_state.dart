@@ -29,12 +29,7 @@ class AddCommentErroeState extends AddCommentState {
 }
 
 class AddCommentSuccessState extends AddCommentState {
-  String msg;
-  AddCommentSuccessState({required this.msg});
+  
   @override
-  List<Object?> get props => [msg];
-  @override
-  String toString() {
-    return msg;
-  }
+  List<Object?> get props => [];
 }
