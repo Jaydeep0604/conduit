@@ -1,19 +1,15 @@
-import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/follow_bloc/follow_bloc.dart';
 import 'package:conduit/bloc/follow_bloc/follow_event.dart';
 import 'package:conduit/bloc/like_article_bloc/like_article_bloc.dart';
 import 'package:conduit/bloc/like_article_bloc/like_article_event.dart';
-import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/all_article_model.dart';
-import 'package:conduit/repository/all_article_repo.dart';
+import 'package:conduit/navigator/tab_items.dart';
 import 'package:conduit/ui/comments/comments_screen.dart';
 import 'package:conduit/ui/global/global_item_detail_screen.dart';
 import 'package:conduit/ui/tag_screen/tag_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
-import 'package:conduit/utils/route_transition.dart';
 import 'package:conduit/widget/shimmer_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -222,30 +218,26 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
     }
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => CommentBloc(repo: AllArticlesImpl()),
-              child: GlobalItemDetailScreen(
-                username: widget.articlesModel!.author!.username,
-                isFollowed: widget.articlesModel!.author!.following,
-                slug: widget.articlesModel!.slug!,
-                favorited: widget.articlesModel!.favorited,
-              ),
-            ),
-          ),
+        globalNavigationKey.currentState?.pushNamed(
+          GlobalItemDetailScreen.globalItemDetailUrl,
+          arguments: {
+            'username': widget.articlesModel!.author!.username,
+            'isFollowed': widget.articlesModel!.author!.following,
+            'slug': widget.articlesModel!.slug!,
+            'favorited': widget.articlesModel!.favorited,
+          },
         );
         // Navigator.push(
-        //     context,
-        //     SlideRightRoute(
-        //       page: GlobalItemDetailScreen(
-        //         username: widget.articlesModel!.author!.username,
-        //         isFollowed: widget.articlesModel!.author!.following,
-        //         slug: widget.articlesModel!.slug!,
-        //         favorited: widget.articlesModel!.favorited,
-        //       ),
-        //     ));
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => GlobalItemDetailScreen(
+        //       username: widget.articlesModel!.author!.username,
+        //       favorited: widget.articlesModel!.favorited,
+        //       isFollowed: widget.articlesModel!.author!.following,
+        //       slug: widget.articlesModel!.slug!,
+        //     ),
+        //   ),
+        // );
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -322,67 +314,10 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
                     ),
                   ),
                 ),
-                // GestureDetector(
-                //   onTap: changeFollowState,
-                //   child: AnimatedSwitcher(
-                //     duration: Duration(milliseconds: 200),
-                //     switchInCurve: Curves.easeOut,
-                //     switchOutCurve: Curves.easeOut,
-                //     transitionBuilder:
-                //         (Widget child, Animation<double> animation) {
-                //       return ScaleTransition(
-                //         scale: animation,
-                //         child: child,
-                //       );
-                //     },
-                //     child: Container(
-                //         padding: EdgeInsets.symmetric(horizontal: 10),
-                //         height: 22,
-                //         decoration: BoxDecoration(
-                //             borderRadius: BorderRadius.circular(5),
-                //             border: Border.all(
-                //                 color: AppColors.black.withOpacity(0.5))),
-                //         child: Center(
-                //             child: _isFollow!
-                //                 ? Text(
-                //                     "Following",
-                //                     style: TextStyle(fontSize: 14),
-                //                   )
-                //                 : Text("Follow"))),
-                //   ),
-                // ),
                 Spacer(),
                 SizedBox(
                   width: 10,
                 ),
-                // GestureDetector(
-                //   onTap: changeLikeState,
-                //   child: AnimatedSwitcher(
-                //     duration: Duration(milliseconds: 200),
-                //     switchInCurve: Curves.easeOut,
-                //     switchOutCurve: Curves.easeOut,
-                //     transitionBuilder:
-                //         (Widget child, Animation<double> animation) {
-                //       return ScaleTransition(
-                //         scale: animation,
-                //         child: child,
-                //       );
-                //     },
-                //     child: _isLike!
-                //         ? Icon(
-                //             Icons.favorite,
-                //             size: 25,
-                //             color: AppColors.primaryColor,
-                //             key: ValueKey<int>(1),
-                //           )
-                //         : Icon(
-                //             Icons.favorite_outline,
-                //             color: AppColors.primaryColor,
-                //             size: 25,
-                //             key: ValueKey<int>(2),
-                //           ),
-                //   ),
-                // ),
                 SizedBox(
                   width: 10,
                 )
@@ -424,16 +359,6 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
             ),
             Row(
               children: [
-                // Container(
-                //   height: 20,
-                //   child: Padding(
-                //     padding: const EdgeInsets.only(left: 10),
-                //     child: Text(
-                //       "Read more...",
-                //       style: TextStyle(fontSize: 11, color: AppColors.black),
-                //     ),
-                //   ),
-                // ),
                 Expanded(
                   child: Container(
                     height: widget.articlesModel!.tagList!.length > 0 ? 20 : 0,
@@ -450,22 +375,36 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) {
-                                    return BlocProvider(
-                                      create: (context) => TagsBloc(
-                                        repo: AllArticlesImpl(),
-                                      ), // Create a new instance
-                                      child: TagScreen(
-                                        title: widget
-                                            .articlesModel?.tagList![index],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
+                              Navigator.pushNamed(context, TagScreen.tagUrl,
+                                  arguments: {
+                                    'title':
+                                        widget.articlesModel?.tagList![index],
+                                  });
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => TagScreen(
+                              //       title:
+                              //           widget.articlesModel?.tagList![index],
+                              //     ),
+                              //   ),
+                              // );
+                              // Navigator.push(
+                              //   context,
+                              //   CupertinoPageRoute(
+                              //     builder: (context) {
+                              //       return BlocProvider(
+                              //         create: (context) => TagsBloc(
+                              //           repo: AllArticlesImpl(),
+                              //         ), // Create a new instance
+                              //         child: TagScreen(
+                              //           title: widget
+                              //               .articlesModel?.tagList![index],
+                              //         ),
+                              //       );
+                              //     },
+                              //   ),
+                              // );
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -543,16 +482,9 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
                 IconButton(
                   splashColor: Colors.transparent,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) {
-                          return CommentsScreen(
-                            slug: widget.articlesModel!.slug!,
-                          );
-                        },
-                      ),
-                    );
+                    globalNavigationKey.currentState?.pushNamed(
+                        CommentsScreen.commentUrl,
+                        arguments: {'slug': widget.articlesModel!.slug!});
                   },
                   icon: Icon(
                     Icons.comment,

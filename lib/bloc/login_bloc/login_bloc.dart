@@ -10,7 +10,7 @@ import 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   AuthRepo repo = AuthRepoImpl();
   // UserRepo userRepo = UserRepoImpl();
-  LoginBloc() : super(LoginInitialState()) {
+  LoginBloc({required this.repo}) : super(LoginInitialState()) {
     on<LoginSubmitEvent>(_onLoginSubmit);
     on<InitUserEvent>(_onInitUser);
   }

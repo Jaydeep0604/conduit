@@ -11,12 +11,12 @@ import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class EditProfileScreen extends StatefulWidget {
+  static const editProfileUrl = '/editProfile';
   const EditProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -77,12 +77,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           body: SafeArea(
               child: BlocConsumer<ProfileBloc, ProfileState>(
             listener: (context, state) {
-              // TODO: implement listener
               if (state is ProfileLoadingState) {
-                CToast.instance.showLoaderDialog(context);
+                CToast.instance.showLodingLoader(context);
+              }else{
+                CToast.instance.dismiss();
               }
               if (state is ProfileNoInternetState) {
-                CToast.instance.dismiss(context);
+                CToast.instance.dismiss();
                 CToast.instance.showError(context, NO_INTERNET);
               }
               if (state is ProfileErrorState) {
@@ -90,16 +91,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 return CToast.instance.showError(context, state.message);
               }
               if (state is UpdateProfileSuccessState) {
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) {
-                    return ProfileScreen();
-                  }),
-                );
+                Navigator.pushNamedAndRemoveUntil(context,
+                    ProfileScreen.profileUrl, (route) => route.isFirst);
+                // Navigator.popUntil(context, (route) => route.isFirst);
+                // Navigator.push(
+                //   context,
+                //   CupertinoPageRoute(builder: (context) {
+                //     return ProfileScreen();
+                //   }),
+                // );
               }
-              if (state is UpdateArticleErroeState) {
-                CToast.instance.dismiss(context);
+              if (state is UpdateProfileErrorState) {
+                // CToast.instance.dismiss(context);
                 print("Profile not updated, please try again later");
                 CToast.instance.showToastError(
                     "Profile not updated, please try again later");
@@ -110,7 +113,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 bio = state.profileList.first.user!.bio;
                 image = state.profileList.first.user!.image;
                 addData();
-                CToast.instance.dismiss(context);
+                CToast.instance.dismiss();
               }
             },
             builder: (context, state) {

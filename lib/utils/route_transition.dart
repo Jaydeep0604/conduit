@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-
+import 'package:flutter/material.dart';
 
 class SlideRightRouteWithBuilder extends PageRouteBuilder {
   final Widget Function(BuildContext, Animation<double>, Animation<double>)
@@ -38,7 +37,8 @@ class ScaleRouteWithBuilder extends PageRouteBuilder {
   final Widget Function(BuildContext, Animation<double>, Animation<double>)
       builder;
   @override
-  ScaleRouteWithBuilder({required this.builder})
+  RouteSettings settings;
+  ScaleRouteWithBuilder({required this.builder, required this.settings})
       : super(
           pageBuilder: builder,
           transitionsBuilder: (
@@ -55,6 +55,7 @@ class ScaleRouteWithBuilder extends PageRouteBuilder {
               child: child,
             );
           },
+          settings: settings,
           reverseTransitionDuration: const Duration(milliseconds: 600),
           transitionDuration: const Duration(milliseconds: 600),
         );
@@ -63,8 +64,8 @@ class ScaleRouteWithBuilder extends PageRouteBuilder {
 class SlideRightRoute extends PageRouteBuilder {
   final Widget page;
   @override
-
-  SlideRightRoute({required this.page})
+  RouteSettings settings;
+  SlideRightRoute({required this.page, required this.settings})
       : super(
           pageBuilder: (
             BuildContext context,
@@ -90,7 +91,7 @@ class SlideRightRoute extends PageRouteBuilder {
               child: child,
             );
           },
-          
+          settings: settings,
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionDuration: const Duration(milliseconds: 300),
         );
@@ -99,7 +100,8 @@ class SlideRightRoute extends PageRouteBuilder {
 class FadeRoute extends PageRouteBuilder {
   final Widget page;
   @override
-  FadeRoute({required this.page})
+  RouteSettings settings;
+  FadeRoute({required this.page, required this.settings})
       : super(
           pageBuilder: (
             BuildContext context,
@@ -123,6 +125,7 @@ class FadeRoute extends PageRouteBuilder {
               child: child,
             );
           },
+          settings: settings,
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionDuration: const Duration(milliseconds: 300),
         );

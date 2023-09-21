@@ -7,19 +7,19 @@ import 'package:conduit/model/profile_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/message.dart';
-import 'package:conduit/widget/no_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChangePassword extends StatefulWidget {
-  const ChangePassword({Key? key}) : super(key: key);
+class ChangePasswordScreen extends StatefulWidget {
+  static const changePasswordUrl = '/changePassword';
+  const ChangePasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChangePassword> createState() => _ChangePasswordState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _ChangePasswordState extends State<ChangePassword> {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController passwordCtr = TextEditingController();
   TextEditingController confirmPasswordCtr = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -83,23 +83,23 @@ class _ChangePasswordState extends State<ChangePassword> {
                 listener: (context, state) {
                   if (state is ChangePasswordLoadingState) {
                     //return CToast.instance.showLoader();
-                    CToast.instance.showLoaderDialog(context);
+                    CToast.instance.showLodingLoader(context);
                   }
                   if (state is ProfileNoInternetState) {
-                    CToast.instance.dismiss(context);
+                    CToast.instance.dismiss();
                     CToast.instance.showError(context, NO_INTERNET);
                   }
                   if (state is ChangePasswordSuccessState) {
                     passwordCtr.clear();
                     confirmPasswordCtr.clear();
-                    CToast.instance.dismiss(context);
+                    CToast.instance.dismiss();
                     print("password updated");
                     CToast.instance
                         .showError(context, "Password Updated Successfully");
                     ConduitFunctions.logOut(context);
                   }
                   if (state is ChangePasswordErrorState) {
-                    CToast.instance.dismiss(context);
+                    CToast.instance.dismiss();
                     print("errrrrrrrrrrr ${state.message}");
                     // CToast.instance.showError(context, state.msg);
                   }

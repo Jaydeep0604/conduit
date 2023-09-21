@@ -4,7 +4,7 @@ import 'package:conduit/bloc/register_bloc/register_bloc.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/auth_model.dart';
-import 'package:conduit/ui/base/home_screen.dart';
+import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/register/register_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
@@ -19,6 +19,7 @@ import '../../bloc/login_bloc/login_event.dart';
 import '../../widget/conduitEditText_widget.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const loginUrl = '/login';
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -32,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late LoginBloc loginBloc;
   late RegisterBloc registerBloc;
-  late TextEditingController emailCtr = TextEditingController();
-  late TextEditingController passwordCtr = TextEditingController();
+  late TextEditingController emailCtr = TextEditingController(text: "jk@mailinator.com");
+  late TextEditingController passwordCtr = TextEditingController(text: "Test@123");
   bool _obsecureText = true;
   @override
   void initState() {
@@ -85,11 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
           body: BlocListener<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state is LoginNoInternetState) {
-                CToast.instance.dismiss(context);
+                CToast.instance.dismiss();
                 CToast.instance.showError(context, NO_INTERNET);
               }
               if (state is LoginLoadingState) {
-                CToast.instance.showLoaderDialog(context);
+                CToast.instance.showLodingLoader(context);
                 setState(() {
                   isLoading = true;
                 });
@@ -99,20 +100,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 });
               }
               if (state is LoginErrorState) {
-                CToast.instance.dismiss(context);
+                CToast.instance.dismiss();
                 setState(() {
                   isLoading = false;
                 });
                 CToast.instance.showError(context, state.msg);
               }
               if (state is LoginSuccessState) {
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.pushReplacement(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => BaseScreen(),
-                  ),
-                );
+                CToast.instance.dismiss();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BaseScreen(),
+                    ),
+                    (route) => false);
                 CToast.instance.showSuccess(context, "login successfull");
               }
             },
@@ -160,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               )),
                         ),
                         SizedBox(
-                          height: 50,
+                          height: 90,
                         ),
                         Container(
                           alignment: Alignment.topLeft,
@@ -345,15 +346,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                           passwordCtr.clear();
                                         });
                                         formKey.currentState?.reset();
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) =>
-                                                RegisterScreen(
-                                              screenSize: screenSize,
-                                            ),
-                                          ),
-                                        );
+                                        Navigator.pushNamed(
+                                            context, RegisterScreen.registerUrl,
+                                            arguments: {
+                                              "screenSize": screenSize,
+                                            });
+                                        // Navigator.push(
+                                        //   context,
+                                        //   CupertinoPageRoute(
+                                        //     builder: (context) =>
+                                        //         RegisterScreen(
+                                        //       screenSize: screenSize,
+                                        //     ),
+                                        //   ),
+                                        // );
                                       }),
                                       child: Text(
                                         "Sign up for Conduit.",
@@ -390,15 +396,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                               passwordCtr.clear();
                                             });
                                             formKey.currentState?.reset();
-                                            Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    RegisterScreen(
-                                                  screenSize: screenSize,
-                                                ),
-                                              ),
-                                            );
+                                            Navigator.pushNamed(context,
+                                                RegisterScreen.registerUrl,
+                                                arguments: {
+                                                  "screenSize": screenSize,
+                                                });
+                                            // Navigator.push(
+                                            //   context,
+                                            //   CupertinoPageRoute(
+                                            //     builder: (context) =>
+                                            //         RegisterScreen(
+                                            //       screenSize: screenSize,
+                                            //     ),
+                                            //   ),
+                                            // );
                                           },
                                         style: TextStyle(
                                           color: AppColors.primaryColor,

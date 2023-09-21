@@ -14,7 +14,7 @@ abstract class AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData({int offset, int limit});
   Future<List<AllArticlesModel>> getYourFeedData({int offset, int limit});
   Future<List<AllArticlesModel>> getMyArticles(int offset, int limit);
-  Future<List<CommentModel>> deleteArticle(String slug);
+  Future<bool> deleteArticle(String slug);
   Future<List<AllArticlesModel>> getMyFavoriteArticles(int offset, int limit);
   Future<dynamic> addNewArticle(ArticleModel newArticleModel);
   Future<dynamic> updateArticle(ArticleModel newArticleModel, String slug);
@@ -38,14 +38,7 @@ class AllArticlesImpl extends AllArticlesRepo {
   Future<List<AllArticlesModel>> getAllArticlesData(
       {int? offset, int? limit}) async {
     String url = ApiConstant.ALL_ARTICLES + "?offset=$offset&limit=$limit";
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    http.Response response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 401) {
@@ -67,15 +60,7 @@ class AllArticlesImpl extends AllArticlesRepo {
   Future<List<AllArticlesModel>> getYourFeedData(
       {int? offset, int? limit}) async {
     String url = ApiConstant.YOUR_FEED + "?offset=$offset&limit=$limit";
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    // print(url);
-    http.Response response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 401) {
       dynamic data = response.body;
@@ -97,10 +82,7 @@ class AllArticlesImpl extends AllArticlesRepo {
         "${detailModel?.values.first.userName}" +
         "&offset=$offset&limit=$limit";
     // print(url);
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "content-type": "application/json",
-      "Authorization": "Bearer ${detailModel?.values.first.token}"
-    });
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     // int totalCount = jsonData['articlesCount'];
     // print(totalCount);
@@ -121,10 +103,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     String url = ApiConstant.MY_FAVORITE_ARTICLES +
         "${detailModel?.values.first.userName}" +
         "&offset=$offset&limit=$limit";
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "content-type": "application/json",
-      "Authorization": "Bearer ${detailModel?.values.first.token}"
-    });
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonData["articles"];
@@ -174,14 +153,7 @@ class AllArticlesImpl extends AllArticlesRepo {
   Future<List<ArticleModel>> getArticle(String slug) async {
     String url = ApiConstant.GET_ARTICLE + "/${slug}";
     // print(url);
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    http.Response response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
       ArticleModel articleModel = ArticleModel.fromJson(jsonData);
@@ -250,15 +222,7 @@ class AllArticlesImpl extends AllArticlesRepo {
         ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
     print(url);
 
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    print(detailModel!.values.first.token);
-    http.Response response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -273,9 +237,8 @@ class AllArticlesImpl extends AllArticlesRepo {
     }
   }
 
-  Future<List<CommentModel>> deleteArticle(String slug) async {
+  Future<bool> deleteArticle(String slug) async {
     String url = ApiConstant.BASE_COMMENT_URL + "/${slug}";
-    // print(url);
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     http.Response response = await http.delete(
       Uri.parse(url),
@@ -284,15 +247,12 @@ class AllArticlesImpl extends AllArticlesRepo {
         "Authorization": "Bearer ${detailModel!.values.first.token}"
       },
     );
-    Map<String, dynamic> jsonData = json.decode(response.body);
+    // Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      // dynamic data = jsonDecode(jsonData);
-      List<dynamic> data = jsonData["comments"];
-      print(data);
-      List<CommentModel> s = List<CommentModel>.from(
-          data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
-      return s;
+    if (response.statusCode == 204) {
+      return true;
+    } else if (response.statusCode == 200 || response.statusCode == 202) {
+      return true;
     } else {
       throw Exception();
     }
@@ -321,15 +281,8 @@ class AllArticlesImpl extends AllArticlesRepo {
 
   @override
   Future<List<ProfileModel>> getProfileData() async {
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.USER_PROFILE;
-    http.Response response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     if (response.statusCode == 200) {
       ProfileModel profile = ProfileModel.fromJson(jsonData);
@@ -394,14 +347,7 @@ class AllArticlesImpl extends AllArticlesRepo {
 
   Future fetchAllTags() async {
     String url = ApiConstant.ALL_POPULAR_TAGS;
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    http.Response response = await http.get(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doGet(url);
     // Map<String, dynamic> jsonData = json.decode(response.body);
     // if (response.statusCode == 401) {}
     if (response.statusCode == 200) {
@@ -418,10 +364,7 @@ class AllArticlesImpl extends AllArticlesRepo {
   Future fetchSearchTags(String title) async {
     Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.ARTICLE_BY_TAG + title;
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "content-type": "application/json",
-      "Authorization": "Bearer ${detailModel?.values.first.token}"
-    });
+    http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     // print(totalCount);
     // Map<String, dynamic> jsonData = json.decode(response.body);

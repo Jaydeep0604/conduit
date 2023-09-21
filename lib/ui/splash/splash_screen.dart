@@ -2,14 +2,14 @@ import 'dart:async';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/user_model.dart';
-import 'package:conduit/ui/base/home_screen.dart';
+import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/login/login_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const splashUrl = "/splash";
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
@@ -18,24 +18,38 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
     Timer(Duration(milliseconds: 1800), () async {
       Box<UserAccessData>? detailModel =
           await hiveStore.isExistUserAccessData();
       if (detailModel!.values.isNotEmpty) {
-        Navigator.pushReplacement(
-            context, (CupertinoPageRoute(builder: (context) => BaseScreen())));
+        Navigator.pushNamedAndRemoveUntil(
+            context, BaseScreen.baseUrl, (route) => false);
       }
       if (detailModel.values.isEmpty)
-        Navigator.pushReplacement(
-            context, (CupertinoPageRoute(builder: (context) => LoginScreen())));
+        Navigator.pushReplacementNamed(context, LoginScreen.loginUrl);
     });
-    // Timer(
-    //     Duration(seconds: 1),
-    //     () => Navigator.pushReplacement(
-    //         context, MaterialPageRoute(builder: (context) => LoginScreen())));
+    super.didChangeDependencies();
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Timer(Duration(milliseconds: 1800), () async {
+  //     Box<UserAccessData>? detailModel =
+  //         await hiveStore.isExistUserAccessData();
+  //     if (detailModel!.values.isNotEmpty) {
+  //       Navigator.pushNamedAndRemoveUntil(
+  //           context, BaseScreen.baseUrl, (route) => false);
+  //     }
+  //     if (detailModel.values.isEmpty)
+  //       Navigator.pushReplacementNamed(context, LoginScreen.loginUrl);
+  //   });
+  //   // Timer(
+  //   //     Duration(seconds: 1),
+  //   //     () => Navigator.pushReplacement(
+  //   //         context, MaterialPageRoute(builder: (context) => LoginScreen())));
+  // }
 
   @override
   Widget build(BuildContext context) {

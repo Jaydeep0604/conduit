@@ -1,3 +1,4 @@
+import 'package:conduit/main.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -12,6 +13,35 @@ class CToast {
   }
 
   CToast._internal();
+
+  // simple toast
+
+  showToastSuccess(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: AppColors.button_color,
+      textColor: Colors.white,
+      fontSize: 12.0,
+    );
+  }
+
+  showToastError(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red[400],
+      textColor: Colors.white,
+      fontSize: 12.0,
+    );
+  }
+
+  // Scaffold message
+
   showError(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     // showToastError(msg);
@@ -23,7 +53,7 @@ class CToast {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.white,
-          //fontFamily: KSMFontFamily.robotomedium,
+          fontFamily: ConduitFontFamily.robotoMedium,
           fontSize: 12,
         ),
       ),
@@ -40,16 +70,14 @@ class CToast {
 
   showSuccess(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         "$msg",
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: AppColors.primaryColor,
-          fontSize: 12,
-          // fontFamily: KSMFontFamily.robotomedium
-        ),
+            color: AppColors.primaryColor,
+            fontSize: 12,
+            fontFamily: ConduitFontFamily.robotoMedium),
       ),
       // backgroundColor: AppColors.black,
       behavior: SnackBarBehavior.floating,
@@ -60,62 +88,8 @@ class CToast {
     ));
   }
 
-  showLoader() {
-    return Center(
-        child: LoadingAnimationWidget.threeArchedCircle(
-      color: Colors.black,
-      // MyApp.themeNotifier.value == ThemeMode.dark
-      //     ? Colors.white
-      //     : Colors.black,
-      size: 40,
-    ));
-  }
-
-  showLoaderWhite() {
-    return Center(
-        child: LoadingAnimationWidget.threeArchedCircle(
-      color: AppColors.white,
-      // MyApp.themeNotifier.value == ThemeMode.dark
-      //     ? Colors.white
-      //     : Colors.black,
-      size: 40,
-    ));
-  }
-
-  showLoading(BuildContext context) {
-    SmartDialog.showLoading(
-        animationType: SmartAnimationType.fade,
-        backDismiss: true,
-        useAnimation: true,
-        usePenetrate: true,
-        msg: "Loading");
-  }
-
-  showToastSuccess(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.button_color,
-        textColor: Colors.white,
-        fontSize: 12.0);
-  }
-
-  showToastError(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red[400],
-        textColor: Colors.white,
-        fontSize: 12.0);
-  }
-
   showToast(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         "$msg",
@@ -123,7 +97,7 @@ class CToast {
         style: TextStyle(
           color: AppColors.black,
           fontSize: 12,
-          // fontFamily: KSMFontFamily.robotomedium
+          fontFamily: ConduitFontFamily.robotoMedium,
         ),
       ),
       behavior: SnackBarBehavior.floating,
@@ -132,6 +106,41 @@ class CToast {
       backgroundColor: AppColors.primaryColor,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));
+  }
+
+  // loaders
+
+  showLoader() {
+    return Center(
+        child: LoadingAnimationWidget.threeArchedCircle(
+      color: Colors.black,
+      size: 40,
+      // MyApp.themeNotifier.value == ThemeMode.dark
+      //     ? Colors.white
+      //     : Colors.black,
+    ));
+  }
+
+  showLoaderWhite() {
+    return Center(
+        child: LoadingAnimationWidget.threeArchedCircle(
+      color: AppColors.white,
+      size: 40,
+    ));
+  }
+
+  void showLodingLoader(BuildContext context) {
+    SmartDialog.showLoading();
+  }
+
+  showLoading(BuildContext context) {
+    SmartDialog.showLoading(
+      animationType: SmartAnimationType.fade,
+      backDismiss: true,
+      useAnimation: true,
+      usePenetrate: true,
+      msg: "Loading",
+    );
   }
 
   showLoaderDialog(BuildContext context) {
@@ -161,7 +170,11 @@ class CToast {
                   ),
                   Text(
                     "Loading...",
-                    style: TextStyle(color: AppColors.white, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 14,
+                      fontFamily: ConduitFontFamily.robotoMedium,
+                    ),
                   )
                 ],
               ),
@@ -179,11 +192,13 @@ class CToast {
     );
   }
 
-  void showLodingLoader(BuildContext context) {
-    SmartDialog.showLoading();
+  // dismiss loader first for SmartDialog and second for showLoaderDialog
+
+  void dismiss() {
+    SmartDialog.dismiss();
   }
 
-  void dismiss(context) {
-    Navigator.pop(context);
-  }
+  // void dismiss2(context) {
+  //   Navigator.pop(context);
+  // }
 }

@@ -6,21 +6,20 @@ import 'package:conduit/bloc/follow_bloc/follow_bloc.dart';
 import 'package:conduit/bloc/follow_bloc/follow_event.dart';
 import 'package:conduit/bloc/like_article_bloc/like_article_bloc.dart';
 import 'package:conduit/bloc/like_article_bloc/like_article_event.dart';
-import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/user_model.dart';
-import 'package:conduit/repository/all_article_repo.dart';
+import 'package:conduit/navigator/tab_items.dart';
 import 'package:conduit/ui/add_article/add_article_screen.dart';
+import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/comments/comments_screen.dart';
-import 'package:conduit/ui/base/home_screen.dart';
 import 'package:conduit/ui/tag_screen/tag_screen.dart';
-import 'package:conduit/ui/add_article/update_article.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
+import 'package:conduit/utils/route_transition.dart';
 import 'package:conduit/widget/no_internet.dart';
 import 'package:conduit/widget/theme_container.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,6 +30,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class GlobalItemDetailScreen extends StatefulWidget {
+  static const globalItemDetailUrl = '/globalItemDetail';
   GlobalItemDetailScreen({
     Key? key,
     required this.slug,
@@ -162,6 +162,29 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                         setState(() {
                           isNoInternet = true;
                         });
+                      }
+                      if (state is ArticleDeleteSuccessState) {
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                        print("====================================================");
+                        // globalNavigationKey.currentState?.push(
+                        //   SlideRightRoute(
+                        //     page: BaseScreen(),
+                        //     settings: (RouteSettings(
+                        //       arguments: {},
+                        //       name: BaseScreen.baseUrl,
+                        //     )),
+                        //   ),
+                        // )
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BaseScreen(),
+                          ),
+                        );
+                        // BaseScreen.switchTab(
+                        //   context,
+                        //   MyTabItem.globalfeed,
+                        // );
                       }
                     },
                     builder: (context, state) {
@@ -492,16 +515,23 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                 ),
                                                 InkWell(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      CupertinoPageRoute(
-                                                        builder: (context) {
-                                                          return CommentsScreen(
-                                                            slug: widget.slug,
-                                                          );
-                                                        },
-                                                      ),
-                                                    );
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        CommentsScreen
+                                                            .commentUrl,
+                                                        arguments: {
+                                                          'slug': widget.slug,
+                                                        });
+                                                    // Navigator.push(
+                                                    //   context,
+                                                    //   CupertinoPageRoute(
+                                                    //     builder: (context) {
+                                                    //       return CommentsScreen(
+                                                    //         slug: widget.slug,
+                                                    //       );
+                                                    //     },
+                                                    //   ),
+                                                    // );
                                                   },
                                                   child: Container(
                                                     padding: EdgeInsets.all(5),
@@ -520,33 +550,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                // InkWell(
-                                                //   onTap: () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   CupertinoPageRoute(
-                                                //     builder: (context) {
-                                                //       return CommentsScreen(
-                                                //         slug: widget.slug,
-                                                //       );
-                                                //     },
-                                                //   ),
-                                                // );
-                                                //   },
-                                                //   child: Container(
-                                                //     padding: EdgeInsets.all(5),
-                                                //     decoration: BoxDecoration(
-                                                //       shape: BoxShape.circle,
-                                                //       // color: AppColors
-                                                //       //     .Bottom_bar_color,
-                                                //     ),
-                                                //     child: Icon(
-                                                //       Icons.share,
-                                                //       color: Colors.white,
-                                                //     ),
-                                                //   ),
-                                                // ),
-
                                                 Spacer(),
                                                 if (dataUsername ==
                                                     state
@@ -565,22 +568,19 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                                     context,
                                                                     NO_INTERNET);
                                                           } else {
-                                                            Navigator.push(
-                                                              context,
-                                                              CupertinoPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        AddArticleScreen(
-                                                                  isUpdateArticle:
-                                                                      true,
-                                                                  slug: state
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                AddArticleScreen
+                                                                    .addArticleUrl,
+                                                                arguments: {
+                                                                  'slug': state
                                                                       .articleModel
                                                                       .last
                                                                       .article!
                                                                       .slug!,
-                                                                ),
-                                                              ),
-                                                            );
+                                                                  'isUpdateArticle':
+                                                                      true,
+                                                                });
                                                           }
                                                         },
                                                         child: Container(
@@ -590,8 +590,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                               BoxDecoration(
                                                             shape:
                                                                 BoxShape.circle,
-                                                            // color: AppColors
-                                                            //     .Bottom_bar_color,
                                                           ),
                                                           child: Icon(
                                                             Icons.edit,
@@ -668,26 +666,35 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                           (index) {
                                             return GestureDetector(
                                               onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (context) {
-                                                      return BlocProvider(
-                                                        create: (context) =>
-                                                            TagsBloc(
-                                                                repo:
-                                                                    AllArticlesImpl()), // Create a new instance
-                                                        child: TagScreen(
-                                                          title: state
-                                                              .articleModel
-                                                              .last
-                                                              .article
-                                                              ?.tagList![index],
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                );
+                                                Navigator.pushNamed(
+                                                    context, TagScreen.tagUrl,
+                                                    arguments: {
+                                                      'title': state
+                                                          .articleModel
+                                                          .last
+                                                          .article
+                                                          ?.tagList![index],
+                                                    });
+                                                // Navigator.push(
+                                                //   context,
+                                                //   CupertinoPageRoute(
+                                                //     builder: (context) {
+                                                //       return BlocProvider(
+                                                //         create: (context) =>
+                                                //             TagsBloc(
+                                                //                 repo:
+                                                //                     AllArticlesImpl()), // Create a new instance
+                                                //         child: TagScreen(
+                                                //           title: state
+                                                //               .articleModel
+                                                //               .last
+                                                //               .article
+                                                //               ?.tagList![index],
+                                                //         ),
+                                                //       );
+                                                //     },
+                                                //   ),
+                                                // );
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -1202,14 +1209,10 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                               .copyWith(color: AppColors.white),
                         ),
                         onPressed: () async {
+                          Navigator.pop(context);
                           articleBloc.add(
                             DeleteArticleEvent(slug: widget.slug),
                           );
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                          Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => BaseScreen()));
                         },
                       ),
                     ),

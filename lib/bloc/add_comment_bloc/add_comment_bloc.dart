@@ -6,12 +6,12 @@ import 'package:conduit/repository/all_article_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddCommentBloc extends Bloc<AddCommentEvent, AddCommentState> {
-  AddCommentBloc() : super(AddCommentInitialState()) {
+  AllArticlesRepo repo = AllArticlesImpl();
+  AddCommentBloc({required this.repo}) : super(AddCommentInitialState()) {
     on<SubmitCommentEvent>(_onSubmitCommentEvent);
   }
   _onSubmitCommentEvent(
       SubmitCommentEvent event, Emitter<AddCommentState> emit) async {
-    AllArticlesRepo repo = AllArticlesImpl();
     try {
       emit(AddCommentLoadingState());
       // ignore: unused_local_variable

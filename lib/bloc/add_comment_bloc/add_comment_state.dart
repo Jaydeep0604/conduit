@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 abstract class AddCommentState extends Equatable {}
 
 class AddCommentInitialState extends AddCommentState {
+  
   @override
   List<Object?> get props => [];
 }

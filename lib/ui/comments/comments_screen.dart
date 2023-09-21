@@ -19,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CommentsScreen extends StatefulWidget {
+  static const commentUrl = '/comment';
   CommentsScreen({Key? key, required this.slug}) : super(key: key);
   String slug;
 
@@ -111,7 +112,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                               );
                             }
                             if (state is CommentLoadingState) {
-                             return Padding(
+                              return Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: SizedBox(
                                   height: 30,
@@ -231,14 +232,14 @@ class CommentsScreenState extends State<CommentsScreen> {
                   BlocListener<AddCommentBloc, AddCommentState>(
                     listener: (context, state) {
                       if (state is AddCommentLoadingState) {
-                        CToast.instance.showLoaderDialog(context);
+                        CToast.instance.showLodingLoader(context);
                       }
                       if (state is AddCommentNoInternetState) {
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         CToast.instance.showError(context, NO_INTERNET);
                       }
                       if (state is AddCommentErroeState) {
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         formKey.currentState!.reset();
                         Future.delayed(Duration.zero, () {
                           CToast.instance.showError(context, state.msg);
@@ -247,7 +248,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                       if (state is AddCommentSuccessState) {
                         commentCtr!.clear();
                         formKey.currentState!.reset();
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         refreshComments();
                       }
                     },
@@ -344,7 +345,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                     listener: (context, state) {
                       if (state is AddCommentLoadingState) {}
                       if (state is AddCommentErroeState) {
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         formKey.currentState!.reset();
                         Future.delayed(Duration.zero, () {
                           CToast.instance.showError(context, state.msg);
@@ -353,7 +354,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                       if (state is AddCommentSuccessState) {
                         commentCtr!.clear();
                         formKey.currentState!.reset();
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         refreshComments();
                       }
                     },
@@ -458,7 +459,7 @@ class CommentsScreenState extends State<CommentsScreen> {
                                             if (formKey.currentState!
                                                 .validate()) {
                                               CToast.instance
-                                                  .showLoaderDialog(context);
+                                                  .showLodingLoader(context);
                                               addCommentBloc.add(
                                                 SubmitCommentEvent(
                                                   addCommentModel:

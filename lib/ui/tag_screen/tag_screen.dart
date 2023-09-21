@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TagScreen extends StatefulWidget {
+  static const tagUrl = '/tags';
   TagScreen({Key? key, required this.title}) : super(key: key);
   String? title;
 

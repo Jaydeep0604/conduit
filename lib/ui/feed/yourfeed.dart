@@ -3,7 +3,8 @@ import 'package:conduit/bloc/feed_bloc/feed_event.dart';
 import 'package:conduit/bloc/feed_bloc/feed_state.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
-import 'package:conduit/ui/base/home_screen.dart';
+import 'package:conduit/navigator/tab_items.dart';
+import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class YourFeedScreen extends StatefulWidget {
+  static const yourFeedUrl = '/yourFeed';
   const YourFeedScreen({Key? key}) : super(key: key);
 
   @override
@@ -64,13 +66,14 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
         centerTitle: false,
         leading: Container(
           child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => BaseScreen(),
-                ),
-              );
+            onPressed: () async {
+              bool isPop =
+                  await navigatorKey[BaseScreen.getCurrentTab(context)]!
+                      .currentState!
+                      .maybePop();
+              if (!isPop) {
+                BaseScreen.switchTab(context, MyTabItem.globalfeed);
+              }
             },
             icon: SvgPicture.asset(
               ic_back_arrow_icon,
@@ -141,7 +144,7 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
                           return SingleChildScrollView(
                             controller: _scrollController,
                             child: Padding(
-                              padding:  EdgeInsets.only(
+                              padding: EdgeInsets.only(
                                   left: 15, right: 15, bottom: 20, top: 20),
                               child: Container(
                                 width: MediaQuery.of(context).size.width,

@@ -16,11 +16,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:image_picker/image_picker.dart';
-
 import '../../bloc/register_bloc/register_bloc.dart';
 
 class RegisterScreen extends StatefulWidget {
+  static const registerUrl = '/register';
   RegisterScreen({Key? key, required this.screenSize}) : super(key: key);
   var screenSize;
 
@@ -110,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   isLoading = true;
                 });
                 FocusManager.instance.primaryFocus!.unfocus();
-                CToast.instance.showLoaderDialog(context);
+                CToast.instance.showLodingLoader(context);
                 // CToast.instance.showLoading(context);
               } else {
                 setState(() {
@@ -118,18 +117,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 });
               }
               if (state is RegisterNoInternetState) {
-                CToast.instance.dismiss(context);
+                CToast.instance.dismiss();
                 CToast.instance.showError(context, NO_INTERNET);
               }
               if (state is RegisterDoneState) {
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.pushReplacement(context,
-                    CupertinoPageRoute(builder: (context) => LoginScreen()));
-                CToast.instance.showSuccess(context, state.msg);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, LoginScreen.loginUrl, (route) => route.isFirst);
+                // Navigator.popUntil(context, (route) => route.isFirst);
+                // Navigator.pushReplacement(context,
+                //     CupertinoPageRoute(builder: (context) => LoginScreen()));
+                // CToast.instance.showSuccess(context, state.msg);
               }
 
               if (state is RegisterErrorState) {
-                CToast.instance.dismiss(context);
+                CToast.instance.dismiss();
                 CToast.instance.showError(context, state.msg);
               }
             },

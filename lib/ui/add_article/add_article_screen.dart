@@ -4,7 +4,9 @@ import 'package:conduit/bloc/article_bloc/article_state.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/new_article_model.dart';
-import 'package:conduit/ui/base/home_screen.dart';
+import 'package:conduit/navigator/tab_items.dart';
+import 'package:conduit/ui/base/base_screen.dart';
+import 'package:conduit/ui/global/global_item_detail_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
@@ -18,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AddArticleScreen extends StatefulWidget {
+  static const addArticleUrl = '/addArticle';
   AddArticleScreen({
     Key? key,
     required this.isUpdateArticle,
@@ -32,12 +35,15 @@ class AddArticleScreen extends StatefulWidget {
 
 class _AddArticleScreenState extends State<AddArticleScreen> {
   GlobalKey<FormState> _form = GlobalKey<FormState>();
-  String? title, aboutTitle, article;
-  String? apiSlug;
+
+  bool isVisible = false;
+  // String? title, aboutTitle, article;
+  // String? apiSlug;
   TextEditingController? titleCtr, aboutTitleCtr, articleCtr;
   TextEditingController? tagsCtr;
   late ArticleBloc articleBloc;
   List<String> tags = [];
+  ArticleModel? articleModel;
 
   bool isNoInternet = false;
   @override
@@ -58,9 +64,10 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
   }
 
   void addData() {
-    titleCtr = TextEditingController(text: title);
-    aboutTitleCtr = TextEditingController(text: aboutTitle);
-    articleCtr = TextEditingController(text: article);
+    titleCtr = TextEditingController(text: articleModel?.article?.title);
+    aboutTitleCtr =
+        TextEditingController(text: articleModel?.article?.description);
+    articleCtr = TextEditingController(text: articleModel?.article?.body);
   }
 
   void clear() {
@@ -94,16 +101,17 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
             backgroundColor: AppColors.primaryColor,
             centerTitle: false,
             leading: IconButton(
-              onPressed: () {
+              onPressed: () async {
                 if (widget.isUpdateArticle) {
                   Navigator.pop(context);
                 } else {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => BaseScreen(),
-                    ),
-                  );
+                  bool isPop =
+                      await navigatorKey[BaseScreen.getCurrentTab(context)]!
+                          .currentState!
+                          .maybePop();
+                  if (!isPop) {
+                    BaseScreen.switchTab(context, MyTabItem.globalfeed);
+                  }
                 }
               },
               icon: SvgPicture.asset(
@@ -129,51 +137,55 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                       child: BlocConsumer<ArticleBloc, ArticleState>(
                     listener: (context, state) {
                       if (state is ArticleLoadingState) {
-                        CToast.instance.showLoaderDialog(context);
+                        CToast.instance.showLodingLoader(context);
                       }
                       if (state is ArticleNoInternetState) {
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         CToast.instance.showError(context, NO_INTERNET);
                       }
-
                       // add article
                       if (state is ArticleAddSuccessState) {
                         clear();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushReplacement(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => BaseScreen()));
+                        CToast.instance.dismiss();
+                        BaseScreen.switchTab(context, MyTabItem.globalfeed);
                         CToast.instance
                             .showSuccess(context, state.msg.toString());
                       }
                       if (state is ArticleAddErrorState) {
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                         CToast.instance
                             .showError(context, state.msg.toString());
                       }
 
                       // update article
                       if (state is UpdateArticleSuccessState) {
-                        CToast.instance.dismiss(context);
-                        Future.delayed(Duration(seconds: 2), () {
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                          Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => BaseScreen(),
-                              ));
-                        });
+                        CToast.instance.dismiss();
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                        Navigator.pushNamed(
+                          context,
+                          GlobalItemDetailScreen.globalItemDetailUrl,
+                          arguments: {
+                            'username': articleModel!.article!.author!.username,
+                            'isFollowed':
+                                articleModel!.article!.author!.following,
+                            'slug': articleModel!.article!.slug,
+                            'favorited': articleModel!.article!.favorited,
+                          },
+                        );
+                        // Future.delayed(Duration(seconds: 1), () {
+                        //   BaseScreen.switchTab(context, MyTabItem.globalfeed);
+                        // });
                       }
                       if (state is ArticleLoadedState) {
-                        title = state.articleModel.last.article?.title;
-                        aboutTitle =
-                            state.articleModel.last.article?.description;
-                        article = state.articleModel.last.article?.body;
-                        apiSlug = state.articleModel.last.article!.slug;
+                        articleModel = state.articleModel.last;
+                        // title = state.articleModel.last.article?.title;
+                        // aboutTitle =
+                        //     state.articleModel.last.article?.description;
+                        // article = state.articleModel.last.article?.body;
+                        // apiSlug = state.articleModel.last.article!.slug;
                         tags = state.articleModel.last.article!.tagList!;
                         addData();
-                        CToast.instance.dismiss(context);
+                        CToast.instance.dismiss();
                       }
                     },
                     builder: (context, state) {
@@ -269,6 +281,29 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                               SizedBox(
                                 height: 20,
                               ),
+                              Visibility(
+                                visible: isVisible,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      border: Border.all(
+                                          color: AppColors.primaryColor),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    "1. Start typing the tag you want to create.\n\n"
+                                    "2. After typing the tag, press the 'Done' or 'Next' button on your keyboard.\n\n"
+                                    "3. The tag you typed will automatically be converted into a tag and added to the list of tags below the input field.\n\n"
+                                    "4. You can continue typing and creating more tags using the same method.",
+                                    style: TextStyle(
+                                        fontFamily:
+                                            ConduitFontFamily.robotoLight),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Text(
                                 'Tags',
                                 style: TextStyle(
@@ -279,69 +314,60 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                 height: 10,
                               ),
                               ConduitEditText(
-                                controller: tagsCtr,
-                                hint: "Tags",
-                                maxLines: 2,
-                                minLines: 1,
-                                textInputType: TextInputType.text,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.deny(" "),
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp("[0-9a-z]"),
-                                  ),
-                                ],
-                                onEditingComplete: () {
-                                  final text = tagsCtr!.text.trim();
-                                  if (text.isNotEmpty) {
-                                    addTag(text);
-                                    tagsCtr!.clear();
-                                    print(tags);
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value!.isEmpty && tags.isEmpty) {
-                                    return "Write at least one tag";
-                                  }
-                                  return null;
-                                },
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return CupertinoAlertDialog(
-                                            title: Text(
-                                              "Tag Creation Instructions",
-                                              style: TextStyle(
-                                                  fontFamily: ConduitFontFamily
-                                                      .robotoMedium),
-                                            ),
-                                            content: Text(
-                                              "1. Start typing the tag you want to create.\n\n"
-                                              "2. After typing the tag, press the 'Done' or 'Next' button on your keyboard.\n\n"
-                                              "3. The tag you typed will automatically be converted into a tag and added to the list of tags below the input field.\n\n"
-                                              "4. You can continue typing and creating more tags using the same method.",
-                                              style: TextStyle(
-                                                  fontFamily: ConduitFontFamily
-                                                      .robotoLight),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text("OK"),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                  controller: tagsCtr,
+                                  hint: "Tags",
+                                  maxLines: 2,
+                                  minLines: 1,
+                                  textInputType: TextInputType.text,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(" "),
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp("[0-9a-z]"),
+                                    ),
+                                  ],
+                                  onEditingComplete: () {
+                                    final text = tagsCtr!.text.trim();
+                                    if (text.isNotEmpty) {
+                                      addTag(text);
+                                      tagsCtr!.clear();
+                                      print(tags);
+                                    }
+                                  },
+                                  validator: (value) {
+                                    if (value!.isEmpty && tags.isEmpty) {
+                                      return "Write at least one tag";
+                                    }
+                                    return null;
+                                  },
+                                  suffixIcon: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        isVisible = !isVisible;
+                                      });
                                     },
-                                    icon: Icon(
-                                      Icons.info_outline,
-                                      color: AppColors.pholder_background,
-                                    )),
-                              ),
+                                    child: Transform.scale(
+                                      scale: 0.9,
+                                      child: isVisible
+                                          ? Icon(
+                                              Icons.close,
+                                              color:
+                                                  AppColors.pholder_background,
+                                            )
+                                          : Icon(
+                                              Icons.info_outline,
+                                              color:
+                                                  AppColors.pholder_background,
+                                            ),
+                                    ),
+                                  )
+                                  // IconButton(
+                                  //   onPressed: () {},
+                                  //   icon: Icon(
+                                  //     Icons.info_outline,
+                                  //     color: AppColors.pholder_background,
+                                  //   ),
+                                  // ),
+                                  ),
                               SizedBox(
                                 height: 20,
                               ),
@@ -384,7 +410,8 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                                   tagList: tags,
                                                 ),
                                               ),
-                                              slug: apiSlug!),
+                                              slug:
+                                                  articleModel!.article!.slug!),
                                         );
                                       } else {
                                         articleBloc.add(

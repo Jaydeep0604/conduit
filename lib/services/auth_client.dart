@@ -14,7 +14,9 @@ class AuthClient {
 
   Future<http.Response> doPost(String url, Map<String, dynamic> body,
       {Map<String, String>? header}) {
-    Map<String, String> head = {"content-type": "application/json"};
+    Map<String, String> head = {
+      "content-type": "application/json",
+    };
     if (header != null) {
       head.addAll(header);
     }
@@ -32,6 +34,10 @@ class AuthClient {
     if (header != null) {
       head.addAll(header);
     }
-    return http.post(Uri.parse(url), body: jsonEncode(body), headers: head);
+    return http.post(
+      Uri.parse(url),
+      body: jsonEncode(body),
+      headers: head,
+    );
   }
 }

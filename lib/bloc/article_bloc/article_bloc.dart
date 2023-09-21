@@ -69,7 +69,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
       DeleteArticleEvent event, Emitter<ArticleState> emit) async {
     try {
       dynamic data = await repo.deleteArticle(event.slug);
-      if (data == 1) {
+      if (data == true) {
         emit(ArticleDeleteSuccessState());
       } else {
         emit(ArticleDeleteErrorState(

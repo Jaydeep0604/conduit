@@ -23,6 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ProfileScreen extends StatefulWidget {
+  static const profileUrl = '/profile';
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -535,20 +536,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     Alignment.centerRight,
                                                 child: InkWell(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      CupertinoPageRoute(
-                                                        builder: (context) =>
-                                                            BlocProvider(
-                                                          create: (context) =>
-                                                              ProfileBloc(
-                                                                  repo:
-                                                                      AllArticlesImpl()),
-                                                          child:
-                                                              EditProfileScreen(),
-                                                        ),
-                                                      ),
-                                                    );
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        EditProfileScreen
+                                                            .editProfileUrl);
+                                                    // Navigator.push(
+                                                    //   context,
+                                                    //   CupertinoPageRoute(
+                                                    //     builder: (context) =>
+                                                    //         BlocProvider(
+                                                    //       create: (context) =>
+                                                    //           ProfileBloc(
+                                                    //               repo:
+                                                    //                   AllArticlesImpl()),
+                                                    //       child:
+                                                    //           EditProfileScreen(),
+                                                    //     ),
+                                                    //   ),
+                                                    // );
                                                   },
                                                   child: Container(
                                                     height: 25,

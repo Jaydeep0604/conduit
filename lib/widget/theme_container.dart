@@ -29,13 +29,13 @@ class ThemeContainer extends StatelessWidget {
               // ),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                end: Alignment.bottomCenter,
                 colors: [
                   Color.fromARGB(255, 227, 239, 228),
                   Color.fromARGB(255, 232, 241, 234),
                   Color.fromARGB(255, 234, 239, 236),
                   Color.fromARGB(255, 232, 241, 234),
-                  Color.fromARGB(255, 227, 239, 228),
+                  Color.fromARGB(255, 255, 255, 255),
                 ],
               ),
             ),

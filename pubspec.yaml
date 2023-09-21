@@ -53,6 +53,7 @@ dependencies:
   flutter_svg: ^2.0.7
   url_strategy: ^0.2.0
   animations: ^2.0.8
+  persistent_bottom_nav_bar: ^5.0.2
   # image_picker: ^1.0.4
   
 

@@ -1,11 +1,12 @@
 import 'package:conduit/main.dart';
+import 'package:conduit/navigator/tab_items.dart';
+import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/change_password/change_password_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -59,12 +60,11 @@ class ConduitDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
+                Navigator.pushNamed(context, ProfileScreen.profileUrl);
+                // for with bottionnavigationbar
+                // navigatorKey[BaseScreen.getCurrentTab(context)]
+                //     ?.currentState
+                //     ?.pushNamed(ProfileScreen.profileUrl);
               },
             ),
             Divider(endIndent: 20, indent: 20),
@@ -81,12 +81,12 @@ class ConduitDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => ChangePassword(),
-                  ),
-                );
+                Navigator.pushNamed(
+                    context, ChangePasswordScreen.changePasswordUrl);
+                // for with bottionnavigationbar
+                // navigatorKey[BaseScreen.getCurrentTab(context)]
+                //     ?.currentState
+                //     ?.pushNamed(ChangePasswordScreen.changePasswordUrl);
               },
             ),
             Divider(endIndent: 20, indent: 20),
@@ -115,8 +115,8 @@ class ConduitDrawer extends StatelessWidget {
   onLogout(BuildContext context) {
     showAlertBottomSheet(context).then((value) {
       if (value != null) {
-        if (value == true) {
-          //  settingBloc.add(LogoutEvent());
+        if (value) {
+          ConduitFunctions.logOut(context);
         }
       }
     });
@@ -185,10 +185,8 @@ class ConduitDrawer extends StatelessWidget {
                                     fontFamily: ConduitFontFamily.robotoRegular,
                                   )
                                   .copyWith(color: Colors.white)),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            CToast.instance.showLoaderDialog(context);
-                            ConduitFunctions.logOut(context);
+                          onPressed: () {
+                            Navigator.pop(context, true);
                           },
                         ),
                       ),
