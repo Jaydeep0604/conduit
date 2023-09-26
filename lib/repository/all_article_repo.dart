@@ -425,7 +425,9 @@ class AllArticlesImpl extends AllArticlesRepo {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Failed to unfollow user');
+      throw Exception(
+        'Failed to unfollow user',
+      );
     }
   }
 }
