@@ -1,3 +1,4 @@
+import 'package:conduit/navigator/bottom_nav.dart';
 import 'package:conduit/navigator/tab_items.dart';
 import 'package:conduit/navigator/tab_navigator.dart';
 import 'package:conduit/ui/base/drawer.dart';
@@ -32,13 +33,13 @@ class BaseScreen extends StatefulWidget {
 }
 
 class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late GlobalKey<ScaffoldState> globalScaffoldKey;
 
   bool isLoading = false;
   var _currentTab = MyTabItem.globalfeed;
 
   openDrawer() {
-    _scaffoldKey.currentState?.openDrawer();
+    globalScaffoldKey.currentState?.openDrawer();
   }
 
   // void didChangeDependancies(){
@@ -47,6 +48,7 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
 
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    globalScaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
   }
 
@@ -60,6 +62,7 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
+        print("app in resumed");
         break;
       case AppLifecycleState.inactive:
         print("app in inactive");
@@ -89,7 +92,7 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
-        key: _scaffoldKey,
+        key: globalScaffoldKey,
         bottomNavigationBar: BottomNavigationBar(
           elevation: 10,
           showSelectedLabels: true,
@@ -141,11 +144,11 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
               label: "Add Article",
             ),
           ],
+
+          //   BottomNavigation(
+          // currentTab: _currentTab,
+          // onSelectTab: (index) => selectTab(index),
         ),
-        // BottomNavigation(
-        //   currentTab: _currentTab,
-        //   onSelectTab: _selectTab,
-        // ),
         drawer: ConduitDrawer(),
         body: Stack(
           children: [

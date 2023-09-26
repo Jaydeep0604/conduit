@@ -15,6 +15,7 @@ class UserClient {
   }
 
   UserClient._internal();
+  
   Future<http.Response> doGet(String url, {Map<String, String>? header}) async {
     Box<UserAccessData>? userData = await hiveStore.isExistUserAccessData();
     if (userData == null) {
@@ -185,9 +186,6 @@ class UserClient {
       head.addAll(header);
     }
 
-    // CommentModel commentModel = CommentModel(
-    //   body: body.values.last["body"] as String?,
-    // );
 
     try {
       http.Response response = await http.post(

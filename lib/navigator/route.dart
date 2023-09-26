@@ -13,7 +13,7 @@ import 'package:conduit/bloc/register_bloc/register_bloc.dart';
 import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/repository/auth_repo.dart';
-import 'package:conduit/ui/EditProfile/EditProfile_screen.dart';
+import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/ui/add_article/add_article_screen.dart';
 import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/change_password/change_password_screen.dart';
@@ -22,7 +22,7 @@ import 'package:conduit/ui/feed/yourfeed.dart';
 import 'package:conduit/ui/global/global.dart';
 import 'package:conduit/ui/global/global_item_detail_screen.dart';
 import 'package:conduit/ui/login/login_screen.dart';
-import 'package:conduit/ui/profile/profile_screen.dart';
+import 'package:conduit/ui/my_articles/my_articles_screen.dart';
 import 'package:conduit/ui/register/register_screen.dart';
 import 'package:conduit/ui/splash/splash_screen.dart';
 import 'package:conduit/ui/tag_screen/tag_screen.dart';
@@ -36,7 +36,7 @@ class CRoutes {
   static const addArticleScreen = AddArticleScreen.addArticleUrl;
   static const commentsScreen = CommentsScreen.commentUrl;
   static const editProfileScreen = CommentsScreen.commentUrl;
-  static const profileScreen = ProfileScreen.profileUrl;
+  static const profileScreen = MyArticlesScreen.myArticlesUrl;
   static const tagScreen = TagScreen.tagUrl;
 
   static generateRoute(BuildContext context, int index,
@@ -85,14 +85,6 @@ class CRoutes {
                 (settings.arguments as Map)['isUpdateArticle'] as dynamic,
             slug: (settings.arguments as Map)['slug'] as dynamic,
           ),
-      EditProfileScreen.editProfileUrl: (context) => MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => ProfileBloc(repo: AllArticlesImpl()),
-              ),
-            ],
-            child: EditProfileScreen(),
-          ),
       TagScreen.tagUrl: (context) => MultiBlocProvider(
             providers: [
               BlocProvider(
@@ -102,7 +94,7 @@ class CRoutes {
             child: TagScreen(
               title: (settings.arguments as Map)['title'] as dynamic,
             ),
-          )
+          ),
     };
   }
 
@@ -154,9 +146,6 @@ class CRoutes {
                 ),
               ],
               child: GlobalItemDetailScreen(
-                favorited: (settings.arguments as Map)['favorited'] as dynamic,
-                isFollowed:
-                    (settings.arguments as Map)['isFollowed'] as dynamic,
                 slug: (settings.arguments as Map)['slug'] as dynamic,
                 username: (settings.arguments as Map)['username'] as dynamic,
               ),
@@ -164,7 +153,7 @@ class CRoutes {
           },
           settings: settings,
         );
-      case ProfileScreen.profileUrl:
+      case MyArticlesScreen.myArticlesUrl:
         return SlideRightRouteWithBuilder(
             builder: (p0, p1, p2) {
               return MultiBlocProvider(
@@ -181,12 +170,19 @@ class CRoutes {
                       repo: AllArticlesImpl(),
                     ),
                   ),
-                  // BlocProvider(
-                  //   create: (context) => LikeBloc(repo: AllArticlesImpl()),
-                  // ),
-                  // BlocProvider(
-                  //   create: (context) => FollowBloc(repo: AllArticlesImpl()),
-                  // ),
+                ],
+                child: MyArticlesScreen(),
+              );
+            },
+            settings: settings);
+      case ProfileScreen.editProfileUrl:
+        return SlideRightRouteWithBuilder(
+            builder: (p0, p1, p2) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => ProfileBloc(repo: AllArticlesImpl()),
+                  ),
                 ],
                 child: ProfileScreen(),
               );
@@ -224,23 +220,39 @@ class CRoutes {
             settings: settings);
       case CommentsScreen.commentUrl:
         return SlideRightRouteWithBuilder(
-            builder: (p0, p1, p2) {
-              return MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (context) => CommentBloc(repo: AllArticlesImpl()),
-                  ),
-                  BlocProvider(
-                    create: (context) =>
-                        AddCommentBloc(repo: AllArticlesImpl()),
-                  ),
-                ],
-                child: CommentsScreen(
-                  slug: (settings.arguments as Map)['slug'] as dynamic,
+          builder: (p0, p1, p2) {
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => CommentBloc(repo: AllArticlesImpl()),
                 ),
-              );
-            },
-            settings: settings);
+                BlocProvider(
+                  create: (context) => AddCommentBloc(repo: AllArticlesImpl()),
+                ),
+              ],
+              child: CommentsScreen(
+                slug: (settings.arguments as Map)['slug'] as dynamic,
+              ),
+            );
+          },
+          settings: settings,
+        );
+      case TagScreen.tagUrl:
+        return SlideRightRouteWithBuilder(
+          builder: (p0, p1, p2) {
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => TagsBloc(repo: AllArticlesImpl()),
+                ),
+              ],
+              child: TagScreen(
+                title: (settings.arguments as Map)['title'] as dynamic,
+              ),
+            );
+          },
+          settings: settings,
+        );
       case BaseScreen.baseUrl:
         return MaterialPageRoute(
             builder: (context) => BaseScreen(), settings: settings);

@@ -8,6 +8,7 @@ import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/utils/AppColors.dart';
+import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/comment_widget.dart';
@@ -84,149 +85,79 @@ class CommentsScreenState extends State<CommentsScreen> {
           child: Column(
             children: [
               Expanded(
-                  child: isNoInternet
-                      ? NoInternet(
-                          isWidget: true,
-                          onClickRetry: onRetryData,
-                        )
-                      : BlocConsumer<CommentBloc, CommentState>(
-                          listener: (context, state) {
-                            if (state is CommentNoInternetState) {
-                              setState(() {
-                                isNoInternet = true;
-                              });
-                            }
-                            if (state is CommentErrorState) {
-                              CToast.instance.showError(context, state.msg);
-                            }
-                          },
-                          builder: (context, state) {
-                            if (state is NoCommentState) {
-                              return Center(
-                                child: Text(
-                                  "No Comments",
-                                  style: TextStyle(
-                                    fontFamily: ConduitFontFamily.robotoRegular,
-                                  ),
+                child: isNoInternet
+                    ? NoInternet(
+                        isWidget: true,
+                        onClickRetry: onRetryData,
+                      )
+                    : BlocConsumer<CommentBloc, CommentState>(
+                        listener: (context, state) {
+                          if (state is CommentNoInternetState) {
+                            setState(() {
+                              isNoInternet = true;
+                            });
+                          }
+                          if (state is CommentDeleteLoadingState) {
+                            CToast.instance.showLodingLoader(context);
+                          }
+                          if (state is CommentErrorState) {
+                            CToast.instance.showError(context, state.msg);
+                          }
+                          if (state is DeleteCommentSuccessState) {
+                            CToast.instance.dismiss();
+                            refreshComments();
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is NoCommentState) {
+                            return Center(
+                              child: Text(
+                                "No Comments",
+                                style: TextStyle(
+                                  fontFamily: ConduitFontFamily.robotoRegular,
                                 ),
-                              );
-                            }
-                            if (state is CommentLoadingState) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: SizedBox(
-                                  height: 30,
-                                  child: CToast.instance.showLoader(),
-                                ),
-                              );
-                            }
-                            if (state is DeleteCommentSuccessState) {
-                              refreshComments();
-                            }
-                            if (state is CommentSuccessState) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, right: 15, top: 10),
-                                child: ListView.separated(
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  // reverse: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: state.commentModel.length,
-                                  itemBuilder: (context, index) {
-                                    return CommentWidget(
-                                      slug: widget.slug,
-                                      commentModel: state.commentModel[index],
-                                    );
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return SizedBox(
-                                      height: 10,
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                            return Container();
-                          },
-                        )
+                              ),
+                            );
+                          }
+                          if (state is CommentLoadingState) {
+                            return Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: SizedBox(
+                                height: 30,
+                                child: CToast.instance.showLoader(),
+                              ),
+                            );
+                          }
 
-                  // BlocBuilder<CommentBloc, CommentState>(
-                  //   builder: (context, state) {
-                  //     if (state is CommentErrorState) {
-                  //       return CToast.instance.showError(context, state.msg);
-                  //     }
-                  //     if (state is CommentLoadingState) {
-                  //       return Padding(
-                  //         padding: const EdgeInsets.all(10),
-                  //         child: SizedBox(
-                  //           height: 30,
-                  //           child: CToast.instance.showLoader(),
-                  //         ),
-                  //       );
-                  //     }
-                  //     if (state is NoCommentState) {
-                  //       return Center(
-                  //         child: Text(
-                  //           "No Comments",
-                  //           style: TextStyle(
-                  //             fontFamily: ConduitFontFamily.robotoRegular,
-                  //           ),
-                  //         ),
-                  //       );
-                  //     }
-                  //     if (state is DeleteCommentSuccessState) {
-                  //       refreshComments();
-                  //     }
-                  //     if (state is CommentSuccessState) {
-                  //       return Padding(
-                  //         padding:
-                  //             const EdgeInsets.only(left: 15, right: 15, top: 10),
-                  //         child: ListView.separated(
-                  //           primary: false,
-                  //           shrinkWrap: true,
-                  //           // reverse: true,
-                  //           scrollDirection: Axis.vertical,
-                  //           itemCount: state.commentModel.length,
-                  //           itemBuilder: (context, index) {
-                  //             return CommentWidget(
-                  //               slug: widget.slug,
-                  //               commentModel: state.commentModel[index],
-                  //             );
-                  //           },
-                  //           separatorBuilder: (BuildContext context, int index) {
-                  //             return SizedBox(
-                  //               height: 10,
-                  //             );
-                  //           },
-                  //         ),
-                  //       );
-                  //     }
-                  //     return SizedBox();
-                  //   },
-                  // ),
-                  ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              //   child: Row(
-              //     children: [
-              //       Expanded(
-              //         child: ConduitEditText(
-              //           hint: "Comment",
-              //           controller: commentCtr,
-              //           minLines: 1,maxLines: 3,
-              //         ),
-              //       ),
-              //       Container(
-              //         padding: EdgeInsets.all(10),
-              //         decoration: BoxDecoration(
-              //             shape: BoxShape.circle, color: AppColors.primaryColor),
-              //         child: Icon(Icons.send_outlined),
-              //       )
-              //     ],
-              //   ),
-              // )
+                          if (state is CommentSuccessState) {
+                            return ScrollConfiguration(
+                              behavior: NoGlow(),
+                              child: ListView.separated(
+                                padding: EdgeInsets.only(
+                                    top: 10, bottom: 15, left: 15, right: 15),
+                                primary: false,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: state.commentModel.length,
+                                itemBuilder: (context, index) {
+                                  return CommentWidget(
+                                    slug: widget.slug,
+                                    commentModel: state.commentModel[index],
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return SizedBox(
+                                    height: 10,
+                                  );
+                                },
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+              ),
               Column(
                 children: [
                   BlocListener<AddCommentBloc, AddCommentState>(
@@ -306,7 +237,14 @@ class CommentsScreenState extends State<CommentsScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: AppColors.Bottom_bar_color),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            blurRadius: 2,
+                                            blurStyle: BlurStyle.normal,
+                                            color: AppColors.black_light.withOpacity(0.4)
+                                          )
+                                        ],
+                                        color: AppColors.primaryColor),
                                     child: Icon(
                                       Icons.send,
                                       size: 20,

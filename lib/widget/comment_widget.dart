@@ -1,7 +1,6 @@
 import 'package:conduit/bloc/comment_bloc/comment_bloc.dart';
 import 'package:conduit/bloc/comment_bloc/comment_event.dart';
 import 'package:conduit/config/hive_store.dart';
-import 'package:conduit/main.dart';
 import 'package:conduit/model/comment_model.dart';
 import 'package:conduit/model/user_model.dart';
 import 'package:conduit/utils/AppColors.dart';
@@ -60,29 +59,16 @@ class _CommentWidgetState extends State<CommentWidget> {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(
-              widget.commentModel.body ?? '',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Divider(
-            color: AppColors.black.withOpacity(0.5),
-            height: 0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CircleAvatar(
                   radius: 20,
-                  
                   foregroundColor: AppColors.text_color,
                   backgroundImage: AssetImage(
                     "assets/icons/user_foreground.png",
@@ -91,29 +77,32 @@ class _CommentWidgetState extends State<CommentWidget> {
                       NetworkImage(widget.commentModel.author?.image ?? ''),
                 ),
                 SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.commentModel.author?.username ?? '',
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.commentModel.author?.username ?? '',
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      DateFormat('dd-MM-yyyy').format(
-                        DateTime.parse(widget.commentModel.createdAt ?? ''),
+                      Text(
+                        widget.commentModel.body ??
+                            '', // Wrap this in a Text widget
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                        softWrap: true, // Allow text to wrap to the next line
                       ),
-                      style: TextStyle(
-                        color: AppColors.Box_width_color,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Spacer(),
+                SizedBox(width: 5,),
                 ValueListenableBuilder(
                   valueListenable:
                       Hive.box<UserAccessData>(hiveStore.userDetailKey)
@@ -124,9 +113,41 @@ class _CommentWidgetState extends State<CommentWidget> {
                             widget.commentModel.author!.username
                         ? InkWell(
                             onTap: () {
-                              commentBloc.add(deleteCommentEvent(
-                                  slug: widget.slug!,
-                                  commentId: widget.commentModel.id!));
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Delete Comment"),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    content: Text(
+                                        "Are you sure you want to delete this comment?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text("Cancel"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text(
+                                          "Delete",
+                                          style:
+                                              TextStyle(color: Colors.red[400]),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          commentBloc.add(deleteCommentEvent(
+                                              slug: widget.slug!,
+                                              commentId:
+                                                  widget.commentModel.id!));
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Icon(
                               Icons.delete_forever_rounded,
@@ -137,6 +158,22 @@ class _CommentWidgetState extends State<CommentWidget> {
                   },
                 ),
               ],
+            ),
+          ),
+          Divider(
+            color: AppColors.black.withOpacity(0.5),
+            height: 0,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              DateFormat('dd-MM-yyyy').format(
+                DateTime.parse(widget.commentModel.createdAt ?? ''),
+              ),
+              style: TextStyle(
+                color: AppColors.Box_width_color,
+                fontSize: 14,
+              ),
             ),
           ),
         ],

@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../bloc/all_articles_bloc/all_articles_event.dart';
 
 class GlobalScreen extends StatefulWidget {
@@ -61,11 +60,17 @@ class _GlobalScreenState extends State<GlobalScreen> {
     super.initState();
   }
 
-  onRetryData() {
+  onRefreshAll() {
     setState(() {
       isNoInternet = false;
       articlesBloc.add(FetchAllArticlesEvent());
       tagsBloc.add(FetchAllTagsEvent());
+    });
+  }
+
+  onRefreshArticle() {
+    setState(() {
+      articlesBloc.add(FetchAllArticlesEvent());
     });
   }
 
@@ -120,7 +125,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
       body: ThemeContainer(
         child: isNoInternet
             ? NoInternet(
-                onClickRetry: onRetryData,
+                onClickRetry: onRefreshAll,
               )
             : GestureDetector(
                 onTap: () {
@@ -132,11 +137,9 @@ class _GlobalScreenState extends State<GlobalScreen> {
                     child: RefreshIndicator(
                       color: AppColors.primaryColor,
                       onRefresh: () {
-                        return Future.delayed(
-                          Duration(seconds: 1),(){
-                            onRetryData();
-                          }  
-                        );
+                        return Future.delayed(Duration(seconds: 1), () {
+                          onRefreshAll();
+                        });
                       },
                       child: SingleChildScrollView(
                         controller: _scrollController,
@@ -155,17 +158,32 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                   if (searchCtr.text.length > 0) {
                                     Navigator.pushNamed(
-                                        context, TagScreen.tagUrl,
-                                        arguments: {
-                                          'title': searchCtr.text,
-                                        });
+                                      context,
+                                      TagScreen.tagUrl,
+                                      arguments: {
+                                        'title': searchCtr.text,
+                                      },
+                                    );
                                   }
                                 },
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(" "),
                                 ],
-                                prefixIcon: Icon(
-                                  Icons.search,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    if (searchCtr.text.length > 0) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        TagScreen.tagUrl,
+                                        arguments: {
+                                          'title': searchCtr.text,
+                                        },
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(Icons.search),
                                   color: AppColors.primaryColor,
                                 ),
                               ),
@@ -271,13 +289,15 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                                   return GestureDetector(
                                                     onTap: () {
                                                       Navigator.pushNamed(
-                                                          context,
-                                                          TagScreen.tagUrl,
-                                                          arguments: {
-                                                            'title': state
-                                                                .allTagsModel
-                                                                .tags![index],
-                                                          });
+                                                        context,
+                                                        TagScreen.tagUrl,
+                                                        arguments: {
+                                                          'title': state
+                                                              .allTagsModel
+                                                              .tags![index],
+                                                        },
+                                                      ).then((value) =>
+                                                          onRefreshArticle());
                                                     },
                                                     child: Container(
                                                       decoration: BoxDecoration(
@@ -413,6 +433,8 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                                 length = state
                                                     .allArticleslist.length;
                                                 return AllAirtistWidget(
+                                                    onRefresh: () =>
+                                                        onRefreshArticle(),
                                                     articlesModel:
                                                         state.allArticleslist[
                                                             index]);

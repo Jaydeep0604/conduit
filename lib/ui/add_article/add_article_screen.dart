@@ -166,10 +166,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           GlobalItemDetailScreen.globalItemDetailUrl,
                           arguments: {
                             'username': articleModel!.article!.author!.username,
-                            'isFollowed':
-                                articleModel!.article!.author!.following,
                             'slug': articleModel!.article!.slug,
-                            'favorited': articleModel!.article!.favorited,
                           },
                         );
                         // Future.delayed(Duration(seconds: 1), () {
@@ -314,60 +311,51 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                 height: 10,
                               ),
                               ConduitEditText(
-                                  controller: tagsCtr,
-                                  hint: "Tags",
-                                  maxLines: 2,
-                                  minLines: 1,
-                                  textInputType: TextInputType.text,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(" "),
-                                    FilteringTextInputFormatter.allow(
-                                      RegExp("[0-9a-z]"),
-                                    ),
-                                  ],
-                                  onEditingComplete: () {
-                                    final text = tagsCtr!.text.trim();
-                                    if (text.isNotEmpty) {
-                                      addTag(text);
-                                      tagsCtr!.clear();
-                                      print(tags);
-                                    }
-                                  },
-                                  validator: (value) {
-                                    if (value!.isEmpty && tags.isEmpty) {
-                                      return "Write at least one tag";
-                                    }
-                                    return null;
-                                  },
-                                  suffixIcon: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isVisible = !isVisible;
-                                      });
-                                    },
-                                    child: Transform.scale(
-                                      scale: 0.9,
-                                      child: isVisible
-                                          ? Icon(
-                                              Icons.close,
-                                              color:
-                                                  AppColors.pholder_background,
-                                            )
-                                          : Icon(
-                                              Icons.info_outline,
-                                              color:
-                                                  AppColors.pholder_background,
-                                            ),
-                                    ),
-                                  )
-                                  // IconButton(
-                                  //   onPressed: () {},
-                                  //   icon: Icon(
-                                  //     Icons.info_outline,
-                                  //     color: AppColors.pholder_background,
-                                  //   ),
-                                  // ),
+                                controller: tagsCtr,
+                                hint: "Tags",
+                                maxLines: 2,
+                                minLines: 1,
+                                textInputType: TextInputType.text,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(" "),
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9a-z]"),
                                   ),
+                                ],
+                                onEditingComplete: () {
+                                  final text = tagsCtr!.text.trim();
+                                  if (text.isNotEmpty) {
+                                    addTag(text);
+                                    tagsCtr!.clear();
+                                    print(tags);
+                                  }
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty && tags.isEmpty) {
+                                    return "Write at least one tag";
+                                  }
+                                  return null;
+                                },
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isVisible = !isVisible;
+                                    });
+                                  },
+                                  child: Transform.scale(
+                                    scale: 0.9,
+                                    child: isVisible
+                                        ? Icon(
+                                            Icons.close,
+                                            color: AppColors.pholder_background,
+                                          )
+                                        : Icon(
+                                            Icons.info_outline,
+                                            color: AppColors.pholder_background,
+                                          ),
+                                  ),
+                                ),
+                              ),
                               SizedBox(
                                 height: 20,
                               ),

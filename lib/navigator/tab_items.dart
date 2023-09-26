@@ -15,3 +15,4 @@ final navigatorKey = {
 };
 
 final globalNavigationKey = GlobalKey<NavigatorState>();
+// final GlobalKey<NavigatorState> globalNavigationKey = GlobalKey<NavigatorState>();

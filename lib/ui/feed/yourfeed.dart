@@ -12,7 +12,6 @@ import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_article_widget.dart';
 import 'package:conduit/widget/no_internet.dart';
 import 'package:conduit/widget/theme_container.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -45,7 +44,7 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
     });
   }
 
-  onRetryData() {
+  onRefreshAll() {
     setState(() {
       isNoInternet = false;
       feedBloc.add(FetchFeedEvent());
@@ -96,7 +95,7 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
             behavior: NoGlow(),
             child: isNoInternet
                 ? NoInternet(
-                    onClickRetry: onRetryData,
+                    onClickRetry: onRefreshAll,
                   )
                 : SafeArea(
                     child: BlocConsumer<FeedBloc, FeedState>(
@@ -141,33 +140,42 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
                           );
                         }
                         if (state is FeedLoadedState) {
-                          return SingleChildScrollView(
-                            controller: _scrollController,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 15, right: 15, bottom: 20, top: 20),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: ListView.separated(
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: state.allArticleslist.length +
-                                      (state.hasReachedMax ? 0 : 1),
-                                  itemBuilder: (context, index) {
-                                    if (index < state.allArticleslist.length) {
-                                      return AllAirtistWidget(
-                                          articlesModel:
-                                              state.allArticleslist[index]);
-                                    } else {
-                                      return ConduitFunctions
-                                          .buildLoadMoreIndicator();
-                                    }
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return SizedBox(height: 10);
-                                  },
+                          return RefreshIndicator(
+                            onRefresh: () {
+                              return Future.delayed(Duration(seconds: 1), () {
+                                onRefreshAll();
+                              });
+                            },
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, right: 15, bottom: 20, top: 20),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ListView.separated(
+                                    primary: false,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: state.allArticleslist.length +
+                                        (state.hasReachedMax ? 0 : 1),
+                                    itemBuilder: (context, index) {
+                                      if (index <
+                                          state.allArticleslist.length) {
+                                        return AllAirtistWidget(
+                                            onRefresh: onRefreshAll,
+                                            articlesModel:
+                                                state.allArticleslist[index]);
+                                      } else {
+                                        return ConduitFunctions
+                                            .buildLoadMoreIndicator();
+                                      }
+                                    },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return SizedBox(height: 10);
+                                    },
+                                  ),
                                 ),
                               ),
                             ),

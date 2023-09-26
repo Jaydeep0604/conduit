@@ -15,13 +15,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class AllAirtistWidget extends StatefulWidget {
-  AllAirtistWidget({Key? key, this.articlesModel, this.isLoading = false})
+  AllAirtistWidget(
+      {Key? key,
+      this.articlesModel,
+      this.isLoading = false,
+      required this.onRefresh})
       : super(key: key);
   AllArticlesModel? articlesModel;
   bool isLoading;
+  void Function() onRefresh;
 
   factory AllAirtistWidget.shimmer() => AllAirtistWidget(
         isLoading: true,
+        onRefresh: () {},
       );
 
   @override
@@ -222,22 +228,13 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
           GlobalItemDetailScreen.globalItemDetailUrl,
           arguments: {
             'username': widget.articlesModel!.author!.username,
-            'isFollowed': widget.articlesModel!.author!.following,
             'slug': widget.articlesModel!.slug!,
-            'favorited': widget.articlesModel!.favorited,
+          },
+        ).then(
+          (value) {
+            widget.onRefresh();
           },
         );
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => GlobalItemDetailScreen(
-        //       username: widget.articlesModel!.author!.username,
-        //       favorited: widget.articlesModel!.favorited,
-        //       isFollowed: widget.articlesModel!.author!.following,
-        //       slug: widget.articlesModel!.slug!,
-        //     ),
-        //   ),
-        // );
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -248,7 +245,8 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
         // decoration: BoxDecoration(
         //     border: Border.all(color: AppColors.black.withOpacity(0.051)),
         //     color: AppColors.white,
-        //     borderRadius: BorderRadius.circular(10)),
+        //     borderRadius: BorderRadius.circular(10),
+        // ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -10,7 +10,6 @@ import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit/model/user_model.dart';
-import 'package:conduit/navigator/tab_items.dart';
 import 'package:conduit/ui/add_article/add_article_screen.dart';
 import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/comments/comments_screen.dart';
@@ -19,7 +18,6 @@ import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
-import 'package:conduit/utils/route_transition.dart';
 import 'package:conduit/widget/no_internet.dart';
 import 'package:conduit/widget/theme_container.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,15 +32,11 @@ class GlobalItemDetailScreen extends StatefulWidget {
   GlobalItemDetailScreen({
     Key? key,
     required this.slug,
-    required this.favorited,
     this.username,
-    required this.isFollowed,
   }) : super(key: key);
   // AllArticlesModel? allArticlesModel;
   String slug;
   String? username;
-  bool favorited;
-  bool isFollowed;
 
   @override
   State<GlobalItemDetailScreen> createState() => _GlobalItemDetailScreenState();
@@ -52,6 +46,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
   Timer? timer;
   bool? _isFollow;
   bool? _isLike;
+  bool isEdited = false;
   bool isDeleting = false;
   bool isNoInternet = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -74,10 +69,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
     articleBloc.add(FetchArticleEvent(slug: widget.slug));
 
     likeBloc = context.read<LikeBloc>();
-    _isLike = widget.favorited;
-
     followBloc = context.read<FollowBloc>();
-    _isFollow = widget.isFollowed;
   }
 
   void fetchdata() async {
@@ -98,6 +90,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
   changeFollowState() {
     setState(() {
       _isFollow = !_isFollow!;
+
       if (_isFollow!) {
         followBloc.add(FollowUserEvent(username: widget.username));
       } else {
@@ -108,6 +101,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
 
   changeLikeState() {
     setState(() {
+      isEdited = true;
       _isLike = !_isLike!;
       if (_isLike!) {
         likeBloc.add(LikeArticleEvent(slug: widget.slug));
@@ -132,7 +126,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
             automaticallyImplyLeading: false,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+              Navigator.pop(context,true);
               },
               icon: SvgPicture.asset(
                 ic_back_arrow_icon,
@@ -163,9 +157,13 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                           isNoInternet = true;
                         });
                       }
+                      if (state is ArticleLoadedState) {
+                        _isLike = state.articleModel.last.article!.favorited;
+                        _isFollow =
+                            state.articleModel.last.article!.author!.following;
+                      }
                       if (state is ArticleDeleteSuccessState) {
                         Navigator.popUntil(context, (route) => route.isFirst);
-                        print("====================================================");
                         // globalNavigationKey.currentState?.push(
                         //   SlideRightRoute(
                         //     page: BaseScreen(),
@@ -279,92 +277,90 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                                 children: [
                                                                   Text(
                                                                     "${state.articleModel.last.article?.author?.username.toString()}",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontFamily:
-                                                                            ConduitFontFamily
-                                                                                .robotoRegular,
-                                                                        color: AppColors
-                                                                            .primaryColor),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .symmetric(
-                                                                      horizontal:
-                                                                          5,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontFamily:
+                                                                          ConduitFontFamily
+                                                                              .robotoBold,
+                                                                      color: AppColors
+                                                                          .black,
                                                                     ),
-                                                                    child:
-                                                                        SizedBox(
-                                                                      child:
-                                                                          CircleAvatar(
-                                                                        radius:
-                                                                            1.5,
-                                                                        backgroundColor: AppColors
-                                                                            .black
-                                                                            .withOpacity(0.5),
-                                                                        child:
-                                                                            ClipRRect(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(
-                                                                            50,
+                                                                  ),
+                                                                  if (dataUsername !=
+                                                                      state
+                                                                          .articleModel
+                                                                          .last
+                                                                          .article
+                                                                          ?.author!
+                                                                          .username)
+                                                                    Row(
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
                                                                           ),
                                                                           child:
-                                                                              Container(),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        changeFollowState,
-                                                                    child:
-                                                                        AnimatedSwitcher(
-                                                                      duration: Duration(
-                                                                          milliseconds:
-                                                                              200),
-                                                                      switchInCurve:
-                                                                          Curves
-                                                                              .easeOut,
-                                                                      switchOutCurve:
-                                                                          Curves
-                                                                              .easeOut,
-                                                                      transitionBuilder: (Widget
-                                                                              child,
-                                                                          Animation<double>
-                                                                              animation) {
-                                                                        return ScaleTransition(
-                                                                          scale:
-                                                                              animation,
-                                                                          child:
-                                                                              child,
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        child:
-                                                                            Center(
-                                                                          child: _isFollow!
-                                                                              ? Text(
-                                                                                  "Following",
-                                                                                  style: TextStyle(
-                                                                                    fontSize: 14,
-                                                                                    fontFamily: ConduitFontFamily.robotoRegular,
-                                                                                    color: AppColors.black.withOpacity(0.8),
-                                                                                  ),
-                                                                                )
-                                                                              : Text(
-                                                                                  "Follow",
-                                                                                  style: TextStyle(
-                                                                                    color: AppColors.black.withOpacity(0.8),
-                                                                                    fontFamily: ConduitFontFamily.robotoRegular,
-                                                                                  ),
+                                                                              SizedBox(
+                                                                            child:
+                                                                                CircleAvatar(
+                                                                              radius: 1.5,
+                                                                              backgroundColor: AppColors.black.withOpacity(0.5),
+                                                                              child: ClipRRect(
+                                                                                borderRadius: BorderRadius.circular(
+                                                                                  50,
                                                                                 ),
+                                                                                child: Container(),
+                                                                              ),
+                                                                            ),
+                                                                          ),
                                                                         ),
-                                                                      ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              changeFollowState,
+                                                                          child:
+                                                                              AnimatedSwitcher(
+                                                                            duration:
+                                                                                Duration(milliseconds: 200),
+                                                                            switchInCurve:
+                                                                                Curves.easeOut,
+                                                                            switchOutCurve:
+                                                                                Curves.easeOut,
+                                                                            transitionBuilder:
+                                                                                (Widget child, Animation<double> animation) {
+                                                                              return ScaleTransition(
+                                                                                scale: animation,
+                                                                                child: child,
+                                                                              );
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              child: Center(
+                                                                                child: _isFollow!
+                                                                                    ? Text(
+                                                                                        "Following",
+                                                                                        style: TextStyle(
+                                                                                          fontSize: 14,
+                                                                                          fontFamily: ConduitFontFamily.robotoBold,
+                                                                                          color: AppColors.black.withOpacity(0.5),
+                                                                                        ),
+                                                                                      )
+                                                                                    : Text(
+                                                                                        "Follow",
+                                                                                        style: TextStyle(
+                                                                                          color: AppColors.primaryColor,
+                                                                                          fontFamily: ConduitFontFamily.robotoBold,
+                                                                                        ),
+                                                                                      ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ),
                                                                 ],
                                                               ),
                                                             ),
@@ -568,6 +564,9 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                                     context,
                                                                     NO_INTERNET);
                                                           } else {
+                                                            setState(() {
+                                                              isEdited = true;
+                                                            });
                                                             Navigator.pushNamed(
                                                                 context,
                                                                 AddArticleScreen
@@ -633,7 +632,29 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 16.0),
+                                    SizedBox(height: 5.0),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 15,
+                                        right: 15,
+                                        top: 10,
+                                        bottom: 10,
+                                      ),
+                                      child: Text(
+                                        '${state.articleModel.last.article?.description}',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            wordSpacing: 2,
+                                            color: AppColors.black
+                                                .withOpacity(0.7),
+                                            fontFamily:
+                                                ConduitFontFamily.robotoBold),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 16.0,
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         left: 15,

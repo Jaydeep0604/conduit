@@ -10,6 +10,7 @@ class AppColors {
       Color.fromARGB(255, 169, 180, 199);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static const Color black_light = Color.fromARGB(255, 45, 44, 44);
   static const Color button_color = Color(0xff00a3d8);
   static const Color pholder_background = Color(0xff24272c);
   static const Color Box_width_color = Color(0xff707070);

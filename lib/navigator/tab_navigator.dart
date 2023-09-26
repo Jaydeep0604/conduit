@@ -8,25 +8,30 @@ class NavigatorRoute {
   static const String root = '/';
 }
 
-class TabNavigator extends StatelessWidget {
+class TabNavigator extends StatefulWidget {
   TabNavigator({Key? key, required this.navigatorKey, required this.tabItem})
       : super(key: key);
   final GlobalKey<NavigatorState> navigatorKey;
   final MyTabItem tabItem;
 
   @override
+  State<TabNavigator> createState() => _TabNavigatorState();
+}
+
+class _TabNavigatorState extends State<TabNavigator> {
+  @override
   Widget build(BuildContext context) {
     return Navigator(
-      key: navigatorKey,
+      key: widget.navigatorKey,
       initialRoute: '/',
       onGenerateRoute: (settings) {
         return ScaleRouteWithBuilder(
           builder: (context, a1, a2) => CRoutes.generateRoute(
-              context, tabItem.index,
+              context, widget.tabItem.index,
               settings: settings)[settings.name]!(context),
           settings: settings,
         );
       },
-    );
+    );    
   }
 }

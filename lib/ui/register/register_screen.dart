@@ -121,12 +121,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CToast.instance.showError(context, NO_INTERNET);
               }
               if (state is RegisterDoneState) {
+                CToast.instance.dismiss();
                 Navigator.pushNamedAndRemoveUntil(
                     context, LoginScreen.loginUrl, (route) => route.isFirst);
                 // Navigator.popUntil(context, (route) => route.isFirst);
                 // Navigator.pushReplacement(context,
                 //     CupertinoPageRoute(builder: (context) => LoginScreen()));
-                // CToast.instance.showSuccess(context, state.msg);
+                CToast.instance.showSuccess(context, state.msg);
               }
 
               if (state is RegisterErrorState) {
@@ -217,7 +218,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Text(
                                 "Username*",
                                 style: TextStyle(
-                                    fontFamily: ConduitFontFamily.robotoLight),
+                                  fontFamily: ConduitFontFamily.robotoBold,
+                                  color: AppColors.black_light,
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
@@ -245,8 +248,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             true) {
                                           return "Enter username";
                                         }
-                                        if (value != null && value.length < 3) {
-                                          return "Username must be minimum 3 characters";
+                                        if (value != null && value.length < 2) {
+                                          return "Username must be minimum 2 characters";
                                         }
                                         return null;
                                       },
@@ -260,7 +263,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Text(
                                 "Email*",
                                 style: TextStyle(
-                                    fontFamily: ConduitFontFamily.robotoLight),
+                                    fontFamily: ConduitFontFamily.robotoBold,
+                                    color: AppColors.black_light),
                               ),
                               SizedBox(
                                 height: 10,
@@ -288,11 +292,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         FilteringTextInputFormatter.deny(
                                             RegExp(r"/"))
                                       ],
+                                      
                                       validator: (value) {
                                         if (value?.trim().isEmpty ?? true) {
                                           return "Enter email address";
                                         } else if (!RegExp(
-                                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$")
                                             .hasMatch(value ?? "")) {
                                           return "Enter valid email address";
                                         }
@@ -308,7 +313,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Text(
                                 "Boi (optional)",
                                 style: TextStyle(
-                                    fontFamily: ConduitFontFamily.robotoLight),
+                                    fontFamily: ConduitFontFamily.robotoBold,
+                                    color: AppColors.black_light),
                               ),
                               SizedBox(
                                 height: 10,
@@ -392,8 +398,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Text(
                                 "Password*",
                                 style: TextStyle(
-                                  fontFamily: ConduitFontFamily.robotoLight,
-                                ),
+                                    fontFamily: ConduitFontFamily.robotoBold,
+                                    color: AppColors.black_light),
                               ),
                               SizedBox(
                                 height: 10,

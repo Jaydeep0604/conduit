@@ -173,7 +173,8 @@ class MyApp extends StatelessWidget {
           ),
       navigatorObservers: [FlutterSmartDialog.observer],
       builder: FlutterSmartDialog.init(),
-      home: const SplashScreen(),
+      // home: SplashScreen(),
+      initialRoute: SplashScreen.splashUrl,
       navigatorKey: globalNavigationKey,
       onGenerateRoute: CRoutes.generateGlobalRoute,
     );

@@ -1,29 +1,21 @@
-import 'package:conduit/bloc/my_articles_bloc/my_articles_bloc.dart';
-import 'package:conduit/bloc/my_articles_bloc/my_articles_event.dart';
-import 'package:conduit/bloc/my_articles_bloc/my_articles_state.dart';
-import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_bloc.dart';
-import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_event.dart';
-import 'package:conduit/bloc/my_favorite_article_bloc/my_favorite_article_state.dart';
 import 'package:conduit/bloc/profile_bloc/profile_bloc.dart';
 import 'package:conduit/bloc/profile_bloc/profile_event.dart';
 import 'package:conduit/bloc/profile_bloc/profile_state.dart';
+import 'package:conduit/config/constant.dart';
 import 'package:conduit/main.dart';
-import 'package:conduit/repository/all_article_repo.dart';
-import 'package:conduit/ui/EditProfile/EditProfile_screen.dart';
+import 'package:conduit/model/profile_model.dart';
+import 'package:conduit/ui/my_articles/my_articles_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
-import 'package:conduit/widget/all_article_widget.dart';
-import 'package:conduit/widget/no_internet.dart';
-import 'package:conduit/widget/shimmer_widget.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:conduit/widget/conduitEditText_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ProfileScreen extends StatefulWidget {
-  static const profileUrl = '/profile';
+  static const editProfileUrl = '/editProfile';
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -31,811 +23,292 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? email, username, bio, image;
+  TextEditingController? emailCtr, usernameCtr, bioCtr, imageCtr;
+  TextEditingController passwordCtr = TextEditingController();
   late ProfileBloc profileBloc;
-  late MyFavoriteArticlesBloc myFavoriteArticlesBloc;
-  late MyArticlesBloc myArticlesBloc;
-
-  bool myArticle = true;
-  bool favArticle = false;
   bool isLoading = false;
-  bool isScrollable = false;
   bool isNoInternet = false;
-
-  late ScrollController _myAricleScrollController;
-  late ScrollController _myFavAricleScrollController;
-  int? myAricleLength, myFavAricleLength;
-
+  @override
   void initState() {
-    super.initState();
     profileBloc = context.read<ProfileBloc>();
     profileBloc.add(FetchProfileEvent());
-
-    myArticlesBloc = context.read<MyArticlesBloc>();
-    myArticlesBloc.add(FetchMyArticlesEvent());
-
-    myFavoriteArticlesBloc = context.read<MyFavoriteArticlesBloc>();
-    myFavoriteArticlesBloc.add(FetchMyFavoriteArticlesEvent());
-
-    _myAricleScrollController = ScrollController();
-    _myFavAricleScrollController = ScrollController();
-
-    // another method of pagenation
-    // _myAricleScrollController.addListener(() async {
-    //   if (_myAricleScrollController.position.atEdge) {
-    //     if (_myAricleScrollController.position.pixels ==
-    //         _myAricleScrollController.position.maxScrollExtent) {
-    //       myArticlesBloc
-    //           .add(FetchNextMyArticlesEvent(length: await myAricleLength));
-    //     }
-    //   }
-    // });
-
-    // _myFavAricleScrollController.addListener(() async {
-    //   if (_myFavAricleScrollController.position.atEdge) {
-    //     if (_myFavAricleScrollController.position.pixels ==
-    //         _myFavAricleScrollController.position.maxScrollExtent) {
-    //       myFavoriteArticlesBloc.add(FetchNextMyFavoriteArticlesEvent(
-    //           length: await myFavAricleLength));
-    //     }
-    //   }
-    // });
+    addData();
+    super.initState();
   }
 
-  onFetcharticlesData() {
-    if (myArticle) {
-      myArticlesBloc.add(FetchMyArticlesEvent());
-    } else {
-      myFavoriteArticlesBloc.add(FetchMyFavoriteArticlesEvent());
-    }
-  }
-
-  onRetryData() {
-    setState(() {
-      isNoInternet = false;
-      profileBloc.add(FetchProfileEvent());
-      myArticlesBloc.add(FetchMyArticlesEvent());
-      myFavoriteArticlesBloc.add(FetchMyFavoriteArticlesEvent());
-    });
-  }
-
-  @override
-  void dispose() {
-    _myAricleScrollController.dispose();
-    _myFavAricleScrollController.dispose();
-    super.dispose();
+  addData() {
+    emailCtr = TextEditingController(text: email);
+    usernameCtr = TextEditingController(text: username);
+    bioCtr = TextEditingController(text: bio);
+    imageCtr = TextEditingController(text: image);
+    image;
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => true,
-      child: Scaffold(
-        backgroundColor: AppColors.white2,
-        extendBody: true,
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          centerTitle: false,
-          automaticallyImplyLeading: favArticle,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus!.unfocus();
+      },
+      child: WillPopScope(
+        onWillPop: () async => true,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.primaryColor,
+            automaticallyImplyLeading: false,
+            centerTitle: false,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
+            title: Text(
+              "Profile",
+              style: TextStyle(
+                color: AppColors.white,
+                fontFamily: ConduitFontFamily.robotoRegular,
+              ),
+            ),
+          ),
+          body: SafeArea(
+              child: BlocConsumer<ProfileBloc, ProfileState>(
+            listener: (context, state) {
+              if (state is ProfileLoadingState) {
+                CToast.instance.showLodingLoader(context);
+              } else {
+                CToast.instance.dismiss();
+              }
+              if (state is ProfileNoInternetState) {
+                CToast.instance.dismiss();
+                CToast.instance.showError(context, NO_INTERNET);
+              }
+              if (state is ProfileErrorState) {
+                print("error ${state.message}");
+                return CToast.instance.showError(context, state.message);
+              }
+              if (state is UpdateProfileSuccessState) {
+                Navigator.pushNamedAndRemoveUntil(context,
+                    MyArticlesScreen.myArticlesUrl, (route) => route.isFirst);
+                // Navigator.popUntil(context, (route) => route.isFirst);
+                // Navigator.push(
+                //   context,
+                //   CupertinoPageRoute(builder: (context) {
+                //     return ProfileScreen();
+                //   }),
+                // );
+              }
+              if (state is UpdateProfileErrorState) {
+                // CToast.instance.dismiss(context);
+                print("Profile not updated, please try again later");
+                CToast.instance.showToastError(
+                    "Profile not updated, please try again later");
+              }
+              if (state is ProfileLoadedState) {
+                email = state.profileList.first.user!.email;
+                username = state.profileList.first.user!.username;
+                bio = state.profileList.first.user!.bio;
+                image = state.profileList.first.user!.image;
+                addData();
+                CToast.instance.dismiss();
+              }
             },
-            icon: SvgPicture.asset(
-              ic_back_arrow_icon,
-              color: AppColors.white,
-            ),
-          ),
-          title: Text(
-            "Profile",
-            style: TextStyle(
-              color: AppColors.white,
-              fontFamily: ConduitFontFamily.robotoRegular,
-            ),
-          ),
-        ),
-        body: isNoInternet
-            ? NoInternet(
-                onClickRetry: onRetryData,
-              )
-            : NestedScrollView(
-                physics: isScrollable ? null : NeverScrollableScrollPhysics(),
-                headerSliverBuilder: ((context, innerBoxIsScrolled) {
-                  return [
-                    SliverAppBar(
-                      pinned: true,
-                      snap: false,
-                      floating: true,
-                      elevation: 0,
-                      automaticallyImplyLeading: false,
-                      backgroundColor: AppColors.white2,
-                      expandedHeight: 320,
-                      bottom: AppBar(
-                        centerTitle: true,
-                        automaticallyImplyLeading: false,
-                        titleSpacing: 6,
-                        elevation: 0,
-                        backgroundColor: AppColors.white2,
-                        title: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
-                          child: BlocConsumer<ProfileBloc, ProfileState>(
-                            listener: (context, state) {
-                              if (state is ProfileNoInternetState) {
-                                setState(() {
-                                  isNoInternet = true;
-                                });
-                              }
-                              if (state is ProfileLoadingState) {
-                                setState(() {
-                                  isScrollable = false;
-                                });
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is ProfileLoadingState) {
-                                return Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 7, horizontal: 10),
-                                          child: Container(
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: ShimmerWidget()),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 7, horizontal: 10),
-                                          child: Container(
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: ShimmerWidget()),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              if (state is ProfileLoadedState) {
-                                return Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 7, horizontal: 10),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                myArticle = true;
-                                                favArticle = false;
-                                              });
-                                              onFetcharticlesData();
-                                            },
-                                            child: Container(
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: AppColors
-                                                          .primaryColor),
-                                                  color: myArticle
-                                                      ? AppColors.primaryColor
-                                                      : AppColors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: Center(
-                                                  child: Text(
-                                                "My Articles",
-                                                style: TextStyle(
-                                                  color: myArticle
-                                                      ? AppColors.white
-                                                      : AppColors.black,
-                                                  fontSize: 15,
-                                                  fontFamily: ConduitFontFamily
-                                                      .robotoRegular,
-                                                ),
-                                              )),
-                                            ),
+            builder: (context, state) {
+              return ScrollConfiguration(
+                behavior: NoGlow(),
+                child: SingleChildScrollView(
+                  child: GestureDetector(
+                    onTap: () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                    },
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                      color: AppColors.primaryColor, width: 1)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: image != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Image.network(image!,
+                                            alignment: Alignment.center),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 45,
+                                            color: AppColors.text_color,
                                           ),
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 7, horizontal: 10),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                myArticle = false;
-                                                favArticle = true;
-                                              });
-                                              onFetcharticlesData();
-                                            },
-                                            child: Container(
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: AppColors
-                                                          .primaryColor),
-                                                  color: favArticle
-                                                      ? AppColors.primaryColor
-                                                      : AppColors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: Center(
-                                                child: Text(
-                                                  "FavArticle Articles",
-                                                  style: TextStyle(
-                                                    color: favArticle
-                                                        ? AppColors.white
-                                                        : AppColors.black,
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        ConduitFontFamily
-                                                            .robotoRegular,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                              controller: imageCtr,
+                              maxLines: 1,
+                              minLines: 1,
+                              prefixIcon: Icon(
+                                Icons.link,
+                                color: AppColors.primaryColor,
+                              ),
+                              textInputType: TextInputType.url,
+                              hint: "Profile photo url",
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                              // readOnly: true,
+                              controller: usernameCtr,
+                              textInputType: TextInputType.text,
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: SvgPicture.asset(
+                                  ic_profile_icon,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                              hint: "Username",
+                              validator: (value) {
+                                if (value!.length == 0) {
+                                  return "Enter username";
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                                controller: bioCtr,
+                                textInputType: TextInputType.text,
+                                minLines: 5,
+                                maxLines: 5,
+                                hint: "Bio"),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ConduitEditText(
+                              readOnly: true,
+                              controller: emailCtr,
+                              textInputType: TextInputType.emailAddress,
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: SvgPicture.asset(
+                                  ic_mail_icon,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                              hint: "Email",
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 45,
+                              child: MaterialButton(
+                                color: AppColors.primaryColor,
+                                textColor: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    FocusManager.instance.primaryFocus!
+                                        .unfocus();
+                                    profileBloc.add(
+                                      UpdateProfileEvent(
+                                        profileModel: ProfileModel(
+                                          user: User(
+                                              username:
+                                                  usernameCtr!.text.toString(),
+                                              email: emailCtr!.text.toString(),
+                                              bio: bioCtr!.text.toString(),
+                                              image: imageCtr!.text.toString()),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              return Container();
-                            },
-                          ),
-                        ),
-                      ),
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: SizedBox(
-                            child: BlocConsumer<ProfileBloc, ProfileState>(
-                          listener: (context, state) {
-                            if (state is ProfileErrorState) {
-                              CToast.instance.showError(context, state.message);
-                            }
-                          },
-                          builder: (context, state) {
-                            if (state is ProfileInitialState ||
-                                state is ProfileLoadingState) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, right: 15, top: 10),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
                                     color: AppColors.white,
-                                    // border: Border.all(
-                                    //     color: AppColors.black.withOpacity(0.1)),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10,
-                                        right: 10,
-                                        top: 20,
-                                        bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            height: 80,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              // border: Border.all(
-                                              //   color: AppColors.primaryColor,
-                                              //   width: 1,
-                                              // ),
-                                            ),
-                                            child: ShimmerWidget()),
-                                        SizedBox(height: 20),
-                                        Container(
-                                            height: 15,
-                                            width: 150,
-                                            child: ShimmerWidget()),
-                                        SizedBox(height: 15),
-                                        Container(
-                                            height: 40,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: ShimmerWidget()),
-                                        SizedBox(height: 18),
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Container(
-                                              height: 25,
-                                              width: 180,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: ShimmerWidget()),
-                                        ),
-                                      ],
-                                    ),
+                                    fontFamily: ConduitFontFamily.robotoRegular,
                                   ),
                                 ),
-                              );
-                            }
-                            if (state is ProfileLoadedState) {
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 15, right: 15, top: 10),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.white,
-                                        border: Border.all(
-                                            color: AppColors.black
-                                                .withOpacity(0.1)),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10,
-                                            right: 10,
-                                            top: 20,
-                                            bottom: 10),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 80,
-                                              width: 80,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                border: Border.all(
-                                                  color: AppColors.primaryColor,
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(1.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  child: Image.network(
-                                                    state.profileList.last.user!
-                                                        .image!,
-                                                    alignment: Alignment.center,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 20),
-                                            Text(
-                                              "${state.profileList.last.user!.username}",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: ConduitFontFamily
-                                                    .robotoBold,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            TextFormField(
-                                              autofocus: false,
-                                              maxLines: 3,
-                                              readOnly: true,
-                                              textAlign: TextAlign.center,
-                                              enableInteractiveSelection: false,
-                                              toolbarOptions: ToolbarOptions(
-                                                  copy: false,
-                                                  cut: false,
-                                                  paste: false,
-                                                  selectAll: false),
-                                              minLines: 1,
-                                              initialValue: state
-                                                  .profileList.last.user!.bio,
-                                              // cursorColor: AppColors.primaryColor,
-                                              keyboardType: TextInputType.text,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12),
-                                              decoration: InputDecoration(
-                                                filled: true,
-                                                fillColor: AppColors.white2,
-                                                contentPadding:
-                                                    const EdgeInsets.all(5),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                disabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      width: 3,
-                                                      color: AppColors.white2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      width: 3,
-                                                      color: AppColors.white2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      width: 3,
-                                                      color: AppColors.white2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                errorBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      width: 3,
-                                                      color: AppColors.white2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                focusedErrorBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      width: 3,
-                                                      color: AppColors.white2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            // ReadMoreText(
-                                            //   '${state.profileList.last.bio}',
-                                            //   textAlign: TextAlign.center,
-                                            //   trimLines: 2,
-                                            //   colorClickableText: Colors.pink,
-                                            //   trimMode: TrimMode.Line,
-                                            //   trimCollapsedText: 'Show more',
-                                            //   trimExpandedText: ' Show less',
-                                            //   lessStyle: TextStyle(
-                                            //       fontSize: 14,
-                                            //       color: Colors.blue,
-                                            //       fontWeight: FontWeight.normal),
-                                            //   moreStyle: TextStyle(
-                                            //       fontSize: 14,
-                                            //       color: Colors.blue,
-                                            //       fontWeight: FontWeight.normal),
-                                            // ),
-                                            SizedBox(height: 15),
-                                            InkWell(
-                                              child: Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    Navigator.pushNamed(
-                                                        context,
-                                                        EditProfileScreen
-                                                            .editProfileUrl);
-                                                    // Navigator.push(
-                                                    //   context,
-                                                    //   CupertinoPageRoute(
-                                                    //     builder: (context) =>
-                                                    //         BlocProvider(
-                                                    //       create: (context) =>
-                                                    //           ProfileBloc(
-                                                    //               repo:
-                                                    //                   AllArticlesImpl()),
-                                                    //       child:
-                                                    //           EditProfileScreen(),
-                                                    //     ),
-                                                    //   ),
-                                                    // );
-                                                  },
-                                                  child: Container(
-                                                    height: 25,
-                                                    width: 180,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color: AppColors
-                                                            .primaryColor,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Icon(
-                                                          Icons.settings,
-                                                          size: 20,
-                                                        ),
-                                                        SizedBox(width: 10),
-                                                        Text(
-                                                            "Edit Profile Setting"),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                            return Container();
-                          },
-                        )),
-                      ),
-                    ),
-                  ];
-                }),
-                body: ScrollConfiguration(
-                  behavior: NoGlow(),
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo is ScrollEndNotification &&
-                          scrollInfo.metrics.extentAfter == 0) {
-                        if (myArticle) {
-                          myArticlesBloc.add(FetchNextMyArticlesEvent());
-                        } else {
-                          myFavoriteArticlesBloc.add(
-                            FetchNextMyFavoriteArticlesEvent(),
-                          );
-                        }
-                      }
-                      return false;
-                    },
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (myArticle)
-                            BlocConsumer<MyArticlesBloc, MyArticlesState>(
-                              listener: (context, state) {
-                                // TODO: implement listener
-                                if (state is MyArticlesNoInternateState) {
-                                  setState(() {
-                                    isNoInternet = true;
-                                  });
-                                }
-                                if (state is MyArticlesLoadedState) {
-                                  setState(() {
-                                    isScrollable = true;
-                                  });
-                                }
-                                if (state is MyArticlesLoadingState) {
-                                  setState(() {
-                                    isScrollable = false;
-                                  });
-                                }
-                                if (state is NoMyArticlesState) {
-                                  setState(() {
-                                    isScrollable = true;
-                                  });
-                                }
-                              },
-                              builder: (context, state) {
-                                if (state is MyArticlesInitialState ||
-                                    state is MyArticlesLoadingState) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(7),
-                                      child: ListView.separated(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: 5,
-                                        primary: false,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          return AllAirtistWidget.shimmer();
-                                        },
-                                        separatorBuilder:
-                                            (BuildContext context, int index) {
-                                          return SizedBox(height: 10);
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }
-                                if (state is NoMyArticlesState) {
-                                  return SizedBox(
-                                    height: 200,
-                                    child: Center(
-                                      child: Text(
-                                        "No articles are here... yet",
-                                        style: TextStyle(
-                                            fontFamily:
-                                                ConduitFontFamily.robotoMedium),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                if (state is MyArticlesLoadedState) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 10,
-                                      left: 15,
-                                      right: 15,
-                                    ),
-                                    child: ListView.separated(
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: state.myArticleslist.length +
-                                          (state.hasReachedMax ? 0 : 1),
-                                      itemBuilder: (context, index) {
-                                        if (index <
-                                            state.myArticleslist.length) {
-                                          myAricleLength =
-                                              state.myArticleslist.length;
-                                          return AllAirtistWidget(
-                                            articlesModel:
-                                                state.myArticleslist[index],
-                                          );
-                                        } else {
-                                          return ConduitFunctions
-                                              .buildLoadMoreIndicator();
-                                        }
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return SizedBox(height: 10);
-                                      },
-                                    ),
-                                  );
-                                }
-                                return Container();
-                              },
+                              ),
                             ),
-                          if (favArticle)
-                            BlocConsumer<MyFavoriteArticlesBloc,
-                                MyFavoriteArticlesState>(
-                              listener: (context, state) {
-                                // TODO: implement listener
-                                if (state
-                                    is MyFavoriteArticlesNoInternetState) {
-                                  setState(() {
-                                    isNoInternet = true;
-                                  });
-                                }
-                                if (state is MyFavoriteArticlesLoadingState) {
-                                  setState(() {
-                                    isScrollable = false;
-                                  });
-                                }
-                                if (state is NoMyFavoriteArticlesState) {
-                                  setState(() {
-                                    isScrollable = true;
-                                  });
-                                }
-                                if (state is MyFavoriteArticlesLoadedStete) {
-                                  setState(() {
-                                    isScrollable = true;
-                                  });
-                                }
-                              },
-                              builder: (context, state) {
-                                if (state is MyFavoriteArticlesInitialState ||
-                                    state is MyFavoriteArticlesLoadingState) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(7),
-                                      child: ListView.separated(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: 5,
-                                        primary: false,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          return AllAirtistWidget.shimmer();
-                                        },
-                                        separatorBuilder:
-                                            (BuildContext context, int index) {
-                                          return SizedBox(height: 10);
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }
-                                if (state is NoMyFavoriteArticlesState) {
-                                  return SizedBox(
-                                    height: 200,
-                                    child: Center(
-                                      child: Text(
-                                        "No articles are here... yet",
-                                        style: TextStyle(
-                                          fontFamily:
-                                              ConduitFontFamily.robotoMedium,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                if (state is MyFavoriteArticlesLoadedStete) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 10,
-                                      left: 15,
-                                      right: 15,
-                                    ),
-                                    child: ListView.separated(
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount:
-                                          state.myFavoriteArticleslist.length +
-                                              (state.hasReachedMax ? 0 : 1),
-                                      itemBuilder: (context, index) {
-                                        if (index <
-                                            state.myFavoriteArticleslist
-                                                .length) {
-                                          myFavAricleLength = state
-                                              .myFavoriteArticleslist.length;
-                                          return AllAirtistWidget(
-                                              articlesModel:
-                                                  state.myFavoriteArticleslist[
-                                                      index]);
-                                        } else {
-                                          return ConduitFunctions
-                                              .buildLoadMoreIndicator();
-                                        }
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return SizedBox(height: 10);
-                                      },
-                                    ),
-                                  );
-                                }
-                                return Container();
-                              },
-                            ),
-                        ],
+                            SizedBox(
+                              height: 20,
+                            )
+                            // Padding(
+                            //   padding: EdgeInsets.only(top: 25),
+                            //   child: SizedBox(
+                            //     width: 320,
+                            //     height: 45,
+                            //     child: MaterialButton(
+                            //       textColor: AppColors.white,
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         side: BorderSide(color: Colors.red[400]!),
+                            //       ),
+                            //       onPressed: () {
+                            //         FocusManager.instance.primaryFocus!.unfocus();
+                            //         setState(() {
+                            //           onLogout();
+                            //         });
+                            //       },
+                            //       child: Text(
+                            //         'Logout',
+                            //         style: TextStyle(color: Colors.red[400]),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              );
+            },
+          )),
+        ),
       ),
     );
   }
 }
+// for hivedata show 
+// ValueListenableBuilder(
+//             valueListenable:
+//                 Hive.box<UserAccessData>(hiveStore.userDetailKey).listenable(),
+//             builder: (BuildContext context, dynamic box, Widget? child) {
+//               UserAccessData? detail = box.get(hiveStore.userId);
+//               return Container();
+//             },
+//           ),

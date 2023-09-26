@@ -61,7 +61,7 @@ class CToast {
       behavior: SnackBarBehavior.floating,
       elevation: 10,
       // duration: Duration(seconds: 2),
-      duration: Duration(milliseconds: 1200),
+      duration: Duration(milliseconds: 1800),
       dismissDirection: DismissDirection.horizontal,
 
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -82,7 +82,7 @@ class CToast {
       // backgroundColor: AppColors.black,
       behavior: SnackBarBehavior.floating,
       // duration: Duration(seconds: 2),
-      duration: Duration(milliseconds: 1200),
+      duration: Duration(milliseconds: 1800),
       elevation: 10,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
     ));

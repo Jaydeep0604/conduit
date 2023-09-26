@@ -239,14 +239,7 @@ class AllArticlesImpl extends AllArticlesRepo {
 
   Future<bool> deleteArticle(String slug) async {
     String url = ApiConstant.BASE_COMMENT_URL + "/${slug}";
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
-    http.Response response = await http.delete(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doDelete(url);
     // Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 204) {
@@ -259,19 +252,12 @@ class AllArticlesImpl extends AllArticlesRepo {
   }
 
   Future<int> deleteComment(int commentId, String slug) async {
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.BASE_COMMENT_URL +
         "/${slug}" +
         ApiConstant.END_COMMENT_URL +
         "/${commentId}";
     print("created url is :: $url");
-    http.Response response = await http.delete(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doDelete(url);
     if (response.statusCode == 200) {
       return 1;
     } else {
@@ -298,10 +284,11 @@ class AllArticlesImpl extends AllArticlesRepo {
     http.Response response =
         await UserClient.instance.doUpdateProfile(url, body);
     // print("updateProfile main repo body ==> ${response.body}");
-    dynamic jsonData = jsonDecode(response.body);
+    dynamic jsonResponse = jsonDecode(response.body);
+    dynamic jsonData=jsonResponse['user'];
     String message = '';
-    if (jsonData['errors'] != null) {
-      Map<String, dynamic> errors = jsonData['errors'];
+    if (jsonResponse['errors'] != null) {
+      Map<String, dynamic> errors = jsonResponse['errors'];
       String fieldName = errors.keys.first;
       String errorValue = errors[fieldName][0];
       message = '$fieldName $errorValue';
@@ -399,18 +386,10 @@ class AllArticlesImpl extends AllArticlesRepo {
   }
 
   Future removeLikeArticle(String slug) async {
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.LIKE_ARTICLE + slug + "/favorite";
     // print(url);
-    http.Response response = await http.delete(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doDelete(url);
     print(response.body);
-    print(detailModel.values.first.token);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -439,18 +418,10 @@ class AllArticlesImpl extends AllArticlesRepo {
   }
 
   Future unFollowUser(String username) async {
-    Box<UserAccessData>? detailModel = await hiveStore.isExistUserAccessData();
     String url = ApiConstant.FOLLOW_USER + username + "/follow";
     // print(url);
-    http.Response response = await http.delete(
-      Uri.parse(url),
-      headers: {
-        "content-type": "application/json",
-        "Authorization": "Bearer ${detailModel!.values.first.token}"
-      },
-    );
+    http.Response response = await UserClient.instance.doDelete(url);
     print(response.body);
-    print(detailModel.values.first.token);
     if (response.statusCode == 200) {
       return true;
     } else {

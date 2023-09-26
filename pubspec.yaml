@@ -54,6 +54,7 @@ dependencies:
   url_strategy: ^0.2.0
   animations: ^2.0.8
   persistent_bottom_nav_bar: ^5.0.2
+  animated_text_kit: ^4.2.2
   # image_picker: ^1.0.4
   
 

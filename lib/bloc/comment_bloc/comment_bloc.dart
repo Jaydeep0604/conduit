@@ -36,7 +36,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   _onDeleteCommentEvent(
       deleteCommentEvent event, Emitter<CommentState> emit) async {
     try {
-      emit(CommentLoadingState());
+      emit(CommentDeleteLoadingState());
       dynamic data = await repo.deleteComment(event.commentId, event.slug);
       if (data == 1) {
         emit(DeleteCommentSuccessState());

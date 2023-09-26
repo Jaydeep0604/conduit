@@ -33,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late LoginBloc loginBloc;
   late RegisterBloc registerBloc;
-  late TextEditingController emailCtr = TextEditingController(text: "jk@mailinator.com");
-  late TextEditingController passwordCtr = TextEditingController(text: "Test@123");
+  late TextEditingController emailCtr = TextEditingController();
+  late TextEditingController passwordCtr = TextEditingController();
   bool _obsecureText = true;
   @override
   void initState() {
@@ -180,8 +180,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           "Email*",
                           style: TextStyle(
-                            fontFamily: ConduitFontFamily.robotoLight,
-                          ),
+                              fontFamily: ConduitFontFamily.robotoBold,
+                              color: AppColors.black_light),
                         ),
                         SizedBox(
                           height: 10,
@@ -193,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 hint: "Email",
                                 controller: emailCtr,
                                 maxLines: 1,
+                                textInputType: TextInputType.emailAddress,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(60),
                                   FilteringTextInputFormatter.deny(" "),
@@ -211,9 +212,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 validator: (value) {
                                   if (value?.trim().isEmpty ?? true) {
                                     return "Enter email address";
-                                  } else if (!RegExp(
-                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                      .hasMatch(value ?? "")) {
+                                  } 
+                                  else if (!RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$",
+                                  ).hasMatch(value ?? "")) {
                                     return "Enter valid email address";
                                   }
                                   return null;
@@ -228,8 +230,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           "Password*",
                           style: TextStyle(
-                            fontFamily: ConduitFontFamily.robotoLight,
-                          ),
+                              fontFamily: ConduitFontFamily.robotoBold,
+                              color: AppColors.black_light),
                         ),
                         SizedBox(
                           height: 10,

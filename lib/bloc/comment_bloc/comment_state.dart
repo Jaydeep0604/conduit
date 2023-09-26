@@ -23,11 +23,15 @@ class CommentLoadingState extends CommentState {
   List<Object?> get props => [];
 }
 
-class CommentLoadedState extends CommentState {
+class CommentDeleteLoadingState extends CommentState {
   @override
   List<Object?> get props => [];
 }
 
+class CommentLoadedState extends CommentState {
+  @override
+  List<Object?> get props => [];
+}
 
 class CommentSuccessState extends CommentState {
   List<CommentModel> commentModel;
@@ -53,7 +57,7 @@ class CommentErrorState extends CommentState {
   }
 }
 
-// delete comment 
+// delete comment
 
 class DeleteCommentLoadingState extends CommentState {
   @override
@@ -75,5 +79,3 @@ class DeleteCommentSuccessState extends CommentState {
   @override
   List<Object?> get props => [];
 }
-
-
