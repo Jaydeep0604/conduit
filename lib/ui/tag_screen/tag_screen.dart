@@ -8,7 +8,7 @@ import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_article_widget.dart';
 import 'package:conduit/widget/no_internet.dart';
-import 'package:conduit/widget/theme_container.dart';
+import 'package:conduit/utils/theme_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -126,27 +126,36 @@ class _TagScreenState extends State<TagScreen> {
                       if (state is SearchTagSuccessState) {
                         return ScrollConfiguration(
                           behavior: NoGlow(),
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 10),
-                              child: ListView.separated(
-                                primary: false,
-                                shrinkWrap: true,
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.vertical,
-                                itemCount: state.myFavoriteArticleslist.length,
-                                itemBuilder: (context, index) {
-                                  return AllAirtistWidget(
-                                    onRefresh: (){},
-                                    articlesModel:
-                                        state.myFavoriteArticleslist[index],
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return SizedBox(height: 10);
-                                },
+                          child: RefreshIndicator(
+                            color: AppColors.primaryColor,
+                            onRefresh: () {
+                              return Future.delayed(Duration(seconds: 1), () {
+                                onRefreshAll();
+                              });
+                            },
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: ListView.separated(
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      state.myFavoriteArticleslist.length,
+                                  itemBuilder: (context, index) {
+                                    return AllAirtistWidget(
+                                      onRefresh: () {},
+                                      articlesModel:
+                                          state.myFavoriteArticleslist[index],
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return SizedBox(height: 10);
+                                  },
+                                ),
                               ),
                             ),
                           ),

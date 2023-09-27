@@ -13,6 +13,7 @@ import 'package:conduit/bloc/register_bloc/register_bloc.dart';
 import 'package:conduit/bloc/tags_bloc/tags_bloc.dart';
 import 'package:conduit/repository/all_article_repo.dart';
 import 'package:conduit/repository/auth_repo.dart';
+import 'package:conduit/ui/about_us/about_us_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/ui/add_article/add_article_screen.dart';
 import 'package:conduit/ui/base/base_screen.dart';
@@ -253,6 +254,9 @@ class CRoutes {
           },
           settings: settings,
         );
+        case AboutUsScreen.aboutUsUrl:
+        return MaterialPageRoute(
+            builder: (context) => AboutUsScreen(), settings: settings);
       case BaseScreen.baseUrl:
         return MaterialPageRoute(
             builder: (context) => BaseScreen(), settings: settings);

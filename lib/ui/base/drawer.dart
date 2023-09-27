@@ -1,5 +1,6 @@
 import 'package:conduit/main.dart';
 import 'package:conduit/navigator/tab_items.dart';
+import 'package:conduit/ui/about_us/about_us_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
 import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/change_password/change_password_screen.dart';
@@ -34,14 +35,14 @@ class ConduitDrawer extends StatelessWidget {
               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.primaryColor),
+                    border: Border.all(color: AppColors.primaryColor,width: 2),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: CircleAvatar(
                     backgroundColor: AppColors.white2,
                     child: SvgPicture.asset(
-                      ic_profile_icon,
-                      color: AppColors.primaryColor,
+                      ic_app_icon,
+                      color: AppColors.text_color,
                       height: 65,
                     ),
                     radius: 45,
@@ -102,14 +103,35 @@ class ConduitDrawer extends StatelessWidget {
                   fontFamily: ConduitFontFamily.robotoRegular,
                 ),
               ),
-              leading: SvgPicture.asset(
-                ic_reset_password_icon,
+              leading: Icon(
+                CupertinoIcons.lock_rotation_open,
                 color: AppColors.primaryColor,
               ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(
                     context, ChangePasswordScreen.changePasswordUrl);
+                // for with bottionnavigationbar
+                // navigatorKey[BaseScreen.getCurrentTab(context)]
+                //     ?.currentState
+                //     ?.pushNamed(ChangePasswordScreen.changePasswordUrl);
+              },
+            ),
+            Divider(endIndent: 20, indent: 20),
+            ListTile(
+              title: const Text(
+                'About Us',
+                style: TextStyle(
+                  fontFamily: ConduitFontFamily.robotoRegular,
+                ),
+              ),
+              leading: Icon(
+                CupertinoIcons.info,
+                color: AppColors.primaryColor,
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, AboutUsScreen.aboutUsUrl);
                 // for with bottionnavigationbar
                 // navigatorKey[BaseScreen.getCurrentTab(context)]
                 //     ?.currentState
@@ -177,7 +199,7 @@ class ConduitDrawer extends StatelessWidget {
                       Expanded(
                         child: MaterialButton(
                             height: 40,
-                            color: AppColors.pholder_background,
+                            color: const Color.fromARGB(255, 50, 48, 48),
                             disabledColor: AppColors.pholder_background,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),

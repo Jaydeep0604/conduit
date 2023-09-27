@@ -7,6 +7,7 @@ import 'package:conduit/model/profile_model.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/message.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -140,7 +141,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   fillColor: AppColors.white2,
                                   contentPadding: const EdgeInsets.all(10),
                                   prefixIcon: Icon(
-                                    Icons.password,
+                                    CupertinoIcons.lock_rotation_open,
                                     color: AppColors.primaryColor,
                                   ),
                                   suffixIcon: InkWell(
@@ -222,7 +223,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     fillColor: AppColors.white2,
                                     contentPadding: const EdgeInsets.all(10),
                                     prefixIcon: Icon(
-                                      Icons.password,
+                                      CupertinoIcons.lock_rotation_open,
                                       color: AppColors.primaryColor,
                                     ),
                                     suffixIcon: InkWell(

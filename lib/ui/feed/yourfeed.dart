@@ -11,7 +11,7 @@ import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/all_article_widget.dart';
 import 'package:conduit/widget/no_internet.dart';
-import 'package:conduit/widget/theme_container.dart';
+import 'package:conduit/utils/theme_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -163,7 +163,9 @@ class _YourFeedScreenState extends State<YourFeedScreen> {
                                       if (index <
                                           state.allArticleslist.length) {
                                         return AllAirtistWidget(
-                                            onRefresh: onRefreshAll,
+                                            onRefresh: (){
+                                              // onRefreshAll();
+                                            },
                                             articlesModel:
                                                 state.allArticleslist[index]);
                                       } else {

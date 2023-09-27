@@ -12,7 +12,7 @@ import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
-import 'package:conduit/widget/theme_container.dart';
+import 'package:conduit/utils/theme_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

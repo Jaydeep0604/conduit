@@ -15,7 +15,7 @@ import 'package:conduit/widget/all_article_widget.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
 import 'package:conduit/widget/no_internet.dart';
 import 'package:conduit/widget/shimmer_widget.dart';
-import 'package:conduit/widget/theme_container.dart';
+import 'package:conduit/utils/theme_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -433,8 +433,9 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                                 length = state
                                                     .allArticleslist.length;
                                                 return AllAirtistWidget(
-                                                    onRefresh: () =>
-                                                        onRefreshArticle(),
+                                                    onRefresh: () {
+                                                      // onRefreshArticle();
+                                                    },
                                                     articlesModel:
                                                         state.allArticleslist[
                                                             index]);

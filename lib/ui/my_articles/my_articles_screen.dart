@@ -740,7 +740,9 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                             myAricleLength =
                                                 state.myArticleslist.length;
                                             return AllAirtistWidget(
-                                              onRefresh: onRefreshMyArticle,
+                                              onRefresh: (){
+                                                // onRefreshMyArticle();
+                                              },
                                               articlesModel:
                                                   state.myArticleslist[index],
                                             );
@@ -848,7 +850,9 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                             myFavAricleLength = state
                                                 .myFavoriteArticleslist.length;
                                             return AllAirtistWidget(
-                                                onRefresh: onRefreshMyFavArticle,
+                                                onRefresh: (){
+                                                  // onRefreshMyFavArticle();
+                                                },
                                                 articlesModel: state
                                                         .myFavoriteArticleslist[
                                                     index]);

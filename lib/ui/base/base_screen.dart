@@ -1,10 +1,10 @@
-import 'package:conduit/navigator/bottom_nav.dart';
 import 'package:conduit/navigator/tab_items.dart';
 import 'package:conduit/navigator/tab_navigator.dart';
 import 'package:conduit/ui/base/drawer.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class BaseScreen extends StatefulWidget {
   static const baseUrl = '/base';
@@ -35,6 +35,10 @@ class BaseScreen extends StatefulWidget {
 class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
   late GlobalKey<ScaffoldState> globalScaffoldKey;
 
+//  late ScrollController _hideBottomNavController;
+
+//   late bool _isVisible;
+
   bool isLoading = false;
   var _currentTab = MyTabItem.globalfeed;
 
@@ -42,13 +46,30 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
     globalScaffoldKey.currentState?.openDrawer();
   }
 
-  // void didChangeDependancies(){
-  //   userdat
-  // }
-
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     globalScaffoldKey = GlobalKey<ScaffoldState>();
+    // _isVisible = true;
+    // _hideBottomNavController = ScrollController();
+    // _hideBottomNavController!.addListener(
+    //   () {
+    //     if (_hideBottomNavController!.position.userScrollDirection ==
+    //         ScrollDirection.reverse) {
+    //       if (_isVisible)
+    //         setState(() {
+    //           _isVisible = false;
+    //         });
+    //     }
+    //     if (_hideBottomNavController.position.userScrollDirection ==
+    //         ScrollDirection.forward) {
+    //       if (!_isVisible)
+    //         setState(() {
+    //           _isVisible = true;
+    //         });
+    //     }
+    //   },
+    // );
+
     super.initState();
   }
 

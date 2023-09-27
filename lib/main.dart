@@ -182,8 +182,8 @@ class MyApp extends StatelessWidget {
 }
 
 class ConduitFontFamily {
-  static const robotoBlack = "Roboto Black";
-  static const robotoBlackItalic = "Roboto BlackItalic";
+    static const robotoBlack = "Roboto Black";
+    static const robotoBlackItalic = "Roboto BlackItalic";
   static const robotoBold = "Roboto Bold";
   static const robotoBoldItalic = "Roboto BoldItalic";
   static const robotoItalic = "Roboto Italic";

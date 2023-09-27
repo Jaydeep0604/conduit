@@ -1,3 +1,4 @@
+const String ic_app_icon = "assets/icons/conduit_app_icon.svg";
 const String ic_back_arrow_icon = "assets/icons/back_arrow.svg";
 const String ic_add_icon = "assets/icons/add.svg";
 const String ic_empty_search_icon = "assets/icons/empty_search.png";

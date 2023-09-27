@@ -11,6 +11,7 @@ import 'package:conduit/utils/image_string.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/widget/conduitEditText_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -221,6 +222,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: AppColors.primaryColor,
                                 ),
                               ),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(60),
+                                FilteringTextInputFormatter.deny(" "),
+                                FilteringTextInputFormatter.deny("[]"),
+                                FilteringTextInputFormatter.deny("["),
+                                FilteringTextInputFormatter.deny("]"),
+                                FilteringTextInputFormatter.deny("^"),
+                                FilteringTextInputFormatter.deny(""),
+                                FilteringTextInputFormatter.deny("`"),
+                                FilteringTextInputFormatter.deny("/"),
+                                // FilteringTextInputFormatter.deny("\"),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9a-zA-z._@]')),
+                                FilteringTextInputFormatter.deny(RegExp(r"/"))
+                              ],
+                              validator: (value) {
+                                if (value?.trim().isEmpty ?? true) {
+                                  return "Enter email address";
+                                } else if (!RegExp(
+                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$")
+                                    .hasMatch(value ?? "")) {
+                                  return "Enter valid email address";
+                                }
+                                return null;
+                              },
                               hint: "Email",
                             ),
                             SizedBox(
@@ -311,4 +337,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
 //               UserAccessData? detail = box.get(hiveStore.userId);
 //               return Container();
 //             },
-//           ),
+//  ),

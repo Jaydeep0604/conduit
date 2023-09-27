@@ -9,7 +9,7 @@ import 'package:conduit/ui/register/register_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/message.dart';
 import 'package:conduit/utils/responsive.dart';
-import 'package:conduit/widget/theme_container.dart';
+import 'package:conduit/utils/theme_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
