@@ -15,7 +15,7 @@ class AuthRepoImpl extends AuthRepo {
     Map<String, dynamic> body = authModel.toJson();
     http.Response response =
         await AuthClient.instance.doPost(ApiConstant.REGISTER, body);
-    print(response.body);
+    // print(response.body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
     if (jsonData['errors'] != null) {
@@ -45,7 +45,7 @@ class AuthRepoImpl extends AuthRepo {
 
     http.Response response =
         await AuthClient.instance.doPost(ApiConstant.LOGIN, body);
-    print(body);
+    // print(body);
     dynamic jsonData = jsonDecode(response.body);
     String message = '';
     if (jsonData['errors'] != null) {
@@ -55,7 +55,7 @@ class AuthRepoImpl extends AuthRepo {
       // Construct the error message with the field name
       message = '$fieldName $errorValue';
     }
-    print(message);
+    // print(message);
     if (response.statusCode == 200) {
       return jsonData;
     } else {

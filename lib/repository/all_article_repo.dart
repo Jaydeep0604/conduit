@@ -195,7 +195,7 @@ class AllArticlesImpl extends AllArticlesRepo {
       AddCommentModel addCommentModel, String slug) async {
     String url =
         ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
-    print(url);
+    // print(url);
     Map<String, dynamic> body = addCommentModel.toJson();
     http.Response response = await UserClient.instance.doPostComment(url, body);
     // print(body);
@@ -220,15 +220,14 @@ class AllArticlesImpl extends AllArticlesRepo {
   Future<List<CommentModel>> getComment(String slug) async {
     String url =
         ApiConstant.BASE_COMMENT_URL + "/${slug}" + ApiConstant.END_COMMENT_URL;
-    print(url);
-
+    // print(url);
     http.Response response = await UserClient.instance.doGet(url);
     Map<String, dynamic> jsonData = json.decode(response.body);
     // dynamic jsonData =jsonDecode(response.body);
     if (response.statusCode == 200) {
       // dynamic data = jsonDecode(jsonData);
       List<dynamic> data = jsonData["comments"];
-      print(data);
+      // print(data);
       List<CommentModel> s = List<CommentModel>.from(
           data.map((e) => CommentModel.fromJson(e as Map<String, dynamic>)));
       return s;
@@ -256,7 +255,7 @@ class AllArticlesImpl extends AllArticlesRepo {
         "/${slug}" +
         ApiConstant.END_COMMENT_URL +
         "/${commentId}";
-    print("created url is :: $url");
+    // print("created url is :: $url");
     http.Response response = await UserClient.instance.doDelete(url);
     if (response.statusCode == 200) {
       return 1;
@@ -376,7 +375,7 @@ class AllArticlesImpl extends AllArticlesRepo {
         "Authorization": "Bearer ${detailModel!.values.first.token}"
       },
     );
-    print(response.body);
+    // print(response.body);
     print(detailModel.values.first.token);
     if (response.statusCode == 200) {
       return true;
@@ -389,7 +388,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     String url = ApiConstant.LIKE_ARTICLE + slug + "/favorite";
     // print(url);
     http.Response response = await UserClient.instance.doDelete(url);
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -408,8 +407,8 @@ class AllArticlesImpl extends AllArticlesRepo {
         "Authorization": "Bearer ${detailModel!.values.first.token}"
       },
     );
-    print(response.body);
-    print(detailModel.values.first.token);
+    // print(response.body);
+    // print(detailModel.values.first.token);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -421,7 +420,7 @@ class AllArticlesImpl extends AllArticlesRepo {
     String url = ApiConstant.FOLLOW_USER + username + "/follow";
     // print(url);
     http.Response response = await UserClient.instance.doDelete(url);
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {

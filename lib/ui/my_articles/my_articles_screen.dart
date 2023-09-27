@@ -182,7 +182,7 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                               builder: (context, state) {
                                 if (state is ProfileLoadingState) {
                                   return Container(
-                                    height: 45,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                         color: AppColors.white,
                                         borderRadius: BorderRadius.circular(5)),
@@ -220,7 +220,7 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                 }
                                 if (state is ProfileLoadedState) {
                                   return Container(
-                                    height: 45,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                         color: AppColors.white,
                                         borderRadius: BorderRadius.circular(5)),
@@ -569,23 +569,14 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                                   child: InkWell(
                                                     onTap: () {
                                                       Navigator.pushNamed(
-                                                          context,
-                                                          ProfileScreen
-                                                              .editProfileUrl);
-                                                      // Navigator.push(
-                                                      //   context,
-                                                      //   CupertinoPageRoute(
-                                                      //     builder: (context) =>
-                                                      //         BlocProvider(
-                                                      //       create: (context) =>
-                                                      //           ProfileBloc(
-                                                      //               repo:
-                                                      //                   AllArticlesImpl()),
-                                                      //       child:
-                                                      //           EditProfileScreen(),
-                                                      //     ),
-                                                      //   ),
-                                                      // );
+                                                              context,
+                                                              ProfileScreen
+                                                                  .profileUrl)
+                                                          .then((value) {
+                                                        if (value == true) {
+                                                          onRefreshAll();
+                                                        }
+                                                      });
                                                     },
                                                     child: Container(
                                                       height: 25,
@@ -684,27 +675,27 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                 builder: (context, state) {
                                   if (state is MyArticlesInitialState ||
                                       state is MyArticlesLoadingState) {
-                                    return ListView.separated(
-                                        padding: const EdgeInsets.only(
-                                    bottom: 10,
-                                    left: 15,
-                                    right: 15,
-                                    top: 4,
-                                    ),
-                                      physics:
-                                          NeverScrollableScrollPhysics(),
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: 5,
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return AllAirtistWidget.shimmer();
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context,
-                                              int index) {
-                                        return SizedBox(height: 10);
-                                      },
+                                    return Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7),
+                                        child: ListView.separated(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: 5,
+                                          primary: false,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return AllAirtistWidget.shimmer();
+                                          },
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                  int index) {
+                                            return SizedBox(height: 10);
+                                          },
+                                        ),
+                                      ),
                                     );
                                   }
                                   if (state is NoMyArticlesState) {
@@ -721,39 +712,39 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                     );
                                   }
                                   if (state is MyArticlesLoadedState) {
-                                    return ListView.separated(
+                                    return Padding(
                                       padding: const EdgeInsets.only(
-                                      bottom: 10,
-                                      left: 15,
-                                      right: 15,
-                                    ),
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: state.myArticleslist.length +
-                                          (state.hasReachedMax ? 0 : 1),
-                                      itemBuilder: (context, index) {
-                                        if (index <
-                                            state.myArticleslist.length) {
-                                          myAricleLength =
-                                              state.myArticleslist.length;
-                                          return AllAirtistWidget(
-                                            onRefresh: (){
-                                              // onRefreshMyArticle();
-                                            },
-                                            articlesModel:
-                                                state.myArticleslist[index],
-                                          );
-                                        } else {
-                                          return ConduitFunctions
-                                              .buildLoadMoreIndicator();
-                                        }
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return SizedBox(height: 10);
-                                      },
+                                        bottom: 10,
+                                        left: 15,
+                                        right: 15,
+                                      ),
+                                      child: ListView.separated(
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.zero,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: state.myArticleslist.length +
+                                            (state.hasReachedMax ? 0 : 1),
+                                        itemBuilder: (context, index) {
+                                          if (index <
+                                              state.myArticleslist.length) {
+                                            myAricleLength =
+                                                state.myArticleslist.length;
+                                            return AllAirtistWidget(
+                                              onRefresh: onRefreshMyArticle,
+                                              articlesModel:
+                                                  state.myArticleslist[index],
+                                            );
+                                          } else {
+                                            return ConduitFunctions
+                                                .buildLoadMoreIndicator();
+                                          }
+                                        },
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return SizedBox(height: 10);
+                                        },
+                                      ),
                                     );
                                   }
                                   return Container();
@@ -789,27 +780,27 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                 builder: (context, state) {
                                   if (state is MyFavoriteArticlesInitialState ||
                                       state is MyFavoriteArticlesLoadingState) {
-                                    return ListView.separated(
-                                         padding: const EdgeInsets.only(
-                                    bottom: 10,
-                                    left: 15,
-                                    right: 16,
-                                    top: 4,
-                                    ),
-                                      physics:
-                                          NeverScrollableScrollPhysics(),
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: 5,
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return AllAirtistWidget.shimmer();
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context,
-                                              int index) {
-                                        return SizedBox(height: 10);
-                                      },
+                                    return Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7),
+                                        child: ListView.separated(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: 5,
+                                          primary: false,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return AllAirtistWidget.shimmer();
+                                          },
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                  int index) {
+                                            return SizedBox(height: 10);
+                                          },
+                                        ),
+                                      ),
                                     );
                                   }
                                   if (state is NoMyFavoriteArticlesState) {
@@ -827,41 +818,42 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
                                     );
                                   }
                                   if (state is MyFavoriteArticlesLoadedStete) {
-                                    return ListView.separated(
+                                    return Padding(
                                       padding: const EdgeInsets.only(
-                                    bottom: 10,
-                                    left: 15,
-                                    right: 15,
-                                    ),
-                                      primary: false,
-                                      shrinkWrap: true,
-                                      
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: state
-                                              .myFavoriteArticleslist.length +
-                                          (state.hasReachedMax ? 0 : 1),
-                                      itemBuilder: (context, index) {
-                                        if (index <
-                                            state.myFavoriteArticleslist
-                                                .length) {
-                                          myFavAricleLength = state
-                                              .myFavoriteArticleslist.length;
-                                          return AllAirtistWidget(
-                                              onRefresh: (){
-                                                // onRefreshMyFavArticle();
-                                              },
-                                              articlesModel: state
-                                                      .myFavoriteArticleslist[
-                                                  index]);
-                                        } else {
-                                          return ConduitFunctions
-                                              .buildLoadMoreIndicator();
-                                        }
-                                      },
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return SizedBox(height: 10);
-                                      },
+                                        bottom: 10,
+                                        left: 15,
+                                        right: 15,
+                                      ),
+                                      child: ListView.separated(
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.zero,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: state
+                                                .myFavoriteArticleslist.length +
+                                            (state.hasReachedMax ? 0 : 1),
+                                        itemBuilder: (context, index) {
+                                          if (index <
+                                              state.myFavoriteArticleslist
+                                                  .length) {
+                                            myFavAricleLength = state
+                                                .myFavoriteArticleslist.length;
+                                            return AllAirtistWidget(
+                                                onRefresh:
+                                                    onRefreshMyFavArticle,
+                                                articlesModel: state
+                                                        .myFavoriteArticleslist[
+                                                    index]);
+                                          } else {
+                                            return ConduitFunctions
+                                                .buildLoadMoreIndicator();
+                                          }
+                                        },
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return SizedBox(height: 10);
+                                        },
+                                      ),
                                     );
                                   }
                                   return Container();

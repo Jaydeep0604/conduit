@@ -48,7 +48,7 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
 
     followBloc = context.read<FollowBloc>();
     _isFollow = widget.articlesModel?.author?.following;
-    ;
+    
   }
 
   @override
@@ -56,15 +56,6 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
     super.dispose();
   }
 
-  // onDoubleTapState() {
-  //   setState(() {
-  //     _isFollow = true;
-  //     if (_isFollow!) {
-  //       followBloc.add(
-  //           FollowUserEvent(username: widget.articlesModel?.author?.username));
-  //     }
-  //   });
-  // }
 
   changeFollowState() {
     setState(() {

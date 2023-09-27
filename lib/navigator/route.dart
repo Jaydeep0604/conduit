@@ -176,7 +176,7 @@ class CRoutes {
               );
             },
             settings: settings);
-      case ProfileScreen.editProfileUrl:
+      case ProfileScreen.profileUrl:
         return SlideRightRouteWithBuilder(
             builder: (p0, p1, p2) {
               return MultiBlocProvider(

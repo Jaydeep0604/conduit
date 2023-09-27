@@ -16,7 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ProfileScreen extends StatefulWidget {
-  static const editProfileUrl = '/editProfile';
+  static const profileUrl = '/profile';
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             centerTitle: false,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context,true);
               },
               icon: Icon(Icons.arrow_back),
             ),
@@ -91,8 +91,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return CToast.instance.showError(context, state.message);
               }
               if (state is UpdateProfileSuccessState) {
-                Navigator.pushNamedAndRemoveUntil(context,
-                    MyArticlesScreen.myArticlesUrl, (route) => route.isFirst);
+                CToast.instance.dismiss();
+                // Navigator.pop(context, true);
+                // Navigator.pushNamedAndRemoveUntil(context,
+                //     MyArticlesScreen.myArticlesUrl, (route) => route.isFirst);
                 // Navigator.popUntil(context, (route) => route.isFirst);
                 // Navigator.push(
                 //   context,

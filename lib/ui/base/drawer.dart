@@ -65,9 +65,8 @@ class ConduitDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.pushNamed(
                   context,
-                  ProfileScreen.editProfileUrl,
+                  ProfileScreen.profileUrl,
                 );
-
                 // for with bottionnavigationbar
                 // navigatorKey[BaseScreen.getCurrentTab(context)]
                 //     ?.currentState
