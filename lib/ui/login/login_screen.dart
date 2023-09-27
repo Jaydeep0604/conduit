@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       builder: (context) => BaseScreen(),
                     ),
                     (route) => false);
-                CToast.instance.showSuccess(context, "login successfull");
+                CToast.instance.showSuccess(context, "Login has been successfully");
               }
             },
             child: ThemeContainer(
