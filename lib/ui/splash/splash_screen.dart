@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   static const splashUrl = "/splash";
@@ -77,96 +78,124 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromARGB(255, 128, 222, 173),
-              Color.fromARGB(255, 209, 225, 216),
-              Color.fromARGB(255, 209, 225, 216),
-              Color.fromARGB(255, 115, 221, 166),
-            ],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Text(
-              //   'conduit',
-              //   style: TextStyle(
-              //     fontSize: 40,
-              //     color: AppColors.primaryColor,
-              //     fontFamily: ConduitFontFamily.robotoRegular,
-              //   ),
-              // ),
-              LoadingAnimationWidget.halfTriangleDot(
-                color: AppColors.advertisement_color,
-                size: 40,
+      body: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    "assets/images/autumn-of-reading-svgrepo-com.png"),
+                opacity: 0.5,
+                scale: 3,
+                alignment: Alignment.bottomCenter,
               ),
-              SizedBox(
-                height: 5,
-              ),
-              AnimatedTextKit(
-                animatedTexts: [
-                  ColorizeAnimatedText(
-                    'conduit',
-                    textAlign: TextAlign.center,
-                    speed: Duration(
-                      milliseconds: 400,
-                    ),
-                    textStyle: colorizeTextStyle,
-                    colors: colorizeColors,
-                  ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromARGB(255, 128, 222, 173),
+                  Color.fromARGB(255, 209, 225, 216),
+                  Color.fromARGB(255, 209, 225, 216),
+                  Color.fromARGB(255, 115, 221, 166),
                 ],
-                isRepeatingAnimation: true,
-                repeatForever: true,
               ),
-              SizedBox(
-                height: 5,
-              ),
-              isShow?
-                SizedBox(
-                  child: DefaultTextStyle(
-                    style: TextStyle(
-                      fontFamily: ConduitFontFamily.robotoRegular,
-                    ),
-                    child: AnimatedTextKit(
-                        isRepeatingAnimation: true,
-                        totalRepeatCount: 1,
-                        animatedTexts: [
-                          TyperAnimatedText(
-                            'A place to share your knowledge.',
-                            speed: Duration(
-                              milliseconds: 80,
-                            ),
-                            textAlign: TextAlign.center,
-                            textStyle: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.primaryColor2,
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Text(
+                  //   'conduit',
+                  //   style: TextStyle(
+                  //     fontSize: 40,
+                  //     color: AppColors.primaryColor,
+                  //     fontFamily: ConduitFontFamily.robotoRegular,
+                  //   ),
+                  // ),
+                  // LoadingAnimationWidget.halfTriangleDot(
+                  //   color: AppColors.advertisement_color,
+                  //   size: 40,
+                  // ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      ColorizeAnimatedText(
+                        'conduit',
+                        textAlign: TextAlign.center,
+                        speed: Duration(
+                          milliseconds: 400,
+                        ),
+                        textStyle: colorizeTextStyle,
+                        colors: colorizeColors,
+                      ),
+                    ],
+                    isRepeatingAnimation: true,
+                    repeatForever: true,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  isShow
+                      ? SizedBox(
+                          child: DefaultTextStyle(
+                            style: TextStyle(
                               fontFamily: ConduitFontFamily.robotoRegular,
                             ),
+                            child: AnimatedTextKit(
+                                isRepeatingAnimation: true,
+                                totalRepeatCount: 1,
+                                animatedTexts: [
+                                  TyperAnimatedText(
+                                    'A place to share your knowledge.',
+                                    speed: Duration(
+                                      milliseconds: 80,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    textStyle: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.primaryColor2,
+                                      fontFamily:
+                                          ConduitFontFamily.robotoRegular,
+                                    ),
+                                  ),
+                                ]),
                           ),
-                        ]),
-                  ),
-                ):SizedBox(height: 20,),
-              // Text(
-              //   'A place to share your knowledge.',
-              //   style: TextStyle(
-              //     fontSize: 18,
-              //     color: AppColors.primaryColor2,
-              //     fontFamily: ConduitFontFamily.robotoRegular,
-              //   ),
-              // )
-            ],
+                        )
+                      : SizedBox(
+                          height: 20,
+                        ),
+                  // Text(
+                  //   'A place to share your knowledge.',
+                  //   style: TextStyle(
+                  //     fontSize: 18,
+                  //     color: AppColors.primaryColor2,
+                  //     fontFamily: ConduitFontFamily.robotoRegular,
+                  //   ),
+                  // )
+                ],
+              ),
+            ),
           ),
-        ),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Opacity(
+              opacity: 0.7,
+              child: Lottie.asset(
+                'assets/animation/splash_snow_animation.json',
+                animate: true,
+                fit: BoxFit.cover,
+                
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

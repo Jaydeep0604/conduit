@@ -20,6 +20,7 @@ import 'package:url_strategy/url_strategy.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Hive.initFlutter();
   Hive.registerAdapter(UserAccessDataAdapter());
   await hiveStore.init();
@@ -182,8 +183,8 @@ class MyApp extends StatelessWidget {
 }
 
 class ConduitFontFamily {
-    static const robotoBlack = "Roboto Black";
-    static const robotoBlackItalic = "Roboto BlackItalic";
+  static const robotoBlack = "Roboto Black";
+  static const robotoBlackItalic = "Roboto BlackItalic";
   static const robotoBold = "Roboto Bold";
   static const robotoBoldItalic = "Roboto BoldItalic";
   static const robotoItalic = "Roboto Italic";

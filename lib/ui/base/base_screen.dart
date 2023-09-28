@@ -4,7 +4,7 @@ import 'package:conduit/ui/base/drawer.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class BaseScreen extends StatefulWidget {
   static const baseUrl = '/base';
@@ -49,7 +49,6 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     globalScaffoldKey = GlobalKey<ScaffoldState>();
-    // _isVisible = true;
     // _hideBottomNavController = ScrollController();
     // _hideBottomNavController!.addListener(
     //   () {
@@ -69,7 +68,6 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
     //     }
     //   },
     // );
-
     super.initState();
   }
 
@@ -112,75 +110,80 @@ class _BaseScreenState extends State<BaseScreen> with WidgetsBindingObserver {
         }
         return isFirstRouteInCurrentTab;
       },
-      child: Scaffold(
-        key: globalScaffoldKey,
-        bottomNavigationBar: BottomNavigationBar(
-          elevation: 10,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          enableFeedback: true,
-          backgroundColor: AppColors.white,
-          currentIndex: tabIndex[_currentTab] ?? 0,
-          // unselectedItemColor: AppColors.black.withOpacity(0.7),
-          unselectedIconTheme: IconThemeData(
-            color: AppColors.black.withOpacity(0.7),
-          ),
-          selectedItemColor: AppColors.primaryColor,
-          onTap: (index) {
-            selectTab(MyTabItem.values[index]);
+      child: ShowCaseWidget(
+        builder: Builder(
+          builder: (context) {
+            return Scaffold(
+              key: globalScaffoldKey,
+              bottomNavigationBar: BottomNavigationBar(
+                elevation: 10,
+                showSelectedLabels: true,
+                showUnselectedLabels: true,
+                type: BottomNavigationBarType.fixed,
+                enableFeedback: true,
+                backgroundColor: AppColors.white,
+                currentIndex: tabIndex[_currentTab] ?? 0,
+                // unselectedItemColor: AppColors.black.withOpacity(0.7),
+                unselectedIconTheme: IconThemeData(
+                  color: AppColors.black.withOpacity(0.7),
+                ),
+                selectedItemColor: AppColors.primaryColor,
+                onTap: (index) {
+                  selectTab(MyTabItem.values[index]);
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      CupertinoIcons.globe,
+                      color: AppColors.black.withOpacity(0.7),
+                    ),
+                    activeIcon: Icon(
+                      CupertinoIcons.globe,
+                      color: AppColors.primaryColor,
+                    ),
+                    label: "Global Feed",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      CupertinoIcons.doc_text,
+                      color: AppColors.black.withOpacity(0.7),
+                    ),
+                    activeIcon: Icon(
+                      CupertinoIcons.doc_text,
+                      color: AppColors.primaryColor,
+                    ),
+                    label: "Your Feed",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      CupertinoIcons.add,
+                      color: AppColors.black.withOpacity(0.7),
+                    ),
+                    activeIcon: Icon(
+                      CupertinoIcons.add,
+                      color: AppColors.primaryColor,
+                    ),
+                    label: "Add Article",
+                  ),
+                ],
+                //   BottomNavigation(
+                // currentTab: _currentTab,
+                // onSelectTab: (index) => selectTab(index),
+              ),
+              drawer: ConduitDrawer(),
+              body: Stack(
+                children: [
+                  Container(
+                    child: MyTabItem.globalfeed == _currentTab
+                        ? _buildOffstageNavigator(MyTabItem.globalfeed)
+                        : MyTabItem.yourfeed == _currentTab
+                            ? _buildOffstageNavigator(MyTabItem.yourfeed)
+                            : _buildOffstageNavigator(MyTabItem.addarticle),
+                  ),
+                ],
+              ),
+            );
           },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                CupertinoIcons.globe,
-                color: AppColors.black.withOpacity(0.7),
-              ),
-              activeIcon: Icon(
-                CupertinoIcons.globe,
-                color: AppColors.primaryColor,
-              ),
-              label: "Global Feed",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                CupertinoIcons.doc_text,
-                color: AppColors.black.withOpacity(0.7),
-              ),
-              activeIcon: Icon(
-                CupertinoIcons.doc_text,
-                color: AppColors.primaryColor,
-              ),
-              label: "Your Feed",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                CupertinoIcons.add,
-                color: AppColors.black.withOpacity(0.7),
-              ),
-              activeIcon: Icon(
-                CupertinoIcons.add,
-                color: AppColors.primaryColor,
-              ),
-              label: "Add Article",
-            ),
-          ],
-
-          //   BottomNavigation(
-          // currentTab: _currentTab,
-          // onSelectTab: (index) => selectTab(index),
-        ),
-        drawer: ConduitDrawer(),
-        body: Stack(
-          children: [
-            Container(
-              child: MyTabItem.globalfeed == _currentTab
-                  ? _buildOffstageNavigator(MyTabItem.globalfeed)
-                  : MyTabItem.yourfeed == _currentTab
-                      ? _buildOffstageNavigator(MyTabItem.yourfeed)
-                      : _buildOffstageNavigator(MyTabItem.addarticle),
-            ),
-          ],
         ),
       ),
     );
