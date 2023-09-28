@@ -6,6 +6,7 @@ import 'package:conduit/bloc/follow_bloc/follow_bloc.dart';
 import 'package:conduit/bloc/follow_bloc/follow_event.dart';
 import 'package:conduit/bloc/like_article_bloc/like_article_bloc.dart';
 import 'package:conduit/bloc/like_article_bloc/like_article_event.dart';
+import 'package:conduit/bloc/my_articles_bloc/my_articles_state.dart';
 import 'package:conduit/config/constant.dart';
 import 'package:conduit/config/hive_store.dart';
 import 'package:conduit/main.dart';
@@ -126,7 +127,7 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
             automaticallyImplyLeading: false,
             leading: IconButton(
               onPressed: () {
-              Navigator.pop(context,true);
+                Navigator.pop(context, isEdited ? true : false);
               },
               icon: SvgPicture.asset(
                 ic_back_arrow_icon,
@@ -162,8 +163,17 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                         _isFollow =
                             state.articleModel.last.article!.author!.following;
                       }
+
                       if (state is ArticleDeleteSuccessState) {
-                        Navigator.popUntil(context, (route) => route.isFirst);
+                        CToast.instance.dismiss();
+                        Navigator.pop(context, true);
+                        // Navigator.popUntil(context, (route) => route.isFirst);
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => BaseScreen(),
+                        //   ),
+                        // );
                         // globalNavigationKey.currentState?.push(
                         //   SlideRightRoute(
                         //     page: BaseScreen(),
@@ -173,16 +183,6 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                         //     )),
                         //   ),
                         // )
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BaseScreen(),
-                          ),
-                        );
-                        // BaseScreen.switchTab(
-                        //   context,
-                        //   MyTabItem.globalfeed,
-                        // );
                       }
                     },
                     builder: (context, state) {
@@ -579,7 +579,14 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                                                                       .slug!,
                                                                   'isUpdateArticle':
                                                                       true,
-                                                                });
+                                                                }).then(
+                                                                (value) => {
+                                                                      if (value ==
+                                                                          true)
+                                                                        {
+                                                                          onRetryData(),
+                                                                        }
+                                                                    });
                                                           }
                                                         },
                                                         child: Container(
@@ -1231,9 +1238,12 @@ class _GlobalItemDetailScreenState extends State<GlobalItemDetailScreen> {
                         ),
                         onPressed: () async {
                           Navigator.pop(context);
-                          articleBloc.add(
-                            DeleteArticleEvent(slug: widget.slug),
-                          );
+                          CToast.instance.showLodingLoader(context);
+                          Timer(Duration(seconds: 2), () {
+                            articleBloc.add(
+                              DeleteArticleEvent(slug: widget.slug),
+                            );
+                          });
                         },
                       ),
                     ),

@@ -25,6 +25,7 @@ class TagScreen extends StatefulWidget {
 class _TagScreenState extends State<TagScreen> {
   late TagsBloc tagsBloc;
   bool isNoInternet = false;
+  bool isEdited = false;
 
   @override
   void initState() {
@@ -146,7 +147,12 @@ class _TagScreenState extends State<TagScreen> {
                                       state.myFavoriteArticleslist.length,
                                   itemBuilder: (context, index) {
                                     return AllAirtistWidget(
-                                      onRefresh: () {},
+                                      onRefresh: () {
+                                        onRefreshAll();
+                                        setState(() {
+                                          isEdited = true;
+                                        });
+                                      },
                                       articlesModel:
                                           state.myFavoriteArticleslist[index],
                                     );

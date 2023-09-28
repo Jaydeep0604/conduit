@@ -296,8 +296,11 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                                               .allTagsModel
                                                               .tags![index],
                                                         },
-                                                      ).then((value) =>
-                                                          onRefreshArticle());
+                                                      ).then((value) {
+                                                        if (value == true) {
+                                                          onRefreshArticle();
+                                                        }
+                                                      });
                                                     },
                                                     child: Container(
                                                       decoration: BoxDecoration(
@@ -434,7 +437,7 @@ class _GlobalScreenState extends State<GlobalScreen> {
                                                     .allArticleslist.length;
                                                 return AllAirtistWidget(
                                                     onRefresh: () {
-                                                      // onRefreshArticle();
+                                                      onRefreshArticle();
                                                     },
                                                     articlesModel:
                                                         state.allArticleslist[

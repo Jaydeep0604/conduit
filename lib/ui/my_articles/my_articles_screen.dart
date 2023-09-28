@@ -38,6 +38,7 @@ class _MyArticlesScreenState extends State<MyArticlesScreen> {
   bool isLoading = false;
   bool isScrollable = false;
   bool isNoInternet = false;
+  
 
   late ScrollController _myAricleScrollController;
   late ScrollController _myFavAricleScrollController;

@@ -44,6 +44,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
   late ArticleBloc articleBloc;
   List<String> tags = [];
   ArticleModel? articleModel;
+  bool isEdited = false;
 
   bool isNoInternet = false;
   @override
@@ -103,7 +104,7 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
             leading: IconButton(
               onPressed: () async {
                 if (widget.isUpdateArticle) {
-                  Navigator.pop(context);
+                  Navigator.pop(context, isEdited ? true : false);
                 } else {
                   bool isPop =
                       await navigatorKey[BaseScreen.getCurrentTab(context)]!
@@ -160,18 +161,16 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                       // update article
                       if (state is UpdateArticleSuccessState) {
                         CToast.instance.dismiss();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushNamed(
-                          context,
-                          GlobalItemDetailScreen.globalItemDetailUrl,
-                          arguments: {
-                            'username': articleModel!.article!.author!.username,
-                            'slug': articleModel!.article!.slug,
-                          },
-                        );
-                        // Future.delayed(Duration(seconds: 1), () {
-                        //   BaseScreen.switchTab(context, MyTabItem.globalfeed);
-                        // });
+                        Navigator.pop(context, isEdited ? true : false);
+                        // Navigator.popUntil(context, (route) => route.isFirst);
+                        // Navigator.pushNamed(
+                        //   context,
+                        //   GlobalItemDetailScreen.globalItemDetailUrl,
+                        //   arguments: {
+                        //     'username': articleModel!.article!.author!.username,
+                        //     'slug': articleModel!.article!.slug,
+                        //   },
+                        // );
                       }
                       if (state is ArticleLoadedState) {
                         articleModel = state.articleModel.last;
@@ -386,6 +385,9 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                                     if (_form.currentState!.validate()) {
                                       print(tags);
                                       if (widget.isUpdateArticle) {
+                                        setState(() {
+                                          isEdited = true;
+                                        });
                                         articleBloc.add(
                                           UpdateArticleEvent(
                                               articleModel: ArticleModel(

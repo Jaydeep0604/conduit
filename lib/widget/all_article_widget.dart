@@ -48,14 +48,12 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
 
     followBloc = context.read<FollowBloc>();
     _isFollow = widget.articlesModel?.author?.following;
-    
   }
 
   @override
   void dispose() {
     super.dispose();
   }
-
 
   changeFollowState() {
     setState(() {
@@ -223,7 +221,9 @@ class _AllAirtistWidgetState extends State<AllAirtistWidget>
           },
         ).then(
           (value) {
-            widget.onRefresh();
+            if (value == true) {
+              widget.onRefresh();
+            }
           },
         );
       },

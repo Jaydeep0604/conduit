@@ -31,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late ProfileBloc profileBloc;
   bool isLoading = false;
   bool isNoInternet = false;
+  bool isEdited = false;
   @override
   void initState() {
     profileBloc = context.read<ProfileBloc>();
@@ -62,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             centerTitle: false,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context,true);
+                Navigator.pop(context, isEdited ? true : false);
               },
               icon: Icon(Icons.arrow_back),
             ),
@@ -267,6 +268,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   if (_formKey.currentState!.validate()) {
                                     FocusManager.instance.primaryFocus!
                                         .unfocus();
+                                    setState(() {
+                                      isEdited = true;
+                                    });
                                     profileBloc.add(
                                       UpdateProfileEvent(
                                         profileModel: ProfileModel(

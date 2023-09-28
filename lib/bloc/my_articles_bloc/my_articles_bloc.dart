@@ -69,6 +69,7 @@ class MyArticlesBloc extends Bloc<MyArticlesEvent, MyArticlesState> {
   _onDeleteMyArticleEvent(
       DeleteMyArticlesEvent event, Emitter<MyArticlesState> emit) async {
     try {
+      emit(DeleteMyArticleLoadingState());
       dynamic data = await repo.deleteArticle(event.slug);
       if (data == 1) {
         emit(DeleteMyArticleSuccessState());

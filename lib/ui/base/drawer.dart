@@ -1,14 +1,11 @@
 import 'package:conduit/main.dart';
-import 'package:conduit/navigator/tab_items.dart';
 import 'package:conduit/ui/about_us/about_us_screen.dart';
 import 'package:conduit/ui/profile/profile_screen.dart';
-import 'package:conduit/ui/base/base_screen.dart';
 import 'package:conduit/ui/change_password/change_password_screen.dart';
 import 'package:conduit/ui/my_articles/my_articles_screen.dart';
 import 'package:conduit/utils/AppColors.dart';
 import 'package:conduit/utils/functions.dart';
 import 'package:conduit/utils/image_string.dart';
-import 'package:conduit/utils/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
