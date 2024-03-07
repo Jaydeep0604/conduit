@@ -39,36 +39,4 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       );
     }
   }
-
-  // _onInitUser(InitUserEvent event, Emitter<RegisterState> emit) async {
-  //   try {
-  //     emit(RegisterLoadingState(authModel: (state.props[0] as AuthModel)));
-  //     // UserData userData = await userRepo.getUserProfileData();
-  //     // bool isStoredUser = await cHiveStore.storeUserData(userData);
-  //     if (state is RegisterDoneState) {
-  //       emit(
-  //         RegisterDoneState(
-  //           authModel: (state.props[0] as AuthModel),
-  //           msg: event.msg,
-  //         ),
-  //       );
-  //     } else {
-  //       emit(
-  //         RegisterErrorState(
-  //           authModel: (state.props[0] as AuthModel),
-  //           msg: "Cannot initialize the user",
-  //         ),
-  //       );
-  //     }
-  //   } on SocketException {
-  //     emit(RegisterNoInternetState());
-  //   } catch (e) {
-  //     emit(
-  //       RegisterErrorState(
-  //         authModel: (state.props[0] as AuthModel),
-  //         msg: e.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
 }

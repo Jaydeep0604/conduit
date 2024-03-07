@@ -21,8 +21,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       data = await repo.login(event.authModel);
       print("Login response :: $data");
       dynamic jsonData = data['user'];
-      // await sharedStore.openSession(jsonData["token"]);
-      // await hiveStore.init();
       bool isSessionOpen = await hiveStore.openSession(
         UserAccessData(
           email: jsonData["email"],
@@ -95,26 +93,4 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 }
-// class LoginBloc extends Bloc<LoginEvent, LoginState> {
-//   final LoginRepository loginRepository;
 
-//   LoginBloc({required this.loginRepository}) : super(LoginInitial());
-
-//   @override
-//   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-//     if (event is LoginButtonPressed) {
-//       yield LoginLoading();
-//       try {
-//         final data = await loginRepository.login(
-//           event.email,
-//           event.password,
-//           event.userDeviceId,
-//           event.fcmToken,
-//         );
-//         yield LoginSuccess(data: data);
-//       } catch (error) {
-//         yield LoginFailure(error: error.toString());
-//       }
-//     }
-//   }
-// }

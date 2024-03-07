@@ -29,40 +29,6 @@ Future<void> main() async {
     runApp(
       MultiBlocProvider(
         providers: [
-          // BlocProvider(
-          //   create: (context) => AllArticlesBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => TagsBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => FeedBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => ArticleBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => LoginBloc(repo: AuthRepoImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => CommentBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => RegisterBloc(repo: AuthRepoImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => MyArticlesBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) =>
-          //       MyFavoriteArticlesBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => AddCommentBloc(repo: AllArticlesImpl()),
-          // ),
-          // BlocProvider(
-          //   create: (context) => ProfileBloc(repo: AllArticlesImpl()),
-          // ),
           BlocProvider(
             create: (context) => LikeBloc(repo: AllArticlesImpl()),
           ),
@@ -92,7 +58,6 @@ Future<void> main() async {
     systemNavigationBarColor: AppColors.white,
   ));
 
-  // ignore: unrelated_type_equality_checks
   if (SystemUiOverlayStyle.light == true) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // transparent status bar
@@ -111,39 +76,6 @@ Future<void> main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        // BlocProvider(
-        //   create: (context) => AllArticlesBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => TagsBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => FeedBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => ArticleBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => LoginBloc(repo: AuthRepoImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => CommentBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => RegisterBloc(repo: AuthRepoImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => MyArticlesBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => MyFavoriteArticlesBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => AddCommentBloc(repo: AllArticlesImpl()),
-        // ),
-        // BlocProvider(
-        //   create: (context) => ProfileBloc(repo: AllArticlesImpl()),
-        // ),
         BlocProvider(
           create: (context) => LikeBloc(repo: AllArticlesImpl()),
         ),
@@ -160,8 +92,6 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.dark);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -174,7 +104,6 @@ class MyApp extends StatelessWidget {
           ),
       navigatorObservers: [FlutterSmartDialog.observer],
       builder: FlutterSmartDialog.init(),
-      // home: SplashScreen(),
       initialRoute: SplashScreen.splashUrl,
       navigatorKey: globalNavigationKey,
       onGenerateRoute: CRoutes.generateGlobalRoute,

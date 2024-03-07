@@ -14,7 +14,6 @@ class AddCommentBloc extends Bloc<AddCommentEvent, AddCommentState> {
       SubmitCommentEvent event, Emitter<AddCommentState> emit) async {
     try {
       emit(AddCommentLoadingState());
-      // ignore: unused_local_variable
       dynamic data = await repo.addComment(event.addCommentModel, event.slug!);
       if (data.toString().contains("OK")) {
         emit(AddCommentSuccessState());

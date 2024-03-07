@@ -75,8 +75,9 @@ dev_dependencies:
   # rules and activating additional ones.
   
 flutter_native_splash:
-  image: assets/images/autumn-of-reading-svgrepo-com.png
+ # image: assets/images/autumn-of-reading-svgrepo-com.png
   color: "#f9f9f9"
+
 
   android: true
   ios: true

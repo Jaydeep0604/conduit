@@ -99,28 +99,3 @@ class ChangePasswordErrorState extends ProfileState {
   @override
   List<Object?> get props => [profileList, message, Random().nextDouble()];
 }
-
-// class ProfileSuccessState extends ProfileState {
-//   List<ProfileModel>? profileList;
-//   ProfileSuccessState({this.profileList});
-//   @override
-//   List<Object?> get props => [profileList];
-// }
-
-// class PasswordChangedState extends ProfileState {
-//   String message;
-//   PasswordChangedState({required this.message});
-//   @override
-//   List<Object?> get props => [message];
-// }
-
-// class ProfileUserErrorState extends ProfileState {
-//   String msg;
-//   ProfileUserErrorState({required this.msg});
-//   @override
-//   List<Object?> get props => [msg];
-//   @override
-//   String toString() {
-//     return msg;
-//   }
-// }

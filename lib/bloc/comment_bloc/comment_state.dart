@@ -41,9 +41,6 @@ class CommentSuccessState extends CommentState {
   List<Object?> get props => [
         this.commentModel,
       ];
-  // String toString() {
-  //   return msg;
-  // }
 }
 
 class CommentErrorState extends CommentState {

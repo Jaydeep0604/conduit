@@ -98,8 +98,6 @@ class HiveStore {
   Future<bool> openTokenSession(String token) async {
     Box<String> userTokenBox = Hive.box<String>(token);
     userTokenBox.put(tokenId, token);
-    // DownloadService.instance.changeScheduledTask(userData.accessToken);
-    // downloadStore.updateDownloadTaskWithAccessToken(userData.accessToken);
 
     if (userTokenBox.containsKey(tokenId)) {
       _isSessionValid.add(true);

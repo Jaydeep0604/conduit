@@ -24,12 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void didChangeDependencies() {
-    Timer(Duration(milliseconds: 800), () {
-      setState(() {
-        isShow = true;
-      });
-    });
-    Timer(Duration(milliseconds: 4300), () async {
+  
+    Timer(Duration(milliseconds: 1800), () async {
       Box<UserAccessData>? detailModel =
           await hiveStore.isExistUserAccessData();
       if (detailModel!.values.isNotEmpty) {
@@ -108,93 +104,42 @@ class _SplashScreenState extends State<SplashScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Text(
-                  //   'conduit',
-                  //   style: TextStyle(
-                  //     fontSize: 40,
-                  //     color: AppColors.primaryColor,
-                  //     fontFamily: ConduitFontFamily.robotoRegular,
-                  //   ),
-                  // ),
-                  // LoadingAnimationWidget.halfTriangleDot(
-                  //   color: AppColors.advertisement_color,
-                  //   size: 40,
-                  // ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  AnimatedTextKit(
-                    animatedTexts: [
-                      ColorizeAnimatedText(
-                        'conduit',
-                        textAlign: TextAlign.center,
-                        speed: Duration(
-                          milliseconds: 400,
-                        ),
-                        textStyle: colorizeTextStyle,
-                        colors: colorizeColors,
-                      ),
-                    ],
-                    isRepeatingAnimation: true,
-                    repeatForever: true,
+                  Text(
+                    'Conduit',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                      fontFamily: ConduitFontFamily.robotoRegular,
+                    ),
                   ),
                   SizedBox(
                     height: 5,
                   ),
-                  isShow
-                      ? SizedBox(
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              fontFamily: ConduitFontFamily.robotoRegular,
-                            ),
-                            child: AnimatedTextKit(
-                                isRepeatingAnimation: true,
-                                totalRepeatCount: 1,
-                                animatedTexts: [
-                                  TyperAnimatedText(
-                                    'A place to share your knowledge.',
-                                    speed: Duration(
-                                      milliseconds: 80,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    textStyle: TextStyle(
-                                      fontSize: 16,
-                                      color: AppColors.primaryColor2,
-                                      fontFamily:
-                                          ConduitFontFamily.robotoRegular,
-                                    ),
-                                  ),
-                                ]),
-                          ),
-                        )
-                      : SizedBox(
-                          height: 20,
-                        ),
-                  // Text(
-                  //   'A place to share your knowledge.',
-                  //   style: TextStyle(
-                  //     fontSize: 18,
-                  //     color: AppColors.primaryColor2,
-                  //     fontFamily: ConduitFontFamily.robotoRegular,
-                  //   ),
-                  // )
+                  Text(
+                    'A place to share your knowledge.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.primaryColor2,
+                      fontFamily: ConduitFontFamily.robotoRegular,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Opacity(
-              opacity: 0.7,
-              child: Lottie.asset(
-                'assets/animation/splash_snow_animation.json',
-                animate: true,
-                fit: BoxFit.cover,
-                
-              ),
-            ),
-          ),
+          // Container(
+          //   height: MediaQuery.of(context).size.height,
+          //   width: MediaQuery.of(context).size.width,
+          //   child: Opacity(
+          //     opacity: 0.7,
+          //     child: Lottie.asset(
+          //       'assets/animation/splash_snow_animation.json',
+          //       animate: true,
+          //       fit: BoxFit.cover,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
