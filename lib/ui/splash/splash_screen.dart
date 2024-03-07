@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() {
   
-    Timer(Duration(milliseconds: 1800), () async {
+    Timer(Duration(milliseconds: 2000), () async {
       Box<UserAccessData>? detailModel =
           await hiveStore.isExistUserAccessData();
       if (detailModel!.values.isNotEmpty) {
@@ -58,12 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
   //   //         context, MaterialPageRoute(builder: (context) => LoginScreen())));
   // }
 
-  List<Color> colorizeColors = [
-    Color.fromARGB(255, 5, 156, 5), // Dark Green
-    Color.fromARGB(255, 0, 100, 100), // Dark Teal
-    Color.fromARGB(255, 0, 128, 81), // Dark Green (similar to the first color)
-    Color.fromARGB(255, 28, 127, 106),
-  ];
+  
 
   static const colorizeTextStyle = TextStyle(
     fontSize: 40.0,
