@@ -20,7 +20,6 @@ import 'package:url_strategy/url_strategy.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   await Hive.initFlutter();
   Hive.registerAdapter(UserAccessDataAdapter());
   await hiveStore.init();
